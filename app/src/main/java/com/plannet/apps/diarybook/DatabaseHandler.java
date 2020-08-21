@@ -58,6 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.disableWriteAheadLogging();
     }
 
+
     public static synchronized void reload() {
         if (instance != null) {
             try {
