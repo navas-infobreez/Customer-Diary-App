@@ -6,11 +6,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.support.multidex.MultiDexApplication;
+
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 
 
+import androidx.multidex.MultiDexApplication;
 
 import java.io.File;
 import java.io.IOException;
