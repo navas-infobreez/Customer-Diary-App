@@ -37,6 +37,16 @@
                 style="@style/modifiedEditText"
                 android:inputType="text"
                 android:maxLines="1"
+                android:hint="PROFESSION"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
+                android:inputType="text"
+                android:maxLines="1"
                 android:hint="PLACE"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,6 +65,22 @@
             android:layout_marginTop="@dimen/signup_text_margin_top">
             <EditText
                 style="@style/modifiedEditText"
+                android:hint="ADDRESS"
+                android:inputType="textPostalAddress"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
+                android:hint="PURPOSE"
+                android:inputType="textPostalAddress"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
                 android:hint="E MAIL"
                 android:maxLines="1"
                 android:inputType="textEmailAddress"/>
@@ -68,6 +94,15 @@
                 android:hint="NO: OF PERSONS ACCOMPANING"
                 android:maxLines="1"
                 android:inputType="number"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
+                android:hint="QUANTITY REQUIRED"
+                android:maxLines="1"
+                android:inputType="numberDecimal"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
