@@ -1,4 +1,4 @@
-package com.posibolt.apps.diarybook;
+package com.plannet.apps.diarybook;
 
 
 import android.os.Bundle;
