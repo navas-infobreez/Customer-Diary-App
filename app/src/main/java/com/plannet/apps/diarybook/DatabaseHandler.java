@@ -11,14 +11,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "diaryBook.db";
     private static final int DATABASE_VERSION = 1;
     private final String TAG = "DatabaseHandler";
-    private final Context mContext;
+    private final Context context;
 
 
-    // Use singleton with Client Count.
-    // Otherwise concurrent access may give database locked exception
     private DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mContext = context;
+        this.context = context;
         dbClientCount = new AtomicInteger(0);
         Log.d(TAG, "Database: '" + DATABASE_NAME + "' Version: '" + DATABASE_VERSION + "'");
         upgraded = false;
@@ -28,23 +26,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     AtomicInteger dbClientCount;
     boolean upgraded;
 
-    public boolean isUpgraded() {
-        return upgraded;
-    }
-
-    public void resetUpgraded() {
-        this.upgraded = false;
-    }
-
     static DatabaseHandler instance;
 
-    // Synchronized on class object
     public static synchronized DatabaseHandler getInstance(Context context) {
         if (instance == null) {
             try {
                 instance = new DatabaseHandler(context);
             } catch (Exception e) {
-                //ErrorMsg.showError(context,"Error While Setting Up Database. Contact Customer Service","" , "DB");
+                ErrorMsg.showError(context,"Error While Creating Database. Contact Customer Service",e , "DB");
                 Log.e("DB", "Error while setting up database. " + e.getMessage(), e);
             }
         }
@@ -57,6 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super.onOpen(db);
         db.disableWriteAheadLogging();
     }
+
 
     public static synchronized void reload() {
         if (instance != null) {
@@ -93,32 +83,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "Creating new Database: '" + DATABASE_NAME + "' Version: '" + DATABASE_VERSION + "'");
-        // TODO Freez this with version 5. on 1.3.x version. All further changes shall be managed thr #onUpgrade()
-        // TODO and Increment version number with every change
         try {
             db.beginTransaction();
             db.execSQL("CREATE TABLE IF NOT EXISTS Customer(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , customer_id INTEGER ," +
                     " customer_name TEXT , customer_code TEXT , country TEXT , city TEXT , address1 TEXT , address2 TEXT ," +
-                    " email TEXT,phone_no TEXT,region TEXT,location TEXT)");
-            db.execSQL("CREATE TABLE IF NOT EXISTS Products(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , product_id INTEGER , " +
-                    "product_category_Id INTEGER , product_category TEXT , product_name TEXT ,uom TEXT ,uomId TEXT, description TEXT , " +
-                    "sale_price TEXT , cost_price TEXT, taxCategoryId INTEGER  )");
-            db.execSQL("CREATE TABLE IF NOT EXISTS Category(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,category_Id INTEGER ," +
-                    "category_name TEXT ,parentCategoryId INTEGER)");
-            db.execSQL("CREATE TABLE IF NOT EXISTS Diary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
-                    "customerId INTEGER ,date TEXT,time TEXT)");
-            db.execSQL("CREATE TABLE IF NOT EXISTS DiaryLines( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
-                    "customerId INTEGER ,date TEXT,time TEXT)");
+                    " email TEXT,phone_no TEXT,region TEXT,location TEXT,locatioId INTEGER,gst_no TEXT)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS Products(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , product_name TEXT,product_id INTEGER , " +
+                    "product_category TEXT ,product_category_Id INTEGER , uom TEXT ,uomId TEXT, description TEXT , " +
+                            "sale_price TEXT , cost_price TEXT, taxId INTEGER  )");
+            db.execSQL("CREATE TABLE IF NOT EXISTS ProductCategory(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,category_name TEXT ,category_Id INTEGER ," +
+                    "parentCategoryId INTEGER)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
+                    "customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no INTEGER,descripion TEXT,status TEXT )");
+            db.execSQL("CREATE TABLE IF NOT EXISTS DiaryLines( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,headerId INTEGER ," +
+                    "product_name TEXT,product_id INTEGER,qty INTEGER )");
+            db.execSQL("CREATE TABLE IF NOT EXISTS Visit( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
+                    "customerId INTEGER ,visit_date TEXT,visit_time TEXT,place TEXT)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS Role( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,roleName TEXT ," +
+                    "roleId INTEGER)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS User( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,name TEXT ," +
+                    "role_name TEXT,role_id INTEGER,userName TEXT,password TEXT)");
             db.setTransactionSuccessful();
 
 
         } catch (Exception e) {
-            //ErrorMsg.showError(mContext, "Internal Error", "Error while setting up database. Contact Customer service", "DB");
+            ErrorMsg.showError( context, "Internal Error", e,"Error");
             Log.e("DB", "Error while setting up database. " + e.getMessage(), e);
         } finally {
             db.endTransaction();
         }
-        onUpgrade(db, 5, DATABASE_VERSION);
+        onUpgrade(db, 1, DATABASE_VERSION);
 
 
     }
@@ -142,7 +136,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         // Views cannot be altered. Hence drop and create again // This should be done last
         upgraded = true;
-        //reCreateViews(db);
     }
 
     @Override
@@ -161,7 +154,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.beginTransaction();
             db.setTransactionSuccessful();
         } catch (Exception ex) {
-            //ErrorMsg.showError(mContext, "Internal Error", "Error while upgrading database (v6). Contact Customer service", "DB");
+            //ErrorMsg.showError(context, "Internal Error", "Error while upgrading database (v6). Contact Customer service", "DB");
             Log.e("DB", "Error while setting up database. " + ex.getMessage(), ex);
             throw ex;
         } finally {

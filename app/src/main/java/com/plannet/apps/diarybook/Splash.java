@@ -2,9 +2,12 @@ package com.plannet.apps.diarybook;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.plannet.apps.diarybook.activity.LoginActivity;
 
 public class Splash extends AppCompatActivity {
 
@@ -30,7 +33,7 @@ public class Splash extends AppCompatActivity {
                 }finally{
 
 
-                    Intent openMainActivity = new Intent(Splash.this,MainActivity.class);
+                    Intent openMainActivity = new Intent(Splash.this, LoginActivity.class);
                     startActivity(openMainActivity);
                     finish();
                 }
