@@ -106,6 +106,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/add_custoner_button"
             style="@style/loginButton"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"

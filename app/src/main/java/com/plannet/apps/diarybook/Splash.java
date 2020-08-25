@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.plannet.apps.diarybook.activity.LoginActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class Splash extends AppCompatActivity {
 
 
