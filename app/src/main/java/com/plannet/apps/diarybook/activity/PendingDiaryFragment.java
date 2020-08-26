@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -20,11 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PendingDiaryFragment extends Fragment {
+    public static final String PENDING = "PN";
+    public static final String PICKED = "PK";
+    public static final String COMPLETED = "CO";
+    public static final String APPROVED = "AP";
+    public static final String APPROVERETURN = "AR";
 
     RecyclerView recyclerView;
     CustomerDiaryAdapter customerDiaryAdapter;
     List<CustomerDiaryModel> customerDiaryModels=new ArrayList<>(  );
     CustomerDiaryDao customerDiaryDao;
+    String selected_status=PENDING;
 
 
     @Override
@@ -37,22 +46,36 @@ public class PendingDiaryFragment extends Fragment {
     }
 
     private void refreshview() {
-        CustomerDiaryModel customerDiaryModel=new CustomerDiaryModel();
-        customerDiaryModel.setCustomerName( "adv.Salmaan Pulli" );
-        customerDiaryModel.setDate( "25/07/2020" );
-        customerDiaryModels.add( customerDiaryModel );
-        CustomerDiaryModel customerDiaryModel1=new CustomerDiaryModel();
-        customerDiaryModel1.setCustomerName( "Amjas Ams" );
-        customerDiaryModel1.setDate( "28/10/2020" );
-        customerDiaryModels.add( customerDiaryModel1 );
-        CustomerDiaryModel customerDiaryModel2=new CustomerDiaryModel();
-        customerDiaryModel2.setCustomerName( "Nazal KK" );
-        customerDiaryModel2.setDate( "25/01/2020" );
-        customerDiaryModels.add( customerDiaryModel2 );
-        CustomerDiaryModel customerDiaryModel3=new CustomerDiaryModel();
-        customerDiaryModel3.setCustomerName( "Lukuman luku" );
-        customerDiaryModel3.setDate( "25/07/2020" );
-        customerDiaryModels.add( customerDiaryModel3 );
+        List<CustomerDiaryModel> customerDiaryModels = new ArrayList<>(  );
+        customerDiaryModels=customerDiaryDao.getAll( selected_status );
+        if (customerDiaryModels==null||customerDiaryModels.size()==0) {
+            CustomerDiaryModel customerDiaryModel =new CustomerDiaryModel();
+            customerDiaryModel.setCustomerName( "adv.Salmaan Pulli" );
+            customerDiaryModel.setDate( "25/07/2020" );
+            customerDiaryModel.setStatus( PENDING );
+            customerDiaryModels.add( customerDiaryModel );
+            CustomerDiaryModel customerDiaryModel1 = new CustomerDiaryModel();
+            customerDiaryModel1.setCustomerName( "Amjas Ams" );
+            customerDiaryModel1.setDate( "28/10/2020" );
+            customerDiaryModel1.setStatus( PICKED );
+            customerDiaryModels.add( customerDiaryModel1 );
+            CustomerDiaryModel customerDiaryModel2 = new CustomerDiaryModel();
+            customerDiaryModel2.setCustomerName( "Nazal KK" );
+            customerDiaryModel2.setDate( "25/01/2020" );
+            customerDiaryModel2.setStatus( COMPLETED );
+            customerDiaryModels.add( customerDiaryModel2 );
+            CustomerDiaryModel customerDiaryModel3 = new CustomerDiaryModel();
+            customerDiaryModel3.setCustomerName( "Lukuman luku" );
+            customerDiaryModel3.setDate( "25/07/2020" );
+            customerDiaryModel3.setStatus( APPROVED );
+            customerDiaryModels.add( customerDiaryModel3 );
+            CustomerDiaryModel customerDiaryModel4 = new CustomerDiaryModel();
+            customerDiaryModel4.setCustomerName( "Dilshad" );
+            customerDiaryModel4.setDate( "25/07/2020" );
+            customerDiaryModel4.setStatus( APPROVERETURN );
+            customerDiaryModels.add( customerDiaryModel4 );
+            customerDiaryDao.insertCustomerDiary( customerDiaryModels );
+        }
 
         customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels);
         recyclerView.setAdapter(customerDiaryAdapter);
@@ -60,12 +83,42 @@ public class PendingDiaryFragment extends Fragment {
     }
 
     private void initui(View view) {
+        Spinner spinner=(Spinner)view.findViewById( R.id.spinner );
         recyclerView=(RecyclerView)view.findViewById( R.id.recyclerDiary );
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new ItemDecorator(getContext()));
-    }
+
+
+        int defualtSelection=0;
+        final ArrayList<String> statusList= new ArrayList<>();
+
+        statusList.add(PENDING);
+        statusList.add(PICKED);
+        statusList.add(COMPLETED);
+        statusList.add(APPROVED);
+        statusList.add(APPROVERETURN);
+
+
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, statusList);
+            spinner.setAdapter(adapter);
+        spinner.setSelection( defualtSelection );
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    selected_status =statusList.get(position);
+                    refreshview();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
     private void initDb() {
         customerDiaryDao=new CustomerDiaryDao( getContext() );

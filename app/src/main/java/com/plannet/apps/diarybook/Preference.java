@@ -11,7 +11,13 @@ public class Preference {
     }
 
 
+    public static void setnotFirstStart(Context context) {
+        getSharedAppPrefs().edit().putBoolean("IsFirstStart", false).commit();
+    }
 
+    public static boolean getnotFirstStart(Context context) {
+        return getSharedAppPrefs().getBoolean("IsFirstStart", true);
+    }
 
     public static String getPassword() {
 

@@ -78,8 +78,8 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     }
 
 
-    public List<CustomerDiaryModel> getAll() {
-        String query="select * from "+TABLE_NAME+ "where status =' D '";
+    public List<CustomerDiaryModel> getAll(String status) {
+        String query="select * from "+TABLE_NAME+ " where status = "+CommonUtils.quoteString( status );
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
         return list;
@@ -106,5 +106,10 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
+    public void delete() {
+        String query="delete from "+TABLE_NAME;
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+    }
 }
 

@@ -16,13 +16,14 @@
         <activity android:name=".activity.DiaryListActivity" />
         <activity android:name=".forms.UserCreationActivity" />
         <activity android:name=".forms.ReceptionForm" />
-        <activity android:name=".Splash" />
-        <activity android:name=".activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Splash" >
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+        <activity android:name=".activity.LoginActivity">
         </activity>
         <activity android:name=".MainActivity" />
     </application>
