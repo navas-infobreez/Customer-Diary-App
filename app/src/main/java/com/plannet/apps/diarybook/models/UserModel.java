@@ -8,6 +8,7 @@ public class UserModel {
     String role_name;
     String userName;
     String password;
+    String confirmPassword;
 
     public int getId() {
         return id;
@@ -55,5 +56,13 @@ public class UserModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

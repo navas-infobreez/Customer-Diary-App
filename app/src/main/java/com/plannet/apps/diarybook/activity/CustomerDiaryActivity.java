@@ -51,6 +51,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 
