@@ -86,5 +86,13 @@ public class User extends DatabaseHandlerController {
 
     }
 
+    public UserModel selectUser(String user_name) {
+
+        String query = "select * from " + TABLE_NAME + " where  userName =" + CommonUtils.quoteString( user_name );
+
+        List<UserModel> userModelList = prepareUserModels( super.executeQuery( context, query ) );
+        return userModelList.size() > 0 ? userModelList.get( 0 ) : null;
+    }
+
 }
 

@@ -12,10 +12,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".forms.CustomerSearchActivity"></activity>
         <activity android:name=".activity.CustomerDiaryActivity"></activity>
-        <activity android:name=".forms.UcerCrestionActivity" />
+        <activity android:name=".forms.UserCreationActivity" />
         <activity android:name=".forms.ReceptionForm" />
-        <activity android:name=".Splash"></activity>
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
