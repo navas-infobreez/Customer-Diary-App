@@ -1,85 +1,115 @@
 package com.plannet.apps.diarybook.activity;
 
-
-import android.os.Bundle;
-
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.tabs.TabLayout;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.plannet.apps.diarybook.R;
+import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
+import com.plannet.apps.diarybook.adapters.ProductListAdapter;
+import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDiaryActivity extends AppCompatActivity {
-
-
-    Fragment []  PAGES;
-    String []  PAGE_TITLES;
-    public PendingDiaryFragment pendingDiaryFragment=new PendingDiaryFragment();
-    public PendingDiaryFragment currentDiaryFragment=new PendingDiaryFragment();
-    public MyPagerAdapter myPagerAdapter;
-    ViewPager viewPager;
-    TabLayout tabLayout;
+    String[] pCategories = { "Tiles", "Sanitaries", "Other"};
+    Spinner category;
+    Button save,products;
+    EditText details;
+    RecyclerView productDetails;
+    String selectedCategory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView( R.layout.activity_diary_main);
+        setContentView(R.layout.activity_custromer_diary);
+        initUi();
+        initDb();
 
-
-        myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        viewPager.setAdapter(myPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                selectedCategory=pCategories[position];
+                Toast.makeText(getApplicationContext(),pCategories[position],Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
             }
 
+        });
+        products.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void onClick(View view) {
+                dilogue();
             }
         });
+    }
+
+    private void initUi() {
+        category=(Spinner)findViewById(R.id.category);
+        save=(Button)findViewById(R.id.save);
+        details=(EditText)findViewById(R.id.details);
+        products=(Button)findViewById(R.id.products);
+        productDetails=(RecyclerView)findViewById(R.id.product_details);
 
     }
 
+    private void initDb() {
 
+    }
 
+    private void dilogue(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout. product_detais_list, null);
+        builder.setView(dialogView);
 
-    public class MyPagerAdapter extends FragmentPagerAdapter {
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.productList);
+        CustomerDiaryLineModel lineModel=new CustomerDiaryLineModel();
+        List<CustomerDiaryLineModel>lineModelList=new ArrayList<>();
+        lineModel.setProduct_name("Tiles");
+        lineModelList.add(lineModel);
 
-        public MyPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-                    PAGES = new Fragment[]{pendingDiaryFragment,currentDiaryFragment};
-                    PAGE_TITLES = new String[]{"Pending","Current"};
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new ItemDecorator(getApplicationContext()));
+        ProductListAdapter productListAdapter = new ProductListAdapter(lineModelList);
+        recyclerView.setAdapter(productListAdapter);
+        productListAdapter.notifyDataSetChanged();
+
+// Set up the buttons
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
 
             }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
-        @Override
-        public Fragment getItem(int position) {
-            return PAGES[position];
-        }
-
-        @Override
-        public int getCount() {
-            return PAGES.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return PAGE_TITLES[position];
-        }
-
+        builder.show();
     }
 }

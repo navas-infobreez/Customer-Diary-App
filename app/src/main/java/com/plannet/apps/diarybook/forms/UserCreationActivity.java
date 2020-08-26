@@ -1,5 +1,6 @@
 package com.plannet.apps.diarybook.forms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,7 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
+import com.plannet.apps.diarybook.activity.CustomerDiaryActivity;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.models.UserModel;
 
@@ -49,6 +52,8 @@ public class UserCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getData();
+                Intent intent = new Intent(UserCreationActivity.this, CustomerDiaryActivity.class );
+                startActivity(intent);
 
             }
         });

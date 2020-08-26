@@ -46,7 +46,7 @@
 
                         <TextView
                             style="@style/headerTextPrimary"
-                            android:text="USER CREATION"
+                            android:text="PRODUCT CREATION"
                             android:textSize="25sp"
                             android:layout_marginTop="@dimen/loginViewsMargin"/>
 
@@ -58,7 +58,7 @@
                                 style="@style/modifiedEditText"
                                 android:inputType="text"
                                 android:maxLines="1"
-                                android:hint="NAME"/>
+                                android:hint="PRODUCT NAME"/>
                         </com.google.android.material.textfield.TextInputLayout>
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/parent"
@@ -68,49 +68,47 @@
                                 style="@style/modifiedEditText"
                                 android:inputType="text"
                                 android:maxLines="1"
-                                android:hint="USER NAME"/>
+                                android:hint="PRODUCT CODE"/>
                         </com.google.android.material.textfield.TextInputLayout>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_marginTop="10dp"
                             android:layout_height="match_parent"
-                            android:text="select a roll"/>
+                            android:text="CATEGORY"/>
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_gravity="center"
                             android:layout_height="50dp">
-                        <androidx.appcompat.widget.AppCompatSpinner
-                            android:id="@+id/roll"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            style="headerTextPrimary">
+                            <androidx.appcompat.widget.AppCompatSpinner
+                                android:id="@+id/roll"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                style="headerTextPrimary">
 
-                        </androidx.appcompat.widget.AppCompatSpinner>
+                            </androidx.appcompat.widget.AppCompatSpinner>
 
                         </androidx.cardview.widget.CardView>
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/parent"
-                            app:passwordToggleEnabled="true"
                             android:layout_marginTop="@dimen/signup_text_margin_top">
                             <EditText
                                 android:id="@+id/password"
                                 style="@style/modifiedEditText"
-                                android:hint="password"
+                                android:hint="RATE"
                                 android:maxLines="1"
                                 android:inputType="textPassword"/>
                         </com.google.android.material.textfield.TextInputLayout>
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/parent"
-                            app:passwordToggleEnabled="true"
                             android:layout_marginTop="@dimen/signup_text_margin_top">
                             <EditText
                                 android:id="@+id/confirm_password"
                                 style="@style/modifiedEditText"
-                                android:hint="confirm password"
+                                android:hint="DETAILS"
                                 android:maxLines="1"
-                                android:inputType="textPassword"/>
+                                android:inputType="text"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <Button
