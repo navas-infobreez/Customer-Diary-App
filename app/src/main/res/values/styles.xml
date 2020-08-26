@@ -25,6 +25,13 @@
         <item name="android:focusableInTouchMode">true</item>
     </style>
 
+    <style name="AppTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorHeight">1dp</item>
+        <item name="tabPaddingStart">6dp</item>
+        <item name="tabPaddingEnd">6dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="headerText" parent="parent">
         <item name="android:textSize">@dimen/headerTextSize</item>
         <item name="android:textAlignment">center</item>

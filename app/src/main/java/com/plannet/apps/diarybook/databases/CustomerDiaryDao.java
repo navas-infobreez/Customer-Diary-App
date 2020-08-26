@@ -77,6 +77,15 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
+
+    public List<CustomerDiaryModel> getAll() {
+        String query="select * from "+TABLE_NAME+ "where status =' D '";
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+        return list;
+
+    }
+
     public List<CustomerDiaryModel> prepareCustomerDiaryModel(ArrayList<ArrayList<String>> data) {
         List<CustomerDiaryModel> customerDiaryModels = new ArrayList<>();
         for (ArrayList<String> tuple : data) {

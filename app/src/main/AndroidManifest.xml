@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".forms.CustomerSearchActivity"></activity>
+        <activity android:name=".activity.CustomerDiaryActivity"></activity>
         <activity android:name=".forms.UcerCrestionActivity" />
         <activity android:name=".forms.ReceptionForm" />
         <activity android:name=".Splash"></activity>
