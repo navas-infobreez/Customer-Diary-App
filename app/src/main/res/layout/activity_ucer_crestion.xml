@@ -25,7 +25,7 @@
                     style="@style/headerText"
                     android:layout_gravity="center"
                     android:text="G diary"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:textStyle="bold"
                     android:layout_marginTop="40dp"/>
                 <androidx.cardview.widget.CardView

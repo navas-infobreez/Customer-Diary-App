@@ -25,7 +25,7 @@
                     style="@style/headerText"
                     android:layout_gravity="center"
                     android:text="G diary"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:textStyle="bold"
                     android:layout_marginTop="40dp"/>
                 <androidx.cardview.widget.CardView
@@ -64,7 +64,7 @@
                             style="@style/parent"
                             android:layout_marginTop="@dimen/signup_text_margin_top">
                             <EditText
-                                android:id="@+id/user_name"
+                                android:id="@+id/product_code"
                                 style="@style/modifiedEditText"
                                 android:inputType="text"
                                 android:maxLines="1"
@@ -80,7 +80,7 @@
                             android:layout_gravity="center"
                             android:layout_height="50dp">
                             <androidx.appcompat.widget.AppCompatSpinner
-                                android:id="@+id/roll"
+                                android:id="@+id/category_spinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
@@ -94,7 +94,7 @@
                             style="@style/parent"
                             android:layout_marginTop="@dimen/signup_text_margin_top">
                             <EditText
-                                android:id="@+id/password"
+                                android:id="@+id/rate"
                                 style="@style/modifiedEditText"
                                 android:hint="RATE"
                                 android:maxLines="1"
@@ -104,7 +104,7 @@
                             style="@style/parent"
                             android:layout_marginTop="@dimen/signup_text_margin_top">
                             <EditText
-                                android:id="@+id/confirm_password"
+                                android:id="@+id/details"
                                 style="@style/modifiedEditText"
                                 android:hint="DETAILS"
                                 android:maxLines="1"
