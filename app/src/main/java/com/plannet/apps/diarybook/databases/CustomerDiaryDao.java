@@ -93,13 +93,13 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             temp.setId(CommonUtils.toInt(tuple.get(0)));
             temp.setCustomerName((tuple.get(1)));
             temp.setCustomerId(CommonUtils.toInt(tuple.get(2)));
-            temp.setDate((tuple.get(1)));
-            temp.setTime((tuple.get(1)));
-            temp.setSalesman_name((tuple.get(1)));
-            temp.setSalesmanId(CommonUtils.toInt(tuple.get(2)));
-            temp.setInvoice_no(tuple.get(2));
-            temp.setDescripion(tuple.get(2));
-            temp.setStatus(tuple.get(2));
+            temp.setDate((tuple.get(3)));
+            temp.setTime((tuple.get(4)));
+            temp.setSalesman_name((tuple.get(5)));
+            temp.setSalesmanId(CommonUtils.toInt(tuple.get(6)));
+            temp.setInvoice_no(tuple.get(7));
+            temp.setDescripion(tuple.get(8));
+            temp.setStatus(tuple.get(9));
             customerDiaryModels.add(temp);
         }
         return customerDiaryModels;
@@ -109,6 +109,13 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     public void delete() {
         String query="delete from "+TABLE_NAME;
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+    }
+
+    public void updateStatus(int i_d, String status) {
+
+        String query = "UPDATE " + TABLE_NAME + " set status =" + CommonUtils.quoteString( status ) + " where id =" + i_d;
+        super.execute( context, query );
 
     }
 }

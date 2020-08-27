@@ -47,13 +47,13 @@ public class Customer extends DatabaseHandlerController {
 
             String[] fields_ar = {Customer.customer_id, Customer.customer_name, Customer.customer_code,
                     Customer.country, Customer.city, Customer.address1, Customer.address2,Customer.email,
-                    Customer.phone_no,Customer.location,Customer.locationId, Customer.gst_no};
+                    Customer.phone_no,Customer.location, Customer.gst_no};
 
             for (CustomerModel customer : customers) {
                 count++;
                 Object[] values_ar = {customer.getCustomerId(),customer.getCustomerName(),customer.getCustomerCode(),
                         customer.getCountryName(), customer.getCity(),customer.getAddress1(),customer.getAddress2(),customer.getEmail(),
-                        customer.getPhone_no(),customer.getLocation(),customer.getLocationId(),customer.getGst_no()};
+                        customer.getPhone_no(),customer.getLocation(),customer.getGst_no()};
                 String values = "", fields = "";
                     for (int i = 0; i < values_ar.length; i++) {
                         if (values_ar[i] != null) {
@@ -80,6 +80,15 @@ public class Customer extends DatabaseHandlerController {
         }
     }
 
+
+    public List<CustomerModel> getAll() {
+        String query="select * from "+TABLE_NAME;
+        List<CustomerModel> list = prepareModelList(super.executeQuery(context,query));
+
+        return list;
+
+    }
+
     public ArrayList<CustomerModel> prepareModelList(ArrayList<ArrayList<String>> data)
 
     {
@@ -95,12 +104,12 @@ public class Customer extends DatabaseHandlerController {
             temp.setCity(tuple.get(5));
             temp.setAddress1(tuple.get(6));
             temp.setAddress2(tuple.get(7));
-            temp.setEmail(tuple.get(12));
-            temp.setPhone_no(tuple.get(16));
-            temp.setRegion(tuple.get(17));
-            temp.setLocation(tuple.get(20));
-            temp.setLocationId(CommonUtils.toInt(tuple.get(19)));
-            temp.setGst_no(tuple.get(20));
+            temp.setEmail(tuple.get(8));
+            temp.setPhone_no(tuple.get(9));
+            temp.setRegion(tuple.get(10));
+            temp.setLocation(tuple.get(11));
+            //temp.setLocationId(CommonUtils.toInt(tuple.get(19)));
+            temp.setGst_no(tuple.get(12));
             customerModels.add(temp);
 
         }
