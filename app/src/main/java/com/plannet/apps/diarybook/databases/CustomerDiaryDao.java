@@ -129,5 +129,12 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
     }
+
+    public void updateStatus(int i_d, String status) {
+
+        String query = "UPDATE " + TABLE_NAME + " set status =" + CommonUtils.quoteString( status ) + " where id =" + i_d;
+        super.execute( context, query );
+
+    }
 }
 

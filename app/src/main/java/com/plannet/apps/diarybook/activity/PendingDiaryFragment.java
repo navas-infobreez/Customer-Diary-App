@@ -18,20 +18,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
+import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
+import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.utils.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PendingDiaryFragment extends Fragment implements OnCompleteCallBack {
-    public static final String PENDING = "PN";
-    public static final String PICKED = "PK";
-    public static final String COMPLETED = "CO";
-    public static final String APPROVED = "AP";
-    public static final String APPROVERETURN = "AR";
+public class PendingDiaryFragment extends Fragment implements Callback,OnCompleteCallBack {
+    public static final String PENDING = "PENDING";
+    public static final String PICKED = "PICKED";
+    public static final String COMPLETED = "COMPLETED";
+    public static final String APPROVED = "APPROVED";
+    public static final String APPROVERETURN = "APPROVE RETURN";
 
     RecyclerView recyclerView;
     CustomerDiaryAdapter customerDiaryAdapter;
@@ -100,7 +103,7 @@ public class PendingDiaryFragment extends Fragment implements OnCompleteCallBack
             customerDiaryDao.insertCustomerDiary( customerDiaryModels );
         }
 
-        customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels,this);
+        customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels,this,this);
         recyclerView.setAdapter(customerDiaryAdapter);
         customerDiaryAdapter.notifyDataSetChanged();
     }
@@ -155,6 +158,18 @@ public class PendingDiaryFragment extends Fragment implements OnCompleteCallBack
             intent.putExtra("diaryId",customerDiaryModel.getId());
             startActivity(intent);
         }
+
+    }
+
+    @Override
+    public void onItemClick(Object object) {
+        CustomerDiaryModel customerDiaryModel=(CustomerDiaryModel) object;
+        customerDiaryDao.updateStatus(customerDiaryModel.getId(),customerDiaryModel.getStatus());
+        refreshview();
+    }
+
+    @Override
+    public void onItemLongClick(Object object) {
 
     }
 }
