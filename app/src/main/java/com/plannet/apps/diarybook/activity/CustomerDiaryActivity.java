@@ -21,6 +21,7 @@ import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.adapters.ProductListAdapter;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
+import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     private void dilogue(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Title");
+        builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout. product_detais_list, null);
         builder.setView(dialogView);
@@ -91,11 +93,18 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new ItemDecorator(getApplicationContext()));
-        ProductListAdapter productListAdapter = new ProductListAdapter(lineModelList);
+        ProductListAdapter productListAdapter = new ProductListAdapter(lineModelList, new OnCompleteCallBack() {
+            @Override
+            public void onCompleteCallBack(Object data) {
+                CustomerDiaryLineModel customerDiaryLineModel=new CustomerDiaryLineModel();
+                if (data instanceof CustomerDiaryLineModel)
+                    customerDiaryLineModel= (CustomerDiaryLineModel) data;
+                detailsDilogue(customerDiaryLineModel);
+            }
+        });
         recyclerView.setAdapter(productListAdapter);
         productListAdapter.notifyDataSetChanged();
 
-// Set up the buttons
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -103,6 +112,37 @@ public class CustomerDiaryActivity extends AppCompatActivity {
 
             }
         });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void detailsDilogue(CustomerDiaryLineModel customerDiaryLineModel){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+        builder.setCancelable(false);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout. product_detais_data, null);
+        builder.setView(dialogView);
+
+        CustomerDiaryLineModel lineModel=new CustomerDiaryLineModel();
+        List<CustomerDiaryLineModel>lineModelList=new ArrayList<>();
+        lineModel.setProduct_name("Tiles");
+        lineModelList.add(lineModel);
+
+//        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//
+//            }
+//        });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

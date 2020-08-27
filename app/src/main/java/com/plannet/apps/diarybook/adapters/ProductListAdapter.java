@@ -11,16 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
+import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
 import java.util.List;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.MyViewHolder> {
 
     private List<CustomerDiaryLineModel> customerDiaryModels;
+    OnCompleteCallBack callBack;
 
-    public ProductListAdapter(List<CustomerDiaryLineModel> customerDiaryModelList) {
+    public ProductListAdapter(List<CustomerDiaryLineModel> customerDiaryModelList, OnCompleteCallBack completeCallBack) {
 
         this.customerDiaryModels = customerDiaryModelList;
+        this.callBack=completeCallBack;
     }
 
 
@@ -50,6 +53,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
         final CustomerDiaryLineModel eachItem = customerDiaryModels.get(position);
         holder.name.setText(eachItem.getProduct_name());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callBack.onCompleteCallBack(eachItem);
+            }
+        });
 
 
     }
