@@ -20,6 +20,8 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     public static final String TABLE_NAME = "CustomerDiary";
     public static final String id = "id";
     public static final String customerName = "customerName";
+    public static final String address = "address";
+    public static final String phone = "phone";
     public static final String customerId = "customerId";
     public static final String date = "date";
     public static final String time = "time";
@@ -46,11 +48,11 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
 
             for (CustomerDiaryModel tuple :customerDiaryModels ) {
-                Object[] values_ar = {tuple.getCustomerName(),tuple.getCustomerId(), tuple.getDate(),
+                Object[] values_ar = {tuple.getCustomerName(),tuple.getCustomerAddress(),tuple.getCustomerPhone(),tuple.getCustomerId(), tuple.getDate(),
                         tuple.getTime(),tuple.getSalesman_name(), tuple.getSalesmanId(),
                         tuple.getInvoice_no(),tuple.getDescripion(), tuple.getStatus()};
 
-                String[] fields_ar = {customerName,customerId, date,time,salesman_name,salesmanId,invoice_no,descripion,status};
+                String[] fields_ar = {customerName,address,phone,customerId, date,time,salesman_name,salesmanId,invoice_no,descripion,status};
                 String values = "", fields = "";
                 for (int i = 0; i < values_ar.length; i++) {
                     if (values_ar[i] != null) {
@@ -76,7 +78,21 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
         }
 
     }
+    public List<CustomerDiaryModel> getAll() {
+        String query="select * from "+TABLE_NAME;
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
+        return list;
+
+    }
+
+    public CustomerDiaryModel getAll(int id) {
+        String query="select * from "+TABLE_NAME+ " where id = "+ id;
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+        return list.size()>0?list.get(0):null;
+
+    }
 
     public List<CustomerDiaryModel> getAll(String status) {
         String query="select * from "+TABLE_NAME+ " where status = "+CommonUtils.quoteString( status );
@@ -92,14 +108,16 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             CustomerDiaryModel temp = new CustomerDiaryModel();
             temp.setId(CommonUtils.toInt(tuple.get(0)));
             temp.setCustomerName((tuple.get(1)));
-            temp.setCustomerId(CommonUtils.toInt(tuple.get(2)));
-            temp.setDate((tuple.get(1)));
-            temp.setTime((tuple.get(1)));
-            temp.setSalesman_name((tuple.get(1)));
-            temp.setSalesmanId(CommonUtils.toInt(tuple.get(2)));
-            temp.setInvoice_no(tuple.get(2));
-            temp.setDescripion(tuple.get(2));
-            temp.setStatus(tuple.get(2));
+            temp.setCustomerAddress((tuple.get(2)));
+            temp.setCustomerPhone((tuple.get(3)));
+            temp.setCustomerId(CommonUtils.toInt(tuple.get(4)));
+            temp.setDate((tuple.get(5)));
+            temp.setTime((tuple.get(6)));
+            temp.setSalesman_name((tuple.get(7)));
+            temp.setSalesmanId(CommonUtils.toInt(tuple.get(8)));
+            temp.setInvoice_no(tuple.get(9));
+            temp.setDescripion(tuple.get(10));
+            temp.setStatus(tuple.get(11));
             customerDiaryModels.add(temp);
         }
         return customerDiaryModels;

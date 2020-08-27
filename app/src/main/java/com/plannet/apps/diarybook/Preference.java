@@ -31,4 +31,16 @@ public class Preference {
 
     }
 
+    public static int getCustomerId() {
+
+        return getSharedAppPrefs().getInt("getCustomerId", 10000);
+
+    }
+
+    public static int  setCustomerId( ) {
+
+        return getSharedAppPrefs().getInt("getCustomerId", 10000);
+
+    }
+
 }

@@ -22,6 +22,9 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
     public static final String product_name = "product_name";
     public static final String product_id = "product_id";
     public static final String qty = "qty";
+    public static final String price = "price";
+    public static final String details = "details";
+
 
     private DatabaseHandler dbhelper;
     private SQLiteDatabase sqliteDB;
@@ -40,9 +43,9 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
 
             for (CustomerDiaryLineModel tuple :customerDiaryLineModels ) {
-                Object[] values_ar = {tuple.getHeaderId(),tuple.getProduct_name(), tuple.getProduct_id(), tuple.getQty()};
+                Object[] values_ar = {tuple.getHeaderId(),tuple.getProduct_name(), tuple.getProduct_id(), tuple.getQty(),tuple.getPrice(),tuple.getDetails()};
 
-                String[] fields_ar = {headerId,product_name, product_id,qty};
+                String[] fields_ar = {headerId,product_name, product_id,qty,price,details};
                 String values = "", fields = "";
                 for (int i = 0; i < values_ar.length; i++) {
                     if (values_ar[i] != null) {
@@ -69,6 +72,15 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
     }
 
+    public List<CustomerDiaryLineModel> getAll(int id) {
+        String query="select * from "+TABLE_NAME+ " where headerId = "+ id;
+        List<CustomerDiaryLineModel> list = prepareCustomerDiaryLinesModel(super.executeQuery(context,query));
+
+        return list;
+
+    }
+
+
     public List<CustomerDiaryLineModel> prepareCustomerDiaryLinesModel(ArrayList<ArrayList<String>> data) {
         List<CustomerDiaryLineModel> customerDiaryLineModels = new ArrayList<>();
         for (ArrayList<String> tuple : data) {
@@ -78,6 +90,8 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
             temp.setProduct_name((tuple.get(2)));
             temp.setProduct_id(CommonUtils.toInt(tuple.get(3)));
             temp.setQty(CommonUtils.toInt(tuple.get(4)));
+            temp.setPrice(Double.valueOf(tuple.get(5)));
+            temp.setDetails(tuple.get(6));
             customerDiaryLineModels.add(temp);
         }
         return customerDiaryLineModels;

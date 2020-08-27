@@ -9,14 +9,19 @@ import android.widget.EditText;
 
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.databases.Customer;
+import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
+import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.plannet.apps.diarybook.activity.PendingDiaryFragment.PENDING;
 
 public class ReceptionForm extends AppCompatActivity {
     EditText name, place, address, email, phone, profession, purpose, noOfperson, qtyRequierd;
     Button add;
     Customer customerDb;
+    CustomerDiaryDao customerDiaryDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,7 @@ public class ReceptionForm extends AppCompatActivity {
 
     private void intDb() {
         customerDb=new Customer(getApplicationContext());
+        customerDiaryDao=new CustomerDiaryDao(getApplicationContext());
     }
 
     private void initUi() {
@@ -62,6 +68,8 @@ public class ReceptionForm extends AppCompatActivity {
 
     private void getData() {
         List<CustomerModel>customerModelList=new ArrayList<>();
+        List<CustomerDiaryModel>customerDiaryModels=new ArrayList<>();
+        CustomerDiaryModel customerDiaryModel=new CustomerDiaryModel();
         CustomerModel customerModel=new CustomerModel();
         customerModel.setCustomerName(name.getText().toString());
         customerModel.setAddress1(address.getText().toString());
@@ -69,7 +77,16 @@ public class ReceptionForm extends AppCompatActivity {
         customerModel.setEmail(email.getText().toString());
         customerModel.setCity(place.getText().toString());
         customerModelList.add(customerModel);
+
+        customerDiaryModel.setCustomerName(name.getText().toString());
+        customerDiaryModel.setCustomerAddress(address.getText().toString());
+        customerDiaryModel.setCustomerPhone(phone.getText().toString());
+        customerDiaryModels.add(customerDiaryModel);
+        customerDiaryModel.setStatus(PENDING);
+
         customerDb.insertCustomers(customerModelList);
+        customerDiaryDao.insertCustomerDiary(customerDiaryModels);
+
         cearData();
 
     }

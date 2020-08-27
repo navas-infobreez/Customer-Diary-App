@@ -88,21 +88,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL("CREATE TABLE IF NOT EXISTS Customer(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , customer_id INTEGER ," +
                     " customer_name TEXT , customer_code TEXT , country TEXT , city TEXT , address1 TEXT , address2 TEXT ," +
                     " email TEXT,phone_no TEXT,region TEXT,location TEXT,locatioId INTEGER,gst_no TEXT)");
+
             db.execSQL("CREATE TABLE IF NOT EXISTS Products(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , product_name TEXT,product_id INTEGER , " +
                     "product_category TEXT ,product_category_Id INTEGER , uom TEXT ,uomId TEXT, description TEXT , " +
                             "sale_price TEXT , cost_price TEXT, taxId INTEGER  )");
+
             db.execSQL("CREATE TABLE IF NOT EXISTS ProductCategory(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,category_name TEXT ,category_Id INTEGER ," +
                     "parentCategoryId INTEGER)");
-            db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
-                    "customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no INTEGER,descripion TEXT,status TEXT )");
-            db.execSQL("CREATE TABLE IF NOT EXISTS DiaryLines( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,headerId INTEGER ," +
-                    "product_name TEXT,product_id INTEGER,qty INTEGER )");
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName TEXT ," +
+                    "address TEXT,phone TEXT,customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no INTEGER,descripion TEXT,status TEXT )");
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiaryLines( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,headerId INTEGER ," +
+                    "product_name TEXT,product_id INTEGER,qty INTEGER,price DOUBLE,details TEXT )");
+
             db.execSQL("CREATE TABLE IF NOT EXISTS Visit( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
                     "customerId INTEGER ,visit_date TEXT,visit_time TEXT,place TEXT)");
+
             db.execSQL("CREATE TABLE IF NOT EXISTS Role( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,roleName TEXT ," +
                     "roleId INTEGER)");
+
             db.execSQL("CREATE TABLE IF NOT EXISTS User( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,name TEXT ," +
                     "role_name TEXT,role_id INTEGER,userName TEXT,password TEXT)");
+
             db.setTransactionSuccessful();
 
 

@@ -9,6 +9,7 @@
     <color name="primaryTextColor">#FB9A18</color>
     <color name="loginBkColor">#f0f0f0</color>
     <color name="title">#272123</color>
+    <color name="shade">#CDCDCD</color>
 
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>

@@ -7,6 +7,7 @@ import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
 import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,15 @@ public class Customer extends DatabaseHandlerController {
         }
     }
 
+    public List<CustomerModel> selectAllCustomer(String user_name) {
+
+        String query = "select * from " + TABLE_NAME + " where  userName =" + CommonUtils.quoteString( user_name );
+
+        List<CustomerModel> customerModelList = prepareModelList( super.executeQuery( context, query ) );
+        return customerModelList;
+    }
+
+
     public ArrayList<CustomerModel> prepareModelList(ArrayList<ArrayList<String>> data)
 
     {
@@ -107,5 +117,6 @@ public class Customer extends DatabaseHandlerController {
 
         return customerModels;
     }
+
 
 }

@@ -87,21 +87,27 @@ public class  Products extends DatabaseHandlerController {
         for (ArrayList<String> tuple : data) {
             ProductModel temp = new ProductModel();
             temp.setId( CommonUtils.toInt(tuple.get(0)));
-            temp.setProduct_name(tuple.get(0));
-            temp.setProduct_id(CommonUtils.toInt(tuple.get(3)));
-            temp.setProduct_category(tuple.get(4));
-            temp.setProduct_category_Id(CommonUtils.toInt(tuple.get(5)));
-            temp.setUom(tuple.get(6));
-            temp.setUomId( CommonUtils.toInt(tuple.get(7)));
-            temp.setDescription(tuple.get(8));
-            temp.setSale_price(CommonUtils.toBigDecimal(tuple.get(9)));
-            temp.setCost_price(CommonUtils.toBigDecimal(tuple.get(10)));
-            temp.setTaxId(CommonUtils.toInt(tuple.get(11)));
+            temp.setProduct_name(tuple.get(1));
+            temp.setProduct_id(CommonUtils.toInt(tuple.get(2)));
+            temp.setProduct_category(tuple.get(3));
+            temp.setProduct_category_Id(CommonUtils.toInt(tuple.get(4)));
+            temp.setUom(tuple.get(5));
+            temp.setUomId( CommonUtils.toInt(tuple.get(6)));
+            temp.setDescription(tuple.get(7));
+            temp.setSale_price(CommonUtils.toBigDecimal(tuple.get(8)));
+            temp.setCost_price(CommonUtils.toBigDecimal(tuple.get(9)));
+            temp.setTaxId(CommonUtils.toInt(tuple.get(10)));
             productModels.add(temp);
 
         }
         return productModels;
     }
 
+    public List<ProductModel> selectAllByCategory(String category) {
+        String query = "select * from " + TABLE_NAME + " where  product_category =" + CommonUtils.quoteString( category );
+
+        List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
+        return productModels;
+    }
 }
 

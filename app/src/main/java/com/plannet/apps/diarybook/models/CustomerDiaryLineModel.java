@@ -9,6 +9,24 @@ public class CustomerDiaryLineModel {
     String product_name ;
     int product_id ;
     int qty ;
+    String details;
+    double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
     public int getId() {
         return id;
