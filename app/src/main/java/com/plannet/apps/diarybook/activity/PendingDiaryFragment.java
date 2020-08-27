@@ -56,7 +56,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     private void iniView() {
         List<CustomerDiaryModel> customerDiaryModels = new ArrayList<>(  );
         customerDiaryModels=customerDiaryDao.getAll();
-        customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels,this);
+        customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels,this,this);
         recyclerView.setAdapter(customerDiaryAdapter);
         customerDiaryAdapter.notifyDataSetChanged();
     }
@@ -64,44 +64,44 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     private void refreshview() {
         List<CustomerDiaryModel> customerDiaryModels = new ArrayList<>(  );
         customerDiaryModels=customerDiaryDao.getAll( selected_status );
-        if (customerDiaryModels==null||customerDiaryModels.size()==0) {
-            CustomerDiaryModel customerDiaryModel =new CustomerDiaryModel();
-            customerDiaryModel.setCustomerName( "adv.Salmaan Pulli" );
-            customerDiaryModel.setDate( "25/07/2020" );
-            customerDiaryModel.setCustomerPhone("8606522615");
-            customerDiaryModel.setCustomerAddress("G Road");
-            customerDiaryModel.setStatus( PENDING );
-            customerDiaryModels.add( customerDiaryModel );
-            CustomerDiaryModel customerDiaryModel1 = new CustomerDiaryModel();
-            customerDiaryModel1.setCustomerName( "Amjas Ams" );
-            customerDiaryModel1.setDate( "28/10/2020" );
-            customerDiaryModel.setCustomerPhone("8606522615");
-            customerDiaryModel.setCustomerAddress("G Road");
-            customerDiaryModel1.setStatus( PICKED );
-            customerDiaryModels.add( customerDiaryModel1 );
-            CustomerDiaryModel customerDiaryModel2 = new CustomerDiaryModel();
-            customerDiaryModel2.setCustomerName( "Nazal KK" );
-            customerDiaryModel2.setDate( "25/01/2020" );
-            customerDiaryModel.setCustomerPhone("8606522615");
-            customerDiaryModel.setCustomerAddress("G Road");
-            customerDiaryModel2.setStatus( COMPLETED );
-            customerDiaryModels.add( customerDiaryModel2 );
-            CustomerDiaryModel customerDiaryModel3 = new CustomerDiaryModel();
-            customerDiaryModel3.setCustomerName( "Lukuman luku" );
-            customerDiaryModel3.setDate( "25/07/2020" );
-            customerDiaryModel.setCustomerPhone("8606522615");
-            customerDiaryModel.setCustomerAddress("G Road");
-            customerDiaryModel3.setStatus( APPROVED );
-            customerDiaryModels.add( customerDiaryModel3 );
-            CustomerDiaryModel customerDiaryModel4 = new CustomerDiaryModel();
-            customerDiaryModel4.setCustomerName( "Dilshad" );
-            customerDiaryModel.setCustomerPhone("8606522615");
-            customerDiaryModel.setCustomerAddress("G Road");
-            customerDiaryModel4.setDate( "25/07/2020" );
-            customerDiaryModel4.setStatus( APPROVERETURN );
-            customerDiaryModels.add( customerDiaryModel4 );
-            customerDiaryDao.insertCustomerDiary( customerDiaryModels );
-        }
+//        if (customerDiaryModels==null||customerDiaryModels.size()==0) {
+//            CustomerDiaryModel customerDiaryModel =new CustomerDiaryModel();
+//            customerDiaryModel.setCustomerName( "adv.Salmaan Pulli" );
+//            customerDiaryModel.setDate( "25/07/2020" );
+//            customerDiaryModel.setCustomerPhone("8606522615");
+//            customerDiaryModel.setCustomerAddress("G Road");
+//            customerDiaryModel.setStatus( PENDING );
+//            customerDiaryModels.add( customerDiaryModel );
+//            CustomerDiaryModel customerDiaryModel1 = new CustomerDiaryModel();
+//            customerDiaryModel1.setCustomerName( "Amjas Ams" );
+//            customerDiaryModel1.setDate( "28/10/2020" );
+//            customerDiaryModel.setCustomerPhone("8606522615");
+//            customerDiaryModel.setCustomerAddress("G Road");
+//            customerDiaryModel1.setStatus( PICKED );
+//            customerDiaryModels.add( customerDiaryModel1 );
+//            CustomerDiaryModel customerDiaryModel2 = new CustomerDiaryModel();
+//            customerDiaryModel2.setCustomerName( "Nazal KK" );
+//            customerDiaryModel2.setDate( "25/01/2020" );
+//            customerDiaryModel.setCustomerPhone("8606522615");
+//            customerDiaryModel.setCustomerAddress("G Road");
+//            customerDiaryModel2.setStatus( COMPLETED );
+//            customerDiaryModels.add( customerDiaryModel2 );
+//            CustomerDiaryModel customerDiaryModel3 = new CustomerDiaryModel();
+//            customerDiaryModel3.setCustomerName( "Lukuman luku" );
+//            customerDiaryModel3.setDate( "25/07/2020" );
+//            customerDiaryModel.setCustomerPhone("8606522615");
+//            customerDiaryModel.setCustomerAddress("G Road");
+//            customerDiaryModel3.setStatus( APPROVED );
+//            customerDiaryModels.add( customerDiaryModel3 );
+//            CustomerDiaryModel customerDiaryModel4 = new CustomerDiaryModel();
+//            customerDiaryModel4.setCustomerName( "Dilshad" );
+//            customerDiaryModel.setCustomerPhone("8606522615");
+//            customerDiaryModel.setCustomerAddress("G Road");
+//            customerDiaryModel4.setDate( "25/07/2020" );
+//            customerDiaryModel4.setStatus( APPROVERETURN );
+//            customerDiaryModels.add( customerDiaryModel4 );
+//            customerDiaryDao.insertCustomerDiary( customerDiaryModels );
+//        }
 
         customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels,this,this);
         recyclerView.setAdapter(customerDiaryAdapter);

@@ -28,8 +28,12 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     public static final String salesman_name = "salesman_name";
     public static final String salesmanId = "salesmanId";
     public static final String invoice_no = "invoice_no";
+    public static final String quotation_no = "quotation_no";
     public static final String descripion = "descripion";
     public static final String status = "status";
+    public static final String isVisit = "isVisit";
+    public static final String isQuotation = "isQuotation";
+    public static final String isInvoiced = "isInvoiced";
 
     private DatabaseHandler dbhelper;
     private SQLiteDatabase sqliteDB;
@@ -50,9 +54,9 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             for (CustomerDiaryModel tuple :customerDiaryModels ) {
                 Object[] values_ar = {tuple.getCustomerName(),tuple.getCustomerAddress(),tuple.getCustomerPhone(),tuple.getCustomerId(), tuple.getDate(),
                         tuple.getTime(),tuple.getSalesman_name(), tuple.getSalesmanId(),
-                        tuple.getInvoice_no(),tuple.getDescripion(), tuple.getStatus()};
+                        tuple.getInvoice_no(),tuple.getQuotationNo(),tuple.getDescripion(), tuple.getStatus(),tuple.isVisit()?1:0,tuple.isQuotation()?1:0,tuple.isInvoiced()?1:0};
 
-                String[] fields_ar = {customerName,address,phone,customerId, date,time,salesman_name,salesmanId,invoice_no,descripion,status};
+                String[] fields_ar = {customerName,address,phone,customerId, date,time,salesman_name,salesmanId,invoice_no,quotation_no,descripion,status,isVisit,isQuotation,isInvoiced};
                 String values = "", fields = "";
                 for (int i = 0; i < values_ar.length; i++) {
                     if (values_ar[i] != null) {
@@ -116,8 +120,15 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             temp.setSalesman_name((tuple.get(7)));
             temp.setSalesmanId(CommonUtils.toInt(tuple.get(8)));
             temp.setInvoice_no(tuple.get(9));
-            temp.setDescripion(tuple.get(10));
-            temp.setStatus(tuple.get(11));
+            temp.setQuotationNo(tuple.get(10));
+            temp.setDescripion(tuple.get(11));
+            temp.setStatus(tuple.get(12));
+            int visit=CommonUtils.toInt(tuple.get(13));
+            temp.setVisit(visit==1);
+            int quotation=CommonUtils.toInt(tuple.get(14));
+            temp.setVisit(quotation==1);
+            int invoiced=CommonUtils.toInt(tuple.get(15));
+            temp.setVisit(invoiced==1);
             customerDiaryModels.add(temp);
         }
         return customerDiaryModels;
@@ -133,6 +144,22 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     public void updateStatus(int i_d, String status) {
 
         String query = "UPDATE " + TABLE_NAME + " set status =" + CommonUtils.quoteString( status ) + " where id =" + i_d;
+        super.execute( context, query );
+
+    }
+    public void updateDiary(int i_d,String status, String invoiceNo,String quotationNo,String discriptions,boolean visit,boolean invoiced,boolean quotation) {
+        int isvisit=visit?1:0;
+        int isinvoiced=invoiced?1:0;
+        int isquotation=quotation?1:0;
+
+        String query = "UPDATE " + TABLE_NAME + " set status =" + CommonUtils.quoteString( status ) +
+                ", invoice_no ="+CommonUtils.quoteString(invoiceNo)+
+                ", quotation_no ="+CommonUtils.quoteString(quotationNo)+
+                ", descripion ="+CommonUtils.quoteString(discriptions)+
+                ", isVisit ="+isvisit+
+                ", isQuotation ="+isquotation+
+                ", isInvoiced ="+isinvoiced
+                +"  where id =" + i_d;
         super.execute( context, query );
 
     }

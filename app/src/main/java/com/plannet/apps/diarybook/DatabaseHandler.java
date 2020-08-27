@@ -101,10 +101,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     "parentCategoryId INTEGER)");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName TEXT ," +
-                    "address TEXT,phone TEXT,customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no INTEGER,descripion TEXT,status TEXT )");
+                    "address TEXT,phone TEXT,customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no TEXT,quotation_no TEXT,descripion TEXT,status TEXT," +
+                    "isVisit INTEGER,isQuotation INTEGER,isInvoiced INTEGER)");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiaryLines( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,headerId INTEGER ," +
-                    "product_name TEXT,product_id INTEGER,qty INTEGER,price DOUBLE,details TEXT )");
+                    "product_name TEXT,product_id INTEGER,qty INTEGER,price TEXT,details TEXT,category TEXT )");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS Visit( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName INTEGER ," +
                     "customerId INTEGER ,visit_date TEXT,visit_time TEXT,place TEXT)");

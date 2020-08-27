@@ -28,13 +28,18 @@ public class DiaryLineAdapter extends RecyclerView.Adapter<DiaryLineAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        public TextView name,qty;
+        public TextView name,qty,category,amount,details,space;
 
 
         public MyViewHolder(View view) {
             super(view);
             name = (TextView) view.findViewById(R.id.name);
             qty = (TextView) view.findViewById(R.id.qty);
+            category = (TextView) view.findViewById(R.id.category);
+            amount = (TextView) view.findViewById(R.id.amount);
+            details = (TextView) view.findViewById(R.id.details);
+            space = (TextView) view.findViewById(R.id.space);
+
 
         }
     }
@@ -49,16 +54,29 @@ public class DiaryLineAdapter extends RecyclerView.Adapter<DiaryLineAdapter.MyVi
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        final CustomerDiaryLineModel eachItem = customerDiaryLineModels.get(position);
-        holder.name.setText(eachItem.getProduct_name());
-        holder.qty.setText(String.valueOf(eachItem.getQty()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callBack.onCompleteCallBack(eachItem);
+        if (position!=0) {
+            final CustomerDiaryLineModel eachItem = customerDiaryLineModels.get(position-1);
+            holder.name.setText(eachItem.getProduct_name());
+            holder.qty.setText(String.valueOf(eachItem.getQty()));
+            holder.amount.setText(String.valueOf(eachItem.getPrice()));
+            holder.category.setText(eachItem.getCategory());
+            if (eachItem.getDetails()!=null) {
+                holder.details.setVisibility(View.VISIBLE );
+                holder.space.setVisibility(View.INVISIBLE);
+                holder.details.setText(eachItem.getDetails());
+            }else {
+                holder.details.setVisibility(View.GONE);
+                holder.space.setVisibility(View.GONE);
             }
-        });
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callBack.onCompleteCallBack(eachItem);
+                }
+            });
+        }
 
 
     }

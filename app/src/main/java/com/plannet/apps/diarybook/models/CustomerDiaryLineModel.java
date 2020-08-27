@@ -1,6 +1,8 @@
 package com.plannet.apps.diarybook.models;
 
 
+import java.math.BigDecimal;
+
 public class CustomerDiaryLineModel {
 
 
@@ -10,13 +12,23 @@ public class CustomerDiaryLineModel {
     int product_id ;
     int qty ;
     String details;
-    double price;
+    BigDecimal price;
+    String category;
 
-    public double getPrice() {
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

@@ -28,7 +28,7 @@ public class CreateProductsActivity extends AppCompatActivity {
     Button submit;
     EditText product_name, code, amount, details;
     Spinner category_spinner;
-    String[] categories = {"Tiles", "Ceramic", "Sanitiser"};
+    String[] categories =  {"Tiles", "PVC Pipe & Fittings", "Sanitaryware"};;
     Products products;
     String selectedCategory;
 

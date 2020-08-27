@@ -14,7 +14,43 @@ public class CustomerDiaryModel {
      String status;
      String customerAddress;
      String customerPhone;
+     String quotationNo;
+     boolean isVisit;
+     boolean isQuotation;
+     boolean isInvoiced;
 
+
+    public String getQuotationNo() {
+        return quotationNo;
+    }
+
+    public void setQuotationNo(String quotationNo) {
+        this.quotationNo = quotationNo;
+    }
+
+    public boolean isVisit() {
+        return isVisit;
+    }
+
+    public void setVisit(boolean visit) {
+        isVisit = visit;
+    }
+
+    public boolean isQuotation() {
+        return isQuotation;
+    }
+
+    public void setQuotation(boolean quotation) {
+        isQuotation = quotation;
+    }
+
+    public boolean isInvoiced() {
+        return isInvoiced;
+    }
+
+    public void setInvoiced(boolean invoiced) {
+        isInvoiced = invoiced;
+    }
 
     public String getCustomerAddress() {
         return customerAddress;
