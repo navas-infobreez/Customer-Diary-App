@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
+import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.action_products:
-                        Toast.makeText(MainActivity.this, "Favorites", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(MainActivity.this, CreateProductsActivity.class );
+                        startActivity(intent1);
                         break;
                     case R.id.action_view:
                         Toast.makeText(MainActivity.this, "Nearby", Toast.LENGTH_SHORT).show();
