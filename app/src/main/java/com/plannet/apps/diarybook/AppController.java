@@ -6,6 +6,9 @@ import android.os.StrictMode;
 import android.provider.Settings;
 import androidx.multidex.MultiDexApplication;
 
+import com.plannet.apps.diarybook.databases.User;
+import com.plannet.apps.diarybook.models.UserModel;
+
 
 public class AppController extends MultiDexApplication {
 
@@ -38,6 +41,28 @@ public class AppController extends MultiDexApplication {
         DatabaseHandlerController.getSqliteVersion(this);
     }
 
+
+    UserModel loggerUser;
+    public int getLoggedUserId() {
+        UserModel userModel = getLoggedUser();
+        return userModel != null ? userModel.getId() : 0;
+    }
+    public UserModel getLoggedUser() {
+        if(loggerUser != null)
+            return loggerUser;
+        User user = new User(getApplicationContext());
+        if(loggerUser == null) {
+            int loggerUserId = Preference.getLoggedUserId();
+            loggerUser = user.getUser(loggerUserId);
+        }
+
+        return loggerUser;
+    }
+
+    public void setLoggedUser(UserModel userModel) {
+        this.loggerUser = userModel;
+        Preference.setLoggedUserId(userModel.getId());
+    }
 
 
     public static synchronized AppController getInstance() {

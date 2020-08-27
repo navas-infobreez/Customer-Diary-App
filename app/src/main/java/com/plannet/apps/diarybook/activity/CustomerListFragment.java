@@ -1,6 +1,7 @@
 package com.plannet.apps.diarybook.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +15,19 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.plannet.apps.diarybook.AppController;
+import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.utils.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerListFragment extends Fragment {
+public class CustomerListFragment extends Fragment implements Callback {
     public static final String PENDING = "PN";
     public static final String PICKED = "PK";
     public static final String COMPLETED = "CO";
@@ -75,7 +80,7 @@ public class CustomerListFragment extends Fragment {
 
     private void setAdapters(List<CustomerModel> customerModels) {
         if (customerModels!=null&& customerModels.size()>0) {
-            customerDiaryAdapter = new CustomerDiaryAdapter( customerModels, true );
+            customerDiaryAdapter = new CustomerDiaryAdapter( customerModels, true,this );
             recyclerView.setAdapter( customerDiaryAdapter );
             customerDiaryAdapter.notifyDataSetChanged();
         }
@@ -89,7 +94,12 @@ public class CustomerListFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new ItemDecorator(getContext()));
-
+        BottomNavigationView bottom_navigation=(BottomNavigationView)view.findViewById( R.id.bottom_navigation );
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
+            bottom_navigation.setVisibility( View.VISIBLE );
+        }else {
+            bottom_navigation.setVisibility( View.GONE );
+        }
 
         int defualtSelection=0;
         final ArrayList<String> statusList= new ArrayList<>();
@@ -122,5 +132,18 @@ public class CustomerListFragment extends Fragment {
 
     private void initDb() {
         customer=new Customer( getContext() );
+    }
+
+    @Override
+    public void onItemClick(Object object) {
+        CustomerModel customerModel=(CustomerModel)object;
+        Intent intent = new Intent(getActivity(), MainActivity.class );
+        intent.putExtra( "customerId",customerModel.getCustomerName() );
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemLongClick(Object object) {
+
     }
 }

@@ -161,7 +161,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     private void upgradeTo_version1(SQLiteDatabase db) {
-        // Version 6 - For stock take
         try {
             db.beginTransaction();
             db.setTransactionSuccessful();

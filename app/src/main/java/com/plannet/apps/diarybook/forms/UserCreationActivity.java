@@ -52,8 +52,7 @@ public class UserCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getData();
-                Intent intent = new Intent(UserCreationActivity.this, CustomerDiaryActivity.class );
-                startActivity(intent);
+
 
             }
         });

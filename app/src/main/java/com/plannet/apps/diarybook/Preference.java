@@ -43,4 +43,17 @@ public class Preference {
 
     }
 
+    public static void setLoggedUserId( int userId) {
+
+        getSharedAppPrefs().edit().putInt("userId", userId).apply();
+
+    }
+
+    public static int  getLoggedUserId( ) {
+
+        return getSharedAppPrefs().getInt("userId", 0);
+
+    }
+
+
 }
