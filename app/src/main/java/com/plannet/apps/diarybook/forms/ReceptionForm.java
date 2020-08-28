@@ -42,9 +42,7 @@ public class ReceptionForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reception_form);
         Intent intent = getIntent();
-        //isEdit = intent != null && intent.hasExtra("IsEdit") ? intent.getBooleanExtra("IsEdit", false) : false;
-        //customerId= intent != null && intent.hasExtra("customerId")?intent.getIntExtra("customerId", 0) : 0;
-        customerId= getIntent().getExtras().getInt("customerId");
+        customerId= intent != null && intent.hasExtra("customerId")?intent.getIntExtra("customerId", 0) : 0;
         intDb();
         initUi();
 
@@ -121,10 +119,12 @@ public class ReceptionForm extends AppCompatActivity {
         if (customerModel!=null) {
             name.setText( customerModel.getCustomerName() );
             address.setText( customerModel.getAddress1() );
-            address.setText( customerModel.getAddress2() );
             phone.setText( customerModel.getPhone_no() );
             email.setText( customerModel.getEmail() );
             place.setText( customerModel.getCity() );
+            noOfperson.setVisibility( View.GONE );
+            qtyRequierd.setVisibility( View.GONE );
+
         }
 
 
