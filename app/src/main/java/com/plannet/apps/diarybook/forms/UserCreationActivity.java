@@ -59,9 +59,7 @@ public class UserCreationActivity extends AppCompatActivity {
         rollSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // your code here
                 roll=rolls[position];
-                Toast.makeText(getApplicationContext(),roll,Toast.LENGTH_SHORT).show();
             }
 
             @Override

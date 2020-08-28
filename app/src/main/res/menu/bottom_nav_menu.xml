@@ -4,19 +4,19 @@
     <item
         android:id="@+id/action_user"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/add_user"
         android:title="add user"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_products"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/add_products"
         android:title="add products"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_view"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/view_reports"
         android:title="view"
         app:showAsAction="ifRoom" />
 </menu>
