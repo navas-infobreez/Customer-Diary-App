@@ -114,6 +114,9 @@ public class ReceptionForm extends AppCompatActivity {
         customerDiaryModel.setCustomerAddress(address.getText().toString());
         customerDiaryModel.setCustomerPhone(phone.getText().toString());
         customerDiaryModels.add(customerDiaryModel);
+        customerDiaryModel.setInvoiced(isInvoiced);
+        customerDiaryModel.setQuotation(isQuotation);
+        customerDiaryModel.setVisit(isVisit);
         customerDiaryModel.setStatus(PENDING);
 
         customerDb.insertCustomers(customerModelList);

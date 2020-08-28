@@ -1,5 +1,7 @@
 package com.plannet.apps.diarybook.models;
 
+import java.math.BigDecimal;
+
 public class CustomerDiaryModel {
 
      int id ;
@@ -18,7 +20,16 @@ public class CustomerDiaryModel {
      boolean isVisit;
      boolean isQuotation;
      boolean isInvoiced;
+     BigDecimal totalAmount;
 
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     public String getQuotationNo() {
         return quotationNo;

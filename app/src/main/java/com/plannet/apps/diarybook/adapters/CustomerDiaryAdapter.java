@@ -1,14 +1,17 @@
 package com.plannet.apps.diarybook.adapters;
 
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
@@ -19,6 +22,7 @@ import com.plannet.apps.diarybook.utils.Callback;
 import java.util.List;
 
 import static com.plannet.apps.diarybook.DatabaseHandler.APPROVED;
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVERETURN;
 import static com.plannet.apps.diarybook.DatabaseHandler.COMPLETED;
 import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
 import static com.plannet.apps.diarybook.DatabaseHandler.PICKED;
@@ -49,6 +53,7 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
 
         public TextView customerName, phoneNo, textDate, address;
         public Button btnpick;
+        LinearLayout statusView;
 
 
         public MyViewHolder(View view) {
@@ -58,6 +63,7 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             phoneNo = (TextView) view.findViewById( R.id.phoneNo );
             address = (TextView) view.findViewById( R.id.address );
             btnpick = (Button) view.findViewById( R.id.add_button );
+            statusView=(LinearLayout)view.findViewById(R.id.status_indication);
 
         }
     }
@@ -85,8 +91,24 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
                 }
             });
         } else {
+            if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
+                holder.btnpick.setEnabled(true);
+            }else {
+                holder.btnpick.setEnabled(false);
+            }
             final CustomerDiaryModel eachItem = customerDiaryModels.get( position );
-
+            if (!eachItem.getStatus().equals(PENDING)){
+                holder.btnpick.setBackgroundResource(R.drawable.picked_button);
+                holder.btnpick.setTextColor(Color.WHITE);
+                holder.btnpick.setText(eachItem.getStatus());
+            }
+            if (eachItem.getStatus().equals(COMPLETED)){
+                holder.statusView.setBackgroundResource(R.drawable.complete_status);
+            }else  if (eachItem.getStatus().equals(APPROVED)){
+                holder.statusView.setBackgroundResource(R.drawable.approved_status);
+            }else  if (eachItem.getStatus().equals(APPROVERETURN)){
+                holder.statusView.setBackgroundResource(R.drawable.reject_status);
+            }
             holder.textDate.setText( eachItem.getDate() );
             holder.customerName.setText( eachItem.getCustomerName() );
 

@@ -103,7 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName TEXT ," +
                     "address TEXT,phone TEXT,customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no TEXT,quotation_no TEXT,descripion TEXT,status TEXT," +
-                    "isVisit INTEGER,isQuotation INTEGER,isInvoiced INTEGER)");
+                    "isVisit INTEGER,isQuotation INTEGER,isInvoiced INTEGER,totalAmount TEXT)");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiaryLines( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,headerId INTEGER ," +
                     "product_name TEXT,product_id INTEGER,qty INTEGER,price TEXT,details TEXT,category TEXT )");

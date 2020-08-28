@@ -57,6 +57,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     CustomerDiaryDao customerDiaryDao;
     CustomerDiaryLinesDao customerDiaryLinesDao;
     TextView grandTotal;
+    BigDecimal grant_Total;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +118,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             invoiceNo.setText(selectedCustomerDiary.getInvoice_no());
         if (selectedCustomerDiary.getQuotationNo()!=null)
             quotationNo.setText(selectedCustomerDiary.getQuotationNo());
+        grandTotal.setText(String.valueOf(selectedCustomerDiary.getTotalAmount()));
     }
 
     private void initUi() {
@@ -159,7 +161,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customerDiaryDao.updateDiary(diaryId,COMPLETED,invoiceNo.getText().toString(),quotationNo.getText().toString(),details.getText().toString(),isVisit,isInvoiced,isQuotation);
+                customerDiaryDao.updateDiary(diaryId,COMPLETED,invoiceNo.getText().toString(),quotationNo.getText().toString(),details.getText().toString(),
+                        isVisit,isInvoiced,isQuotation,grant_Total.toPlainString());
                 finish();
             }
         });
@@ -222,7 +225,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout. product_detais_data, null);
+        final View dialogView = inflater.inflate(R.layout. product_detais_data, null);
         builder.setView(dialogView);
 
         final EditText sqrft,details;
@@ -269,7 +272,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+                dialog.dismiss();
             }
         });
 
@@ -298,7 +301,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         customerDiaryLineModelList.add(customerDiaryLineModel);
         customerDiaryLinesDao.insertCustomerDiaryLines(customerDiaryLineModelList);
         lineRefresh();
-        BigDecimal grant_Total=customerDiaryLinesDao.getSumOfLineTotal(diaryId);
+        grant_Total=customerDiaryLinesDao.getSumOfLineTotal(diaryId);
         grandTotal.setText(grant_Total!=null?grant_Total.toPlainString():"0.00"  );
 
     }
