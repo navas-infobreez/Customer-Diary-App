@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.plannet.apps.diarybook.DatabaseHandler.ALL;
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVED;
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVERETURN;
+import static com.plannet.apps.diarybook.DatabaseHandler.COMPLETED;
+import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
+import static com.plannet.apps.diarybook.DatabaseHandler.PICKED;
 
 
 public class CustomerDiaryDao extends DatabaseHandlerController {
@@ -107,9 +112,25 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
+    public List<CustomerDiaryModel> getCustomerCurrentDiary(int salesmanID,String status) {
+        String query="select * from "+TABLE_NAME+ " where salesmanId in ("+ salesmanID +"," +0+")";
+        if(status.equals(ALL)){
+            query=query+" and status in (" + CommonUtils.quoteString( COMPLETED )+","+ CommonUtils.quoteString(PICKED)+","+
+                    CommonUtils.quoteString( APPROVED )+")";
+        }else if (!status.equalsIgnoreCase( ALL )) {
+            query=query+" and status = " + CommonUtils.quoteString( status );
+        }
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+        return list;
+
+    }
+
     public List<CustomerDiaryModel> getCustomerDiary(int salesmanID,String status) {
         String query="select * from "+TABLE_NAME+ " where salesmanId in ("+ salesmanID +"," +0+")";
-        if (!status.equalsIgnoreCase( ALL )) {
+        if(status.equals(PENDING)){
+            query=query+" and status in (" + CommonUtils.quoteString( PENDING )+","+ CommonUtils.quoteString(APPROVERETURN)+")";
+        }else if (!status.equalsIgnoreCase( ALL )) {
             query=query+" and status = " + CommonUtils.quoteString( status );
         }
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));

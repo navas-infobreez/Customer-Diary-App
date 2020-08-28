@@ -56,24 +56,39 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         View view = inflater.inflate( R.layout.activity_main, container, false);
 
         activity = (MainActivity) getActivity();
-
+        initui(view);
+        initDb();
         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
             if (isPendingList) {
                 selected_status = COMPLETED;
+                refreshview();
             } else {
                 selected_status = ALL;
+                currentRefreshview();
+
             }
         }else  if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )) {
             if (isPendingList) {
-                selected_status = PENDING;
+                selected_status = ALL;
+                refreshview();
             } else {
                 selected_status = ALL;
+                currentRefreshview();
             }
         }
-        initui(view);
-        initDb();
-        refreshview();
+
         return view;
+    }
+
+    private void currentRefreshview() {
+
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
+            customerDiaryModels=customerDiaryDao.getCustomerCurrentDiary(AppController.getInstance().getLoggedUser().getId(),selected_status);
+        }else {
+            customerDiaryModels=customerDiaryDao.getCustomerDiary(selected_status);
+        }
+
+        setadaper();
     }
 
     private void refreshview() {

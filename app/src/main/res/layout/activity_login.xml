@@ -50,8 +50,8 @@
                     android:visibility="invisible"
                     android:textStyle="bold"
                     android:layout_marginTop="40dp"/>
-                <include
-                    layout="@layout/login2"/>
+
+                <include layout="@layout/login2" />
 
             </LinearLayout>
         </RelativeLayout>

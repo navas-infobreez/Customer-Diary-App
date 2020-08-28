@@ -99,6 +99,7 @@ public class UserCreationActivity extends AppCompatActivity {
         userModel.setUserName(userName.getText().toString());
         userModelList.add(userModel);
         userDb.insertUser(userModelList);
+        Toast.makeText(getApplicationContext(),name.getText().toString()+ "user created successfully",Toast.LENGTH_SHORT).show();
         clear();
     }
 
