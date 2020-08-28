@@ -7,6 +7,7 @@ import android.util.Log;
 import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
+import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
@@ -84,6 +85,16 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     }
     public List<CustomerDiaryModel> getAll() {
         String query="select * from "+TABLE_NAME;
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+        return list;
+
+    }
+    public List<CustomerDiaryModel> getCustomerDiary(int customer_id,String status) {
+        String query="select * from "+TABLE_NAME+ " where customerId = "+ customer_id;
+        if (!status.equalsIgnoreCase( PendingDiaryFragment.ALL )) {
+            query=query+" and status = " + CommonUtils.quoteString( status );
+        }
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
         return list;

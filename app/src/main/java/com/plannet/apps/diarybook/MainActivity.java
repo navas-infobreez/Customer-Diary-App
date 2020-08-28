@@ -4,6 +4,7 @@ package com.plannet.apps.diarybook;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,10 +28,14 @@ public class MainActivity extends AppCompatActivity {
     public MyPagerAdapter myPagerAdapter;
     ViewPager viewPager;
     TabLayout tabLayout;
+    public int customerId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main2);
+
+        customerId= getIntent().getExtras().getInt("customerId");
+
         myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(myPagerAdapter);
@@ -51,8 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
+            bottomNavigationView.setVisibility( View.VISIBLE );
+        }else {
+            bottomNavigationView.setVisibility( View.GONE );
+        }
+
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

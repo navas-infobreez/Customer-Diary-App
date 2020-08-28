@@ -21,7 +21,7 @@ import java.util.List;
 public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdapter.MyViewHolder> {
 
     private List<CustomerDiaryModel> customerDiaryModels;
-    OnCompleteCallBack callBack;
+    OnCompleteCallBack onCompleteCallBack;
     private List<CustomerModel> customerModels;
     boolean isCustomerList=false;
     Callback callback;
@@ -29,12 +29,13 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
     public CustomerDiaryAdapter(List<CustomerDiaryModel> customerDiaryModelList, Callback callback,OnCompleteCallBack completeCallBack) {
         this.callback = callback;
         this.customerDiaryModels = customerDiaryModelList;
-        this.callBack=completeCallBack;
+        this.onCompleteCallBack=completeCallBack;
     }
 
-    public CustomerDiaryAdapter(List<CustomerModel> customerModels,boolean isCustomerList) {
+    public CustomerDiaryAdapter(List<CustomerModel> customerModels,boolean isCustomerList, Callback callback) {
        this.isCustomerList=isCustomerList;
         this.customerModels = customerModels;
+        this.callback=callback;
     }
 
 
@@ -71,6 +72,13 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             holder.customerName.setText( eachItem.getCustomerName() );
             holder.btnpick.setText( eachItem.getAddress1() );
             holder.btnpick.setVisibility( View.GONE );
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onItemClick(eachItem);
+                }
+            });
         } else {
             final CustomerDiaryModel eachItem = customerDiaryModels.get( position );
 
@@ -80,7 +88,7 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callBack.onCompleteCallBack(eachItem);
+                onCompleteCallBack.onCompleteCallBack(eachItem);
             }
         });
 

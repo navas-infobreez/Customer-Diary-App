@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.Preference;
 import com.plannet.apps.diarybook.R;
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                               intent.putExtra( "role_name", userModel.getRole_name() );
                               LoginActivity.this.startActivity( intent );
                           }
+                          AppController.getInstance().setLoggedUser( userModel );
                      } else {
                          pass_word.setError( "Invalid Password" );
                      }

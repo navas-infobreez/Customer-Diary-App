@@ -53,6 +53,7 @@ public class UserCreationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 getData();
 
+
             }
         });
         rollSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
