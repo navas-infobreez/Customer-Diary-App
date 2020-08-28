@@ -15,6 +15,8 @@ import com.plannet.apps.diarybook.utils.CommonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.plannet.apps.diarybook.DatabaseHandler.ALL;
+
 
 public class CustomerDiaryDao extends DatabaseHandlerController {
 
@@ -92,7 +94,7 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
     }
     public List<CustomerDiaryModel> getCustomerDiary(int customer_id,String status) {
         String query="select * from "+TABLE_NAME+ " where customerId = "+ customer_id;
-        if (!status.equalsIgnoreCase( PendingDiaryFragment.ALL )) {
+        if (!status.equalsIgnoreCase( ALL )) {
             query=query+" and status = " + CommonUtils.quoteString( status );
         }
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));

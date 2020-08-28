@@ -22,22 +22,21 @@ import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
-import com.plannet.apps.diarybook.forms.UserCreationActivity;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
-import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.utils.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.plannet.apps.diarybook.DatabaseHandler.ALL;
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVED;
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVERETURN;
+import static com.plannet.apps.diarybook.DatabaseHandler.COMPLETED;
+import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
+import static com.plannet.apps.diarybook.DatabaseHandler.PICKED;
+
 public class PendingDiaryFragment extends Fragment implements Callback,OnCompleteCallBack {
-    public static final String PENDING = "PENDING";
-    public static final String PICKED = "PICKED";
-    public static final String COMPLETED = "COMPLETED";
-    public static final String APPROVED = "APPROVED";
-    public static final String APPROVERETURN = "APPROVE RETURN";
-    public static final String ALL = "ALL";
 
     RecyclerView recyclerView;
     CustomerDiaryAdapter customerDiaryAdapter;
@@ -69,6 +68,12 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         customerDiaryAdapter = new CustomerDiaryAdapter(customerDiaryModels,this,this);
         recyclerView.setAdapter(customerDiaryAdapter);
         customerDiaryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+      refreshview();
+        super.onResume();
     }
 
     private void initui(View view) {

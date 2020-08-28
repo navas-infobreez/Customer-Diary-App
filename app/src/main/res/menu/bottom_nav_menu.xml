@@ -14,9 +14,9 @@
         android:title="add products"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_view"
+        android:id="@+id/action_customer"
         android:enabled="true"
-        android:icon="@drawable/view_reports"
-        android:title="view"
+        android:icon="@drawable/add_user"
+        android:title="add customer"
         app:showAsAction="ifRoom" />
 </menu>

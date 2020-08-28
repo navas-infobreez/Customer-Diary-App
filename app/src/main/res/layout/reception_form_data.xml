@@ -73,15 +73,57 @@
                 android:hint="ADDRESS"
                 android:inputType="textPostalAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-            <EditText
-                android:id="@+id/txt_purpose"
-                style="@style/modifiedEditText"
-                android:hint="PURPOSE"
-                android:inputType="textPostalAddress"/>
-        </com.google.android.material.textfield.TextInputLayout>
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            style="@style/parent"-->
+<!--            android:layout_marginTop="@dimen/signup_text_margin_top">-->
+<!--            <EditText-->
+<!--                android:id="@+id/txt_purpose"-->
+<!--                style="@style/modifiedEditText"-->
+<!--                android:hint="PURPOSE"-->
+<!--                android:inputType="textPostalAddress"/>-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PURPOSE"
+                android:padding="5dp"
+                android:textColor="@color/black"></TextView>
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <RadioButton
+                    android:id="@+id/visit"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Visit"/>
+                <RadioButton
+                    android:id="@+id/quotation"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Quotation "/>
+                <RadioButton
+                    android:id="@+id/invoiced"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Invoiced"/>
+            </RadioGroup>
+        </LinearLayout>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="@dimen/signup_text_margin_top">

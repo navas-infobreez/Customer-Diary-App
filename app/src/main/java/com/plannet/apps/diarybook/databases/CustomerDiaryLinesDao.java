@@ -11,6 +11,7 @@ import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,5 +101,21 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
     }
 
+    public BigDecimal getSumOfLineTotal(int diaryId) {
+        String query="select sum(" + price+") from "+ TABLE_NAME + " where headerId ="+ diaryId ;
+        ArrayList<ArrayList<String>> result=super.executeQuery(context,query);
+
+        BigDecimal temp=BigDecimal.ZERO;
+        try {
+
+            temp=new BigDecimal(result.get(0).get(0).toString());
+
+        }
+        catch (Exception e)
+        {
+            temp=BigDecimal.ZERO;
+        }
+        return temp;
+    }
 }
 

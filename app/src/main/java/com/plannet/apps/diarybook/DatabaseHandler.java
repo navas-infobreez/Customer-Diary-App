@@ -13,11 +13,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final String TAG = "DatabaseHandler";
     private final Context context;
 
-    public static final String PENDING = "PN";
-    public static final String PICKED = "PK";
-    public static final String COMPLETED = "CO";
-    public static final String APPROVED = "AP";
-    public static final String APPROVERETURN = "AR";
+    public static final String PENDING = "PENDING";
+    public static final String PICKED = "PICKED";
+    public static final String COMPLETED = "COMPLETED";
+    public static final String APPROVED = "APPROVED";
+    public static final String APPROVERETURN = "APPROVE RETURN";
+    public static final String ALL = "ALL";
     private DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;

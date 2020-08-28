@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.databases.Customer;
@@ -15,13 +17,18 @@ import com.plannet.apps.diarybook.models.CustomerModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.plannet.apps.diarybook.activity.PendingDiaryFragment.PENDING;
+import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
+
 
 public class ReceptionForm extends AppCompatActivity {
     EditText name, place, address, email, phone, profession, purpose, noOfperson, qtyRequierd;
     Button add;
     Customer customerDb;
     CustomerDiaryDao customerDiaryDao;
+    RadioGroup radioGroup;
+    RadioButton visit,invoiced,quotation;
+    boolean isVisit,isInvoiced,isQuotation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +50,35 @@ public class ReceptionForm extends AppCompatActivity {
         email = (EditText) findViewById(R.id.txt_email);
         phone = (EditText) findViewById(R.id.txt_phone);
         profession = (EditText) findViewById(R.id.txt_profession);
-        purpose = (EditText) findViewById(R.id.txt_purpose);
+        //purpose = (EditText) findViewById(R.id.txt_purpose);
         noOfperson = (EditText) findViewById(R.id.txt_noAccoumpaining);
         qtyRequierd = (EditText) findViewById(R.id.no_qty_requerd);
         add = (Button) findViewById(R.id.add_custoner_button);
+
+        quotation=(RadioButton)findViewById(R.id.quotation);
+        visit=(RadioButton)findViewById(R.id.visit);
+        invoiced=(RadioButton)findViewById(R.id.invoiced);
+        radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (i==R.id.visit) {
+                    isInvoiced=false;
+                    isQuotation=false;
+                    isVisit=true;
+                }else if (i==R.id.quotation){
+                    quotation.toggle();
+                    isInvoiced=false;
+                    isQuotation=true;
+                    isVisit=false;
+                }else if (i==R.id.invoiced){
+                    isInvoiced=true;
+                    isQuotation=false;
+                    isVisit=false;
+                }
+            }
+        });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +132,6 @@ public class ReceptionForm extends AppCompatActivity {
         place.getText().clear();
         noOfperson.getText().clear();
         qtyRequierd.getText().clear();
-        purpose.getText().clear();
+        //purpose.getText().clear();
     }
 }

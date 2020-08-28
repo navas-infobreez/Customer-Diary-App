@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
+import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,11 +58,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
-            bottomNavigationView.setVisibility( View.VISIBLE );
-        }else {
-            bottomNavigationView.setVisibility( View.GONE );
-        }
+//        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
+//            bottomNavigationView.getMenu().getItem(R.id.action_user  ).setEnabled( true );
+//            bottomNavigationView.getMenu().getItem(R.id.action_products  ).setEnabled( true );
+//        }else {
+//            bottomNavigationView.setVisibility( View.GONE );
+//            bottomNavigationView.getMenu().getItem(R.id.action_user  ).setEnabled( false );
+//            bottomNavigationView.getMenu().getItem(R.id.action_products  ).setEnabled( false );
+//        }
+
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -76,8 +81,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent1 = new Intent(MainActivity.this, CreateProductsActivity.class );
                         startActivity(intent1);
                         break;
-                    case R.id.action_view:
-                        Toast.makeText(MainActivity.this, "Nearby", Toast.LENGTH_SHORT).show();
+                    case R.id.action_customer:
+                        Intent intent2 = new Intent(MainActivity.this, ReceptionForm.class );
+                        startActivity(intent2);
                         break;
                 }
                 return true;

@@ -18,6 +18,11 @@ import com.plannet.apps.diarybook.utils.Callback;
 
 import java.util.List;
 
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVED;
+import static com.plannet.apps.diarybook.DatabaseHandler.COMPLETED;
+import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
+import static com.plannet.apps.diarybook.DatabaseHandler.PICKED;
+
 public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdapter.MyViewHolder> {
 
     private List<CustomerDiaryModel> customerDiaryModels;
@@ -94,22 +99,20 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
 
             holder.btnpick.setVisibility( View.VISIBLE );
 
-            if (eachItem.getStatus().equalsIgnoreCase( PendingDiaryFragment.PENDING )) {
+            if (eachItem.getStatus().equalsIgnoreCase( PENDING )) {
                 holder.btnpick.setText( "PICK" );
-            } else if (eachItem.getStatus().equalsIgnoreCase( PendingDiaryFragment.PICKED )) {
+            } else if (eachItem.getStatus().equalsIgnoreCase( PICKED )) {
                 holder.btnpick.setText( "PICKED" );
-            } else if (eachItem.getStatus().equalsIgnoreCase( PendingDiaryFragment.COMPLETED )) {
+            } else if (eachItem.getStatus().equalsIgnoreCase( COMPLETED )) {
                 holder.btnpick.setText( "COMPLETED" );
+            }else if (eachItem.getStatus().equalsIgnoreCase( APPROVED )) {
+                holder.btnpick.setText( "APPROVED" );
             }
             holder.btnpick.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (eachItem.getStatus().equalsIgnoreCase( PendingDiaryFragment.PENDING )) {
-                        eachItem.setStatus( PendingDiaryFragment.PICKED );
-                    } else if (eachItem.getStatus().equalsIgnoreCase( PendingDiaryFragment.PICKED )) {
-                        eachItem.setStatus( PendingDiaryFragment.COMPLETED );
-                    } else if (eachItem.getStatus().equalsIgnoreCase( PendingDiaryFragment.COMPLETED )) {
-                        eachItem.setStatus( PendingDiaryFragment.APPROVED );
+                    if (eachItem.getStatus().equalsIgnoreCase( PENDING )) {
+                        eachItem.setStatus( PICKED );
                     }
                     callback.onItemClick( eachItem );
                 }

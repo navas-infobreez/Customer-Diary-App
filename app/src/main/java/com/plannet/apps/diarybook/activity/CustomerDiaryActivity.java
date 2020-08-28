@@ -34,6 +34,7 @@ import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     CustomerDiaryModel selectedCustomerDiary=new CustomerDiaryModel();
     CustomerDiaryDao customerDiaryDao;
     CustomerDiaryLinesDao customerDiaryLinesDao;
+    TextView grandTotal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +134,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         visit=(RadioButton)findViewById(R.id.visit);
         invoiced=(RadioButton)findViewById(R.id.invoiced);
         radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
+        grandTotal=(TextView)findViewById(R.id.total);
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -157,6 +160,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customerDiaryDao.updateDiary(diaryId,COMPLETED,invoiceNo.getText().toString(),quotationNo.getText().toString(),details.getText().toString(),isVisit,isInvoiced,isQuotation);
+                finish();
             }
         });
 
@@ -215,7 +219,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
 
     private void detailsDialogue(final ProductModel productsModel){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout. product_detais_data, null);
@@ -294,6 +298,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         customerDiaryLineModelList.add(customerDiaryLineModel);
         customerDiaryLinesDao.insertCustomerDiaryLines(customerDiaryLineModelList);
         lineRefresh();
+        BigDecimal grant_Total=customerDiaryLinesDao.getSumOfLineTotal(diaryId);
+        grandTotal.setText(grant_Total!=null?grant_Total.toPlainString():"0.00"  );
 
     }
 }
