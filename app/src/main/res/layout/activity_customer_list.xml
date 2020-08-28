@@ -16,14 +16,15 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/iextinput"
             android:layout_above="@+id/customerList_layout"
-            style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/search"
-                style="@style/modifiedEditText"
-                android:inputType="text"
-                android:maxLines="1"
-                android:hint="Search"/>
+                android:hint="  Customer Search"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:background="@drawable/rounded_edit_text"
+                android:layout_height="50dp"/>
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
         <LinearLayout

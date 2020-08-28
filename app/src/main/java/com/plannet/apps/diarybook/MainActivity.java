@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main2);
 
-        customerId= getIntent().getExtras().getInt("customerId");
-
         myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(myPagerAdapter);

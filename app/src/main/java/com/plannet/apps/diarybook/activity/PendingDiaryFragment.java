@@ -61,13 +61,13 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
             if (isPendingList) {
                 selected_status = COMPLETED;
             } else {
-                selected_status = APPROVED;
+                selected_status = ALL;
             }
         }else  if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )) {
             if (isPendingList) {
                 selected_status = PENDING;
             } else {
-                selected_status = PICKED;
+                selected_status = ALL;
             }
         }
         initui(view);
@@ -78,7 +78,12 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
 
     private void refreshview() {
 
-        customerDiaryModels=customerDiaryDao.getCustomerDiary(activity.customerId,selected_status);
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
+            customerDiaryModels=customerDiaryDao.getCustomerDiary(AppController.getInstance().getLoggedUser().getId(),selected_status);
+        }else {
+            customerDiaryModels=customerDiaryDao.getCustomerDiary(selected_status);
+        }
+
         setadaper();
     }
 
@@ -168,7 +173,12 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     @Override
     public void onItemClick(Object object) {
         CustomerDiaryModel customerDiaryModel=(CustomerDiaryModel) object;
-        customerDiaryDao.updateStatus(customerDiaryModel.getId(),customerDiaryModel.getStatus());
+        customerDiaryDao.updateStatus(customerDiaryModel.getId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getId());
+
+            Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
+            intent.putExtra("diaryId",customerDiaryModel.getId());
+            startActivity(intent);
+
         refreshview();
     }
 

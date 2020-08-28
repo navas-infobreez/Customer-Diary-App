@@ -263,7 +263,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="15dp"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp">
+            android:layout_marginEnd="20dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -282,18 +282,36 @@
             android:textAlignment="textEnd"
             android:text="38,9,5412"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+        <Button
+            android:id="@+id/reject"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="reject"
+            android:elevation="5dp"
+            style="@style/rejectButton"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="right"
+            android:layout_marginBottom="10dp"/>
         <Button
             android:id="@+id/save"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="submit"
-            android:layout_marginTop="15dp"
             android:elevation="5dp"
             style="@style/loginButton"
             android:layout_marginEnd="10dp"
             android:layout_gravity="right"
             android:layout_marginBottom="10dp"/>
+        </LinearLayout>
     </LinearLayout>
 
     </ScrollView>

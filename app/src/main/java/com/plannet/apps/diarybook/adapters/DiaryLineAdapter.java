@@ -55,7 +55,7 @@ public class DiaryLineAdapter extends RecyclerView.Adapter<DiaryLineAdapter.MyVi
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
-        if (position!=0) {
+        if (position>0) {
             final CustomerDiaryLineModel eachItem = customerDiaryLineModels.get(position-1);
             holder.name.setText(eachItem.getProduct_name());
             holder.qty.setText(String.valueOf(eachItem.getQty()));
@@ -84,7 +84,7 @@ public class DiaryLineAdapter extends RecyclerView.Adapter<DiaryLineAdapter.MyVi
     @Override
     public int getItemCount() {
         if (customerDiaryLineModels != null)
-            return customerDiaryLineModels.size();
+            return customerDiaryLineModels.size()+1;
         else
             return 0;
 
