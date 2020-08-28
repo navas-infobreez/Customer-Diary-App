@@ -21,11 +21,16 @@ import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.databases.Customer;
+import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
+import com.plannet.apps.diarybook.forms.ReceptionForm;
+import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.utils.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
 
 public class CustomerListFragment extends Fragment implements Callback {
     public static final String PENDING = "PN";
@@ -39,6 +44,7 @@ public class CustomerListFragment extends Fragment implements Callback {
     List<CustomerModel> customerModels = new ArrayList<>(  );
     Customer customer;
     String selected_status=PENDING;
+    CustomerDiaryDao customerDiaryDao;
 
 
     @Override
@@ -132,14 +138,30 @@ public class CustomerListFragment extends Fragment implements Callback {
 
     private void initDb() {
         customer=new Customer( getContext() );
+        customerDiaryDao=new CustomerDiaryDao( getContext() );
     }
 
     @Override
     public void onItemClick(Object object) {
         CustomerModel customerModel=(CustomerModel)object;
-        Intent intent = new Intent(getActivity(), MainActivity.class );
+        Intent intent = new Intent(getActivity(), ReceptionForm.class );
+        Bundle bundle=new Bundle(  );
+        bundle.putBoolean( "IsEdit",true );
+        intent.putExtras( bundle );
         intent.putExtra( "customerId",customerModel.getCustomerName() );
         startActivity(intent);
+    }
+
+    private void createNewDiary() {
+        List<CustomerDiaryModel> customerDiaryModels=new ArrayList<>(  );
+        CustomerDiaryModel customerDiaryModel=new CustomerDiaryModel();
+        customerDiaryModel.setCustomerName(customerDiaryModel.getCustomerName().toString());
+        customerDiaryModel.setCustomerAddress(customerDiaryModel.getCustomerAddress().toString());
+        customerDiaryModel.setCustomerPhone(customerDiaryModel.getCustomerPhone().toString());
+        customerDiaryModels.add(customerDiaryModel);
+        customerDiaryModel.setStatus(PENDING);
+
+        customerDiaryDao.insertCustomerDiary(customerDiaryModels);
     }
 
     @Override

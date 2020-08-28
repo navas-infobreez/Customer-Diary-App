@@ -20,8 +20,8 @@ public class DiaryListActivity extends AppCompatActivity {
 
     Fragment []  PAGES;
     String []  PAGE_TITLES;
-    public PendingDiaryFragment pendingDiaryFragment=new PendingDiaryFragment();
-    public PendingDiaryFragment currentDiaryFragment=new PendingDiaryFragment();
+    public PendingDiaryFragment pendingDiaryFragment=new PendingDiaryFragment(true);
+    public PendingDiaryFragment currentDiaryFragment=new PendingDiaryFragment(false);
     public MyPagerAdapter myPagerAdapter;
     ViewPager viewPager;
     TabLayout tabLayout;

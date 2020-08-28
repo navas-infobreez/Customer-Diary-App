@@ -40,19 +40,38 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
 
     RecyclerView recyclerView;
     CustomerDiaryAdapter customerDiaryAdapter;
-    List<CustomerDiaryModel> customerDiaryModels=new ArrayList<>(  );
+    private List<CustomerDiaryModel> customerDiaryModels=new ArrayList<>(  );
     CustomerDiaryDao customerDiaryDao;
-    String selected_status=ALL;
-    MainActivity activity;
+    private String selected_status=ALL;
+    private MainActivity activity;
+    private boolean isPendingList;
+
+    public PendingDiaryFragment(boolean b) {
+        isPendingList=b;
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.activity_main, container, false);
-        activity=(MainActivity)getActivity();
+
+        activity = (MainActivity) getActivity();
+
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
+            if (isPendingList) {
+                selected_status = COMPLETED;
+            } else {
+                selected_status = APPROVED;
+            }
+        }else  if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )) {
+            if (isPendingList) {
+                selected_status = PENDING;
+            } else {
+                selected_status = PICKED;
+            }
+        }
         initui(view);
         initDb();
-//        refreshview();
         refreshview();
         return view;
     }
@@ -93,6 +112,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         }
 
         int defualtSelection=0;
+
         final ArrayList<String> statusList= new ArrayList<>();
 
         statusList.add(ALL);
@@ -102,6 +122,14 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         statusList.add(APPROVED);
         statusList.add(APPROVERETURN);
 
+        int i =0;
+        for (String tuple:statusList) {
+
+            if (tuple.equalsIgnoreCase( selected_status )) {
+                defualtSelection = i;
+            }
+            i++;
+        }
 
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, statusList);
