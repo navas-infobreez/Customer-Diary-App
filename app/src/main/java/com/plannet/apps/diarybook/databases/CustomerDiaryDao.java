@@ -137,9 +137,9 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             int visit=CommonUtils.toInt(tuple.get(13));
             temp.setVisit(visit==1);
             int quotation=CommonUtils.toInt(tuple.get(14));
-            temp.setVisit(quotation==1);
+            temp.setQuotation(quotation==1);
             int invoiced=CommonUtils.toInt(tuple.get(15));
-            temp.setVisit(invoiced==1);
+            temp.setInvoiced(invoiced==1);
             customerDiaryModels.add(temp);
         }
         return customerDiaryModels;

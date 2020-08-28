@@ -106,6 +106,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             isQuotation=false;
             isVisit=true;
         }
+        if (selectedCustomerDiary.getDescripion()!=null)
+            details.setText(selectedCustomerDiary.getDescripion());
         customerName.setText(selectedCustomerDiary.getCustomerName());
         customerPhone.setText("Phone : "+selectedCustomerDiary.getCustomerPhone());
         customerAddress.setText("Place  : "+selectedCustomerDiary.getCustomerAddress());
