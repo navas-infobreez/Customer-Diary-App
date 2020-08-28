@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                               intent.putExtra( "role_name", userModel.getRole_name() );
                               LoginActivity.this.startActivity( intent );
                           }else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" )){
-                              Intent intent = new Intent( LoginActivity.this, CustomerDiaryActivity.class );
+                              Intent intent = new Intent( LoginActivity.this, MainActivity.class );
                               intent.putExtra( "role_name", userModel.getRole_name() );
                               LoginActivity.this.startActivity( intent );
                           }else if (userModel.getRole_name().equalsIgnoreCase( "Manager" )) {
