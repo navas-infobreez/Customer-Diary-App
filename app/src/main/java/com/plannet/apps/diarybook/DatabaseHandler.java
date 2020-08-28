@@ -17,7 +17,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String PICKED = "PICKED";
     public static final String COMPLETED = "COMPLETED";
     public static final String APPROVED = "APPROVED";
-    public static final String APPROVERETURN = "APPROVE RETURN";
+    public static final String APPROVERETURN = "REJECTED";
     public static final String ALL = "ALL";
     private DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
