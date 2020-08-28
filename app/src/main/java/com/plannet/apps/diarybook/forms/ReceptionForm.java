@@ -16,6 +16,8 @@ import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.utils.CommonUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,6 +158,7 @@ public class ReceptionForm extends AppCompatActivity {
         customerDiaryModel.setInvoiced(isInvoiced);
         customerDiaryModel.setQuotation(isQuotation);
         customerDiaryModel.setVisit(isVisit);
+        customerDiaryModel.setDate(CommonUtils.getCurrentDateAndTime());
         customerDiaryModel.setStatus(PENDING);
         customerDiaryDao.insertCustomerDiary(customerDiaryModels);
     }

@@ -54,7 +54,7 @@ public class CommonUtils {
 
 
     public static String getCurrentDateAndTime() {
-        SimpleDateFormat dateformat = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT);
+        SimpleDateFormat dateformat = new SimpleDateFormat(DATETIME_PRINT_FORMAT);
         String dateString = dateformat.format(new Date());
         return dateString;
     }

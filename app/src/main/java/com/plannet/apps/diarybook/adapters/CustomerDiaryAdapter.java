@@ -83,7 +83,6 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             holder.customerName.setText( eachItem.getCustomerName() );
             holder.btnpick.setText( eachItem.getAddress1() );
             holder.btnpick.setVisibility( View.GONE );
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -96,7 +95,9 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             }else {
                 holder.btnpick.setEnabled(false);
             }
+
             final CustomerDiaryModel eachItem = customerDiaryModels.get( position );
+
             if (!eachItem.getStatus().equals(PENDING)){
                 holder.btnpick.setBackgroundResource(R.drawable.picked_button);
                 holder.btnpick.setTextColor(Color.WHITE);
@@ -109,6 +110,7 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             }else  if (eachItem.getStatus().equals(APPROVERETURN)){
                 holder.statusView.setBackgroundResource(R.drawable.reject_status);
             }
+
             holder.textDate.setText( eachItem.getDate() );
             holder.customerName.setText( eachItem.getCustomerName() );
 
