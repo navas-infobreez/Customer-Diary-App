@@ -31,10 +31,12 @@ import com.plannet.apps.diarybook.adapters.ProductListAdapter;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.CustomerDiaryLinesDao;
 import com.plannet.apps.diarybook.databases.Products;
+import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
+import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
@@ -54,7 +56,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     Button save,products,rejectButton;
     EditText details,quotationNo,invoiceNo;
     RecyclerView productDetails;
-    TextView customerName,customerAddress,customerPhone;
+    TextView customerName,customerAddress,customerPhone,salesMan;
     String selectedCategory;
     Products productsDb;
     int diaryId;
@@ -64,7 +66,9 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     CustomerDiaryLinesDao customerDiaryLinesDao;
     TextView grandTotal;
     boolean isEdit,isManager;
+    User userDb;
     BigDecimal grant_Total;
+    UserModel userModel=new UserModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +137,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         if (selectedCustomerDiary.getQuotationNo()!=null)
             quotationNo.setText(selectedCustomerDiary.getQuotationNo());
         grandTotal.setText(String.valueOf(selectedCustomerDiary.getTotalAmount()));
+        salesMan.setText(userModel.getName());
     }
 
     private void initUi() {
@@ -152,6 +157,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
         grandTotal=(TextView)findViewById(R.id.total);
         rejectButton=(Button)findViewById(R.id.reject);
+        salesMan=(TextView)findViewById(R.id.salesman);
+
 
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -223,13 +230,17 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             quotation.setEnabled(false);
             visit.setEnabled(false);
         }
+        selectedCustomerDiary=customerDiaryDao.getAll(diaryId);
+        userModel=userDb.getUser(selectedCustomerDiary.getSalesmanId());
+
     }
 
     private void initDb() {
         productsDb = new Products(getApplicationContext());
         customerDiaryLinesDao = new CustomerDiaryLinesDao(getApplicationContext());
         customerDiaryDao = new CustomerDiaryDao(getApplicationContext());
-        selectedCustomerDiary=customerDiaryDao.getAll(diaryId);
+        userDb=new User(getApplicationContext());
+
     }
 
     private void dialogue(){
