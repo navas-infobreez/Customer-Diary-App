@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.plannet.apps.diarybook.AppController;
+import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.adapters.DiaryLineAdapter;
@@ -28,6 +31,7 @@ import com.plannet.apps.diarybook.adapters.ProductListAdapter;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.CustomerDiaryLinesDao;
 import com.plannet.apps.diarybook.databases.Products;
+import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
@@ -38,6 +42,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVED;
+import static com.plannet.apps.diarybook.DatabaseHandler.APPROVERETURN;
 import static com.plannet.apps.diarybook.DatabaseHandler.COMPLETED;
 
 public class CustomerDiaryActivity extends AppCompatActivity {
@@ -45,7 +51,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     Spinner category;
     RadioButton visit,invoiced,quotation;
     boolean isVisit,isInvoiced,isQuotation;
-    Button save,products;
+    Button save,products,rejectButton;
     EditText details,quotationNo,invoiceNo;
     RecyclerView productDetails;
     TextView customerName,customerAddress,customerPhone;
@@ -57,12 +63,20 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     CustomerDiaryDao customerDiaryDao;
     CustomerDiaryLinesDao customerDiaryLinesDao;
     TextView grandTotal;
+    boolean isEdit,isManager;
     BigDecimal grant_Total;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custromer_diary);
         diaryId= getIntent().getExtras().getInt("diaryId");
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
+            isEdit=false;
+            isManager=true;
+        }else {
+            isManager=false;
+            isEdit=true;
+        }
         initDb();
         initUi();
         initView();
@@ -137,6 +151,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         invoiced=(RadioButton)findViewById(R.id.invoiced);
         radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
         grandTotal=(TextView)findViewById(R.id.total);
+        rejectButton=(Button)findViewById(R.id.reject);
+
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -161,12 +177,52 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customerDiaryDao.updateDiary(diaryId,COMPLETED,invoiceNo.getText().toString(),quotationNo.getText().toString(),details.getText().toString(),
-                        isVisit,isInvoiced,isQuotation,grant_Total.toPlainString());
-                finish();
+                if (isManager){
+                    customerDiaryDao.updateDiaryStatus(diaryId,APPROVED);
+                }else {
+                    customerDiaryDao.updateDiary(diaryId, COMPLETED, invoiceNo.getText().toString(), quotationNo.getText().toString(), details.getText().toString(),
+                            isVisit, isInvoiced, isQuotation, grant_Total != null ? grant_Total.toPlainString() : "00.00");
+                }
+                Intent intent2 = new Intent(CustomerDiaryActivity.this, MainActivity.class );
+                startActivity(intent2);
             }
         });
 
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerDiaryDao.updateDiaryStatus(diaryId,APPROVERETURN);
+                Intent intent2 = new Intent(CustomerDiaryActivity.this, MainActivity.class );
+                startActivity(intent2);
+            }
+        });
+        if (isManager){
+            rejectButton.setVisibility(View.VISIBLE);
+            save.setText("APPROVE");
+        }else {
+            rejectButton.setVisibility(View.INVISIBLE);
+            save.setText("COMPLETE");
+        }
+
+        if (isEdit){
+            category.setEnabled(true);
+            products.setEnabled(true);
+            invoiceNo.setEnabled(true);
+            quotationNo.setEnabled(true);
+            radioGroup.setEnabled(true);
+            invoiced.setEnabled(true);
+            quotation.setEnabled(true);
+            visit.setEnabled(true);
+        }else {
+            category.setEnabled(false);
+            products.setEnabled(false);
+            invoiceNo.setEnabled(false);
+            quotationNo.setEnabled(false);
+            radioGroup.setEnabled(false);
+            invoiced.setEnabled(false);
+            quotation.setEnabled(false);
+            visit.setEnabled(false);
+        }
     }
 
     private void initDb() {
@@ -236,12 +292,20 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         name=(TextView) dialogView.findViewById(R.id.name);
         amount=(TextView) dialogView.findViewById(R.id.amount);
         save=(Button) dialogView.findViewById(R.id.save);
+        save.setVisibility(View.GONE);
 
         name.setText(productsModel.getProduct_name());
         amount.setText("Price : "+String.valueOf(productsModel.getSale_price()));
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+            }
+        });
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 if (sqrft.getText().toString().isEmpty()||sqrft.getText().toString().equals("")){
                     sqrft.setError("Enter a Quantity");
                 }else {
@@ -259,16 +323,9 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     details.getText().clear();
                     lineRefresh();
                 }
+
             }
         });
-
-//        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//
-//            }
-//        });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

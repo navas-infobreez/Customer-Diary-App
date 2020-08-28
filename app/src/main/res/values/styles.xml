@@ -65,6 +65,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="rejectButton" parent="viewParent">
+        <item name="android:background">@drawable/reject_button</item>
+        <item name="android:textColor">@color/whiteTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ApproveButton" parent="viewParent">
         <item name="android:background">@drawable/approve_button</item>
         <item name="android:textColor">@color/whiteTextColor</item>
