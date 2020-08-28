@@ -146,9 +146,9 @@ public class CustomerListFragment extends Fragment implements Callback {
         CustomerModel customerModel=(CustomerModel)object;
         Intent intent = new Intent(getActivity(), ReceptionForm.class );
         Bundle bundle=new Bundle(  );
-        bundle.putBoolean( "IsEdit",true );
-        intent.putExtras( bundle );
-        intent.putExtra( "customerId",customerModel.getCustomerName() );
+        //bundle.putBoolean( "IsEdit",true );
+        intent.putExtra("customerId",customerModel.getId());
+        //intent.putExtras( bundle );
         startActivity(intent);
     }
 

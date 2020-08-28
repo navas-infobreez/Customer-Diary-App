@@ -99,6 +99,16 @@ public class Customer extends DatabaseHandlerController {
 
     }
 
+    public CustomerModel getCustomer(int cusId) {
+        String query = "select * from " + TABLE_NAME + " where id= " + cusId;
+        List<CustomerModel> list = prepareModelList( super.executeQuery( context, query ) );
+        if (list != null) {
+            return list.get( 0 );
+        }
+        return null;
+    }
+
+
     public ArrayList<CustomerModel> prepareModelList(ArrayList<ArrayList<String>> data)
 
     {

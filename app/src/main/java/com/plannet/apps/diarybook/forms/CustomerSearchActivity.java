@@ -60,6 +60,8 @@ public class CustomerSearchActivity extends AppCompatActivity {
         int i = item.getItemId();
         if (i == R.id.add_customer) {
             Intent intent = new Intent( CustomerSearchActivity.this, ReceptionForm.class );
+            intent.putExtra( "isEdit",false );
+            intent.putExtra( "customerId",false );
             CustomerSearchActivity.this.startActivity( intent );
 
         }

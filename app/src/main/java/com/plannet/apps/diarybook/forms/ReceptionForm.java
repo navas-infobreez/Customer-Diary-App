@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.databases.Customer;
@@ -30,6 +31,8 @@ public class ReceptionForm extends AppCompatActivity {
     RadioButton visit,invoiced,quotation;
     boolean isVisit,isInvoiced,isQuotation;
     boolean isEdit;
+    int customerId=0;
+    TextView header;
 
 
     @Override
@@ -37,10 +40,12 @@ public class ReceptionForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reception_form);
         Intent intent = getIntent();
-        isEdit = intent != null && intent.hasExtra("isEdit") ? intent.getBooleanExtra("isEdit", false) : false;
-
-        initUi();
+        //isEdit = intent != null && intent.hasExtra("IsEdit") ? intent.getBooleanExtra("IsEdit", false) : false;
+        //customerId= intent != null && intent.hasExtra("customerId")?intent.getIntExtra("customerId", 0) : 0;
+        customerId= getIntent().getExtras().getInt("customerId");
         intDb();
+        initUi();
+
     }
 
     private void intDb() {
@@ -49,6 +54,7 @@ public class ReceptionForm extends AppCompatActivity {
     }
 
     private void initUi() {
+
         name = (EditText) findViewById(R.id.txt_name);
         place = (EditText) findViewById(R.id.txt_place);
         address = (EditText) findViewById(R.id.txt_address);
@@ -59,7 +65,7 @@ public class ReceptionForm extends AppCompatActivity {
         noOfperson = (EditText) findViewById(R.id.txt_noAccoumpaining);
         qtyRequierd = (EditText) findViewById(R.id.no_qty_requerd);
         add = (Button) findViewById(R.id.add_custoner_button);
-
+        header=(TextView)findViewById( R.id.header ) ;
         quotation=(RadioButton)findViewById(R.id.quotation);
         visit=(RadioButton)findViewById(R.id.visit);
         invoiced=(RadioButton)findViewById(R.id.invoiced);
@@ -91,6 +97,11 @@ public class ReceptionForm extends AppCompatActivity {
                 saveData();
             }
         });
+        if (customerId>0){
+            header.setText( "CREATE DIARY" );
+            add.setText( "SAVE" );
+            setData();
+        }
     }
 
     private void saveData() {
@@ -103,29 +114,47 @@ public class ReceptionForm extends AppCompatActivity {
         }
     }
 
+    private void setData() {
+        CustomerModel customerModel=customerDb.getCustomer(customerId);
+        if (customerModel!=null) {
+            name.setText( customerModel.getCustomerName() );
+            address.setText( customerModel.getAddress1() );
+            address.setText( customerModel.getAddress2() );
+            phone.setText( customerModel.getPhone_no() );
+            email.setText( customerModel.getEmail() );
+            place.setText( customerModel.getCity() );
+        }
+
+
+    }
+
     private void getData() {
-        List<CustomerModel>customerModelList=new ArrayList<>();
+        if (customerId==0) {//for check is not edit
+            List<CustomerModel> customerModelList = new ArrayList<>();
+
+            CustomerModel customerModel = new CustomerModel();
+            customerModel.setCustomerName( name.getText().toString() );
+            customerModel.setAddress1( address.getText().toString() );
+            customerModel.setPhone_no( phone.getText().toString() );
+            customerModel.setEmail( email.getText().toString() );
+            customerModel.setCity( place.getText().toString() );
+            customerModelList.add( customerModel );
+            customerDb.insertCustomers( customerModelList );
+        }
+         insertDiary();
+        cearData();
+
+    }
+
+    private void insertDiary() {
         List<CustomerDiaryModel>customerDiaryModels=new ArrayList<>();
         CustomerDiaryModel customerDiaryModel=new CustomerDiaryModel();
-        CustomerModel customerModel=new CustomerModel();
-        customerModel.setCustomerName(name.getText().toString());
-        customerModel.setAddress1(address.getText().toString());
-        customerModel.setPhone_no(phone.getText().toString());
-        customerModel.setEmail(email.getText().toString());
-        customerModel.setCity(place.getText().toString());
-        customerModelList.add(customerModel);
-
         customerDiaryModel.setCustomerName(name.getText().toString());
         customerDiaryModel.setCustomerAddress(address.getText().toString());
         customerDiaryModel.setCustomerPhone(phone.getText().toString());
         customerDiaryModels.add(customerDiaryModel);
         customerDiaryModel.setStatus(PENDING);
-
-        customerDb.insertCustomers(customerModelList);
         customerDiaryDao.insertCustomerDiary(customerDiaryModels);
-
-        cearData();
-
     }
 
     private void cearData() {
@@ -138,5 +167,6 @@ public class ReceptionForm extends AppCompatActivity {
         noOfperson.getText().clear();
         qtyRequierd.getText().clear();
         //purpose.getText().clear();
+        finish();
     }
 }

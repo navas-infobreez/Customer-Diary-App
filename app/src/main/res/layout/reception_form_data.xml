@@ -16,6 +16,7 @@
         android:padding="@dimen/loginViewsMargin">
 
         <TextView
+            android:id="@+id/header"
             style="@style/headerTextPrimary"
             android:text="CUSTOMER INFORMATION"
             android:layout_marginTop="@dimen/loginViewsMargin"/>
