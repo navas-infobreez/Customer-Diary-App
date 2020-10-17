@@ -2,6 +2,7 @@ package com.plannet.apps.diarybook.forms;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,11 +14,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
+import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.activity.CustomerDiaryActivity;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.models.UserModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +108,36 @@ public class UserCreationActivity extends AppCompatActivity {
         userModel.setUserName(userName.getText().toString());
         userModelList.add(userModel);
         userDb.insertUser(userModelList);
+        syn();
         clear();
+    }
+
+    private void syn() {
+
+       // https://planet-customerdiary.herokuapp.com/user/createorupdateuser  post
+
+        final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
+        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
     }
 
     private void clear() {

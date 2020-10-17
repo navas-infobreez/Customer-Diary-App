@@ -3,6 +3,10 @@ package com.plannet.apps.diarybook;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -14,12 +18,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Fragment[]  PAGES;
@@ -89,6 +103,51 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+            MenuInflater inflater = getMenuInflater();
+
+            inflater.inflate(R.menu.option_menu, menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int i = item.getItemId();
+        if (i == R.id.sync) {
+            makeLfogin();
+
+        }
+        return super.onOptionsItemSelected( item );
+    }
+
+            public void makeLfogin() {
+                final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
+                JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                                    Log.d( "Response", response.toString() );
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d( "Response", error.toString() );
+
+                    }
+                } );
+
+                AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+            }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 

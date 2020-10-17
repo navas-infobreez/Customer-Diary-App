@@ -23,4 +23,21 @@ public class JsonFormater {
 
         return jsonObject;
     }
+
+    public JSONObject userJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+
+            jsonObject.put("username", "superuser");
+            jsonObject.put("password", "superuser");
+            Log.d("orderjson", jsonObject.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return jsonObject;
+    }
 }
