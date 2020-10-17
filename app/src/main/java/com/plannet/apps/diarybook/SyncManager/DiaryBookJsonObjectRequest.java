@@ -49,9 +49,9 @@ public class DiaryBookJsonObjectRequest extends com.android.volley.toolbox.JsonO
 
         Map<String, String> params = new HashMap<String, String>();
         //params.put("Accept", "application/json");
-        //params.put("Content-Type", "application/json; charset=utf-8");
+       // params.put("Content-Type", "application/json; charset=utf-8");
         try {
-            params.put("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlcnVzZXIiLCJzY29wZXMiOlt7ImF1dGhvcml0eSI6IkFETUlOIn1dLCJpc3MiOiJodHRwczovL3d3dy5wbGFuZXQuY29tIiwiaWF0IjoxNjAyNjk4NjA2LCJleHAiOjE2MDI3MTY2MDZ9.5Ck-o0mOd9YvNqEWxPb7ZWVWmqafa630b_YB_XelTAg");
+            params.put("Authorization", AppController.getInstance().getAuthToken().getResult().getToken());
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthFailureError("Bad Authentication token", e);

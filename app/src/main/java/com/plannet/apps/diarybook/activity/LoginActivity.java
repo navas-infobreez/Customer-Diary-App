@@ -95,40 +95,49 @@ public class LoginActivity extends AppCompatActivity {
 //                } else {
 //                    Toast.makeText( getApplicationContext(), "User Not Exsists", Toast.LENGTH_SHORT ).show();
 //                }
-               // final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-               // progressDialog.show();
-                final LoginManager loginManager = new LoginManager();
-                loginManager.login(new OnCompleteCallback() {
-                    @Override
-                    public void onError(Exception error) {
-                        AppController.getInstance().setAuthToken(null);
-                        //progressDialog.dismiss();
-                        Toast.makeText( getApplicationContext(), "User Not Exsists", Toast.LENGTH_SHORT ).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        AppController.getInstance().setAuthToken(loginManager.getAuthModel());
-                        //progressDialog.dismiss();
-                        if (userModel.getRole_name().equalsIgnoreCase( "Reception" )) {
-                            Intent intent = new Intent( LoginActivity.this, CustomerSearchActivity.class );
-                            intent.putExtra( "role_name", userModel.getRole_name() );
-                            LoginActivity.this.startActivity( intent );
-                        } else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" )) {
-                            Intent intent = new Intent( LoginActivity.this, MainActivity.class );
-                            intent.putExtra( "role_name", userModel.getRole_name() );
-                            LoginActivity.this.startActivity( intent );
-                        } else if (userModel.getRole_name().equalsIgnoreCase( "Manager" )) {
-                            Intent intent = new Intent( LoginActivity.this, MainActivity.class );
-                            intent.putExtra( "role_name", userModel.getRole_name() );
-                            LoginActivity.this.startActivity( intent );
+                // final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
+                // progressDialog.show();
+                if (AppController.getInstance().isAuthenticated()) {
+                    login(  userModel );
+                } else {
+                    final LoginManager loginManager = new LoginManager();
+                    loginManager.login( new OnCompleteCallback() {
+                        @Override
+                        public void onError(Exception error) {
+                            AppController.getInstance().setAuthToken( null );
+                            //progressDialog.dismiss();
+                            Toast.makeText( getApplicationContext(), "User Not Exsists", Toast.LENGTH_SHORT ).show();
                         }
-                        AppController.getInstance().setLoggedUser( userModel );
 
-                    }
-                }); //
+                        @Override
+                        public void onComplete() {
+                            AppController.getInstance().setAuthToken(loginManager.getAuthModel());
+                            login(  userModel );
+
+                        }
+                    } ); //
+                }
             }
         } );
+    }
+
+    private void login(UserModel userModel) {
+
+        //progressDialog.dismiss();
+        if (userModel.getRole_name().equalsIgnoreCase( "Reception" )) {
+            Intent intent = new Intent( LoginActivity.this, CustomerSearchActivity.class );
+            intent.putExtra( "role_name", userModel.getRole_name() );
+            LoginActivity.this.startActivity( intent );
+        } else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" )) {
+            Intent intent = new Intent( LoginActivity.this, MainActivity.class );
+            intent.putExtra( "role_name", userModel.getRole_name() );
+            LoginActivity.this.startActivity( intent );
+        } else if (userModel.getRole_name().equalsIgnoreCase( "Manager" )) {
+            Intent intent = new Intent( LoginActivity.this, MainActivity.class );
+            intent.putExtra( "role_name", userModel.getRole_name() );
+            LoginActivity.this.startActivity( intent );
+        }
+        AppController.getInstance().setLoggedUser( userModel );
     }
 
 
