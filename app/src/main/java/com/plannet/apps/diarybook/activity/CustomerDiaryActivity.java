@@ -137,7 +137,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         if (selectedCustomerDiary.getQuotationNo()!=null)
             quotationNo.setText(selectedCustomerDiary.getQuotationNo());
         grandTotal.setText(String.valueOf(selectedCustomerDiary.getTotalAmount()));
-        salesMan.setText(userModel.getName());
+        if (userModel!=null)
+            salesMan.setText(userModel.getName());
     }
 
     private void initUi() {

@@ -112,7 +112,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     "customerId INTEGER ,visit_date TEXT,visit_time TEXT,place TEXT)");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS Role( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,roleName TEXT ," +
-                    "roleId INTEGER)");
+                    "roleId INTEGER,description TEXT,priority INTEGER,isActive INTEGER)");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS User( id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,name TEXT ," +
                     "role_name TEXT,role_id INTEGER,userName TEXT,password TEXT)");

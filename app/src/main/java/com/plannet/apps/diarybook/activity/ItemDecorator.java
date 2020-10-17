@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.plannet.apps.diarybook.R;
 
-class ItemDecorator extends RecyclerView.ItemDecoration {
+public class ItemDecorator extends RecyclerView.ItemDecoration {
 
         private Drawable mDivider;
 

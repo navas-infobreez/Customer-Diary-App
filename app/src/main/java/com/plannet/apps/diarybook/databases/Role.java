@@ -19,6 +19,9 @@ public class Role extends DatabaseHandlerController {
     public static final String id = "id";
     public static final String role_name = "role_name";
     public static final String role_id = "role_id";
+    public static final String description = "description";
+    public static final String priority = "priority";
+    public static final String isActive = "isActive";
     private DatabaseHandler dbhelper;
     private SQLiteDatabase sqliteDB;
     private Context context;
@@ -36,9 +39,9 @@ public class Role extends DatabaseHandlerController {
 
 
             for (RoleModel tuple :roleModels ) {
-                Object[] values_ar = {tuple.getRoleName(),tuple.getRoleId()};
+                Object[] values_ar = {tuple.getRoleName(),tuple.getRoleId(),tuple.getDescription(),tuple.getPriority(),tuple.isActive()?1:0};
 
-                String[] fields_ar = {role_name,role_id};
+                String[] fields_ar = {role_name,role_id,description,priority,isActive};
                 String values = "", fields = "";
                 for (int i = 0; i < values_ar.length; i++) {
                     if (values_ar[i] != null) {
@@ -72,6 +75,10 @@ public class Role extends DatabaseHandlerController {
             temp.setId(CommonUtils.toInt(tuple.get(0)));
             temp.setRoleName((tuple.get(1)));
             temp.setRoleId(CommonUtils.toInt(tuple.get(2)));
+            temp.setDescription(tuple.get(3));
+            temp.setPriority(CommonUtils.toInt(tuple.get(4)));
+            int active=CommonUtils.toInt(tuple.get(5));
+            temp.setActive(active==1);
             roleModels.add(temp);
         }
         return roleModels;
