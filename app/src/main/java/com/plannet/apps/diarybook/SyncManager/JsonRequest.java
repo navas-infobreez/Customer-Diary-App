@@ -69,7 +69,7 @@ public class JsonRequest extends JsonArrayRequest {
         //params.put("Content-Type", "application/json; charset=utf-8");
 
         try {
-            params.put("Authorization", AppController.getInstance().getAuthToken().getResult().getToken());
+            params.put("Authorization","Bearer " + AppController.getInstance().getAuthToken().getResult().getToken());
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthFailureError("Bad Authentication token", e);
