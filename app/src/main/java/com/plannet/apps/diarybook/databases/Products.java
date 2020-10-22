@@ -47,7 +47,7 @@ public class  Products extends DatabaseHandlerController {
 
             for (ProductModel tuple : productModel) {
                     Object[] values_ar = {tuple.getProduct_name(), tuple.getProduct_id(), tuple.getProduct_category(),
-                            tuple.getProduct_category_Id(), tuple.getUom(), tuple.getUomId(), tuple.getDescription(),
+                            tuple.getProductCategoryId(), tuple.getUom(), tuple.getUomId(), tuple.getDescription(),
                             tuple.getSale_price(), tuple.getCost_price(), tuple.getTaxId()};
                     String[] fields_ar = { Products.product_name,Products.product_id, Products.product_category,
                             Products.product_category_Id, Products.uom, Products.uomId, Products.description,
@@ -90,7 +90,7 @@ public class  Products extends DatabaseHandlerController {
             temp.setProduct_name(tuple.get(1));
             temp.setProduct_id(CommonUtils.toInt(tuple.get(2)));
             temp.setProduct_category(tuple.get(3));
-            temp.setProduct_category_Id(CommonUtils.toInt(tuple.get(4)));
+            temp.setProductCategoryId(CommonUtils.toInt(tuple.get(4)));
             temp.setUom(tuple.get(5));
             temp.setUomId( CommonUtils.toInt(tuple.get(6)));
             temp.setDescription(tuple.get(7));

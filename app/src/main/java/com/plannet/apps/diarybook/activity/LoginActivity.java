@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //makeLfogin();
+                //getAllUsers();
 
 
                 String username = user_name.getText().toString();

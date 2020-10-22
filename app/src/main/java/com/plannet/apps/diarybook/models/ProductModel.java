@@ -1,6 +1,7 @@
 package com.plannet.apps.diarybook.models;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 public class ProductModel {
@@ -9,13 +10,41 @@ public class ProductModel {
     String product_name;
     int product_id;
     String product_category;
-    int product_category_Id;
+    int productCategoryId;
     String uom;
     int uomId;
     String description;
     BigDecimal sale_price;
     BigDecimal cost_price;
     int taxId;
+    String searchKey;
+    boolean isActive;
+
+    List<ProductPriceDto> productPriceDTOList;
+
+    public List<ProductPriceDto> getProductPriceDTOList() {
+        return productPriceDTOList;
+    }
+
+    public void setProductPriceDTOList(List<ProductPriceDto> productPriceDTOList) {
+        this.productPriceDTOList = productPriceDTOList;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public String getSearchKey() {
+        return searchKey;
+    }
+
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
+    }
 
     public int getId() {
         return id;
@@ -49,12 +78,12 @@ public class ProductModel {
         this.product_category = product_category;
     }
 
-    public int getProduct_category_Id() {
-        return product_category_Id;
+    public int getProductCategoryId() {
+        return productCategoryId;
     }
 
-    public void setProduct_category_Id(int product_category_Id) {
-        this.product_category_Id = product_category_Id;
+    public void setProductCategoryId(int productCategoryId) {
+        this.productCategoryId = productCategoryId;
     }
 
     public String getUom() {

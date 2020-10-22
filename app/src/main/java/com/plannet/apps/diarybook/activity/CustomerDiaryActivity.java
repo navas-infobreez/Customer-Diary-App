@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,9 +26,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
+import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.adapters.DiaryLineAdapter;
 import com.plannet.apps.diarybook.adapters.ProductListAdapter;
@@ -39,6 +48,9 @@ import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -108,6 +120,54 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             }
         });
         lineRefresh();
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.option_menu, menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int i = item.getItemId();
+        if (i == R.id.sync) {
+            getAllProducts();
+
+        }
+        return super.onOptionsItemSelected( item );
+    }
+
+    public void getAllProducts() {
+        final String url = "https://planet-customerdiary.herokuapp.com/product/getallproduct";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
     }
 
     private void initView() {

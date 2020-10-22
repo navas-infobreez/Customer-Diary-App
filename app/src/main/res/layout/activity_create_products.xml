@@ -75,21 +75,81 @@
                             android:layout_marginTop="10dp"
                             android:layout_height="match_parent"
                             android:text="CATEGORY"/>
+
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_gravity="center"
                             android:layout_height="50dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
                             <androidx.appcompat.widget.AppCompatSpinner
                                 android:id="@+id/category_spinner"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
                                 android:layout_gravity="center"
+                                android:layout_weight="1.5"
                                 android:gravity="center"
-                                style="headerTextPrimary">
+                                style="headerTextPrimary"/>
+                        <Button
+                            android:id="@+id/add_category"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="5dp"
+                            android:text="add"
+                            android:background="@color/whiteCardColor"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_weight=".5"
+                            style="headerTextPrimary"/>
 
-                            </androidx.appcompat.widget.AppCompatSpinner>
+                            </LinearLayout>
+
 
                         </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="10dp"
+                            android:layout_height="match_parent"
+                            android:text="Uom"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_height="50dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+                                <androidx.appcompat.widget.AppCompatSpinner
+                                    android:id="@+id/uom_spinner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1.5"
+                                    android:gravity="center"
+                                    style="headerTextPrimary"/>
+                                <Button
+                                    android:id="@+id/add_uom"
+                                    android:layout_width="0dp"
+                                    android:layout_marginStart="5dp"
+                                    android:text="add"
+                                    android:background="@color/whiteCardColor"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:layout_weight=".5"
+                                    style="headerTextPrimary"/>
+
+                            </LinearLayout>
+
+
+                        </androidx.cardview.widget.CardView>
+
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/parent"
                             android:layout_marginTop="@dimen/signup_text_margin_top">

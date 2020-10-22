@@ -6,6 +6,33 @@ public class ProductCategoryModel {
     String categoryName;
     int productCategoryId;
     int parentCategoryId;
+    String searchKey;
+    String description;
+    boolean active;
+
+    public String getSearchKey() {
+        return searchKey;
+    }
+
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public int getId() {
         return id;

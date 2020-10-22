@@ -3,13 +3,10 @@ package com.plannet.apps.diarybook;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
+import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
@@ -32,8 +30,6 @@ import com.plannet.apps.diarybook.forms.UserCreationActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Fragment[]  PAGES;
@@ -118,13 +114,16 @@ public class MainActivity extends AppCompatActivity {
 
         int i = item.getItemId();
         if (i == R.id.sync) {
-            makeLfogin();
+            getAllUsers();
+            getAllProducts();
+            getAllProductsCategory();
+            getallUom();
 
         }
         return super.onOptionsItemSelected( item );
     }
 
-            public void makeLfogin() {
+            public void getAllUsers() {
                 final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
                 JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
                         new Response.Listener<JSONObject>() {
@@ -148,6 +147,86 @@ public class MainActivity extends AppCompatActivity {
 
                 AppController.getInstance().submitServerRequest( req, "submitShipmet" );
             }
+
+    public void getAllProducts() {
+        final JsonFormater formatter = new JsonFormater();
+        final String url = "https://planet-customerdiary.herokuapp.com/product/getallproduct";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+    }
+
+
+    public void getallUom() {
+        final JsonFormater formatter = new JsonFormater();
+        final String url = " https://planet-customerdiary.herokuapp.com/uom/getalluom";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+    }
+
+
+    public void getAllProductsCategory() {
+        final JsonFormater formatter = new JsonFormater();
+        final String url = "https://planet-customerdiary.herokuapp.com/product/getallproductcategory";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+    }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
