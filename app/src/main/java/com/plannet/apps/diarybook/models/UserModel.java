@@ -1,5 +1,7 @@
 package com.plannet.apps.diarybook.models;
 
+import java.util.List;
+
 public class UserModel {
 
     int id;
@@ -9,6 +11,25 @@ public class UserModel {
     String userName;
     String password;
     String confirmPassword;
+
+    UserContacts userContacts;
+    List<RoleModel> roles;
+
+    public List<RoleModel> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleModel> roles) {
+        this.roles = roles;
+    }
+
+    public UserContacts getUserContacts() {
+        return userContacts;
+    }
+
+    public void setUserContacts(UserContacts userContacts) {
+        this.userContacts = userContacts;
+    }
 
     public int getId() {
         return id;

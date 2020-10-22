@@ -38,6 +38,7 @@ import com.plannet.apps.diarybook.databases.Role;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.RoleModel;
+import com.plannet.apps.diarybook.models.UserContacts;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
@@ -133,18 +134,28 @@ public class UserCreationActivity extends AppCompatActivity {
         userModel.setPassword(password.getText().toString());
         userModel.setConfirmPassword(confirmPassword.getText().toString());
         userModel.setUserName(userName.getText().toString());
+        UserContacts userContacts=new UserContacts();
+        userContacts.setCity("Mukkam"  );
+        userContacts.setAddress1("Mukkam"  );
+        userContacts.setAddress2("Mukkam"  );
+        userContacts.setEmail("Mukkam@gmail.com" );
+        userContacts.setPhoneNumber("5053265531" );
+        userContacts.setCountry( "India" );
+        userModel.setUserContacts( userContacts );
+
         userModelList.add(userModel);
         userDb.insertUser(userModelList);
-        syn();
+        syncUser(userModel);
         clear();
     }
 
-    private void syn() {
+    private void syncUser(UserModel userModel) {
 
        // https://planet-customerdiary.herokuapp.com/user/createorupdateuser  post
 
-        final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
-        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+        final String url ="https://planet-customerdiary.herokuapp.com/user/createorupdateuser";
+        final JsonFormater formatter = new JsonFormater();
+        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, formatter.toUserJson(userModel),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -164,7 +175,7 @@ public class UserCreationActivity extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+        AppController.getInstance().submitServerRequest( req, "submitUser" );
     }
 
     private void getRoll() {
