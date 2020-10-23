@@ -71,7 +71,7 @@ public class CustomerListFragment extends Fragment implements Callback {
             } else {
                 List<CustomerModel> temp = new ArrayList<>();
                 for (CustomerModel productModel : customerModels) {
-                    if (productModel.getPhone_no() != null && productModel.getPhone_no().toLowerCase().contains( text.toLowerCase() ) ||
+                    if (productModel.getCustomerContact().getContactNo( ) != null && productModel.getCustomerContact().getContactNo( ).toLowerCase().contains( text.toLowerCase() ) ||
                             productModel.getCustomerName() != null && productModel.getCustomerName().toLowerCase().contains( text.toLowerCase() )) {
                         temp.add( productModel );
                     }

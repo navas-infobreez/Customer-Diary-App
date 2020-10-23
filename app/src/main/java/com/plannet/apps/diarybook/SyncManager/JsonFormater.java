@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.plannet.apps.diarybook.forms.UomModel;
+import com.plannet.apps.diarybook.models.CustomerContact;
+import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.ProductPriceDto;
@@ -58,6 +60,50 @@ public class JsonFormater {
 
         return jsonObject;
     }
+
+    public JSONObject customerJson(CustomerModel customerModel) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+            jsonObject.put("id",customerModel.getId());
+            jsonObject.put("firstName",customerModel.getCustomerName() );
+            jsonObject.put("lastName", "kk");
+            jsonObject.put("searchKey","key" );
+            jsonObject.put("gstNo", customerModel.getGst_no());
+            jsonObject.put("CustomerContact", customerContactJson( customerModel.getCustomerContact() ));
+            Log.d("orderjson", jsonObject.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return jsonObject;
+    }
+
+    public JSONObject customerContactJson(CustomerContact customerContact) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+            jsonObject.put("email",customerContact.getEmail());
+            jsonObject.put("country",customerContact.getCountry() );
+            jsonObject.put("city", customerContact.getCity());
+            jsonObject.put("state",customerContact.getState() );
+            jsonObject.put("address1",customerContact.getAddress1());
+            jsonObject.put("address2",customerContact.getAddress2() );
+            jsonObject.put("contactNo", customerContact.getContactNo());
+            jsonObject.put("contactNo2",customerContact.getContactNo2() );
+            jsonObject.put("landmark", customerContact.getLandmark());
+            Log.d("contcat", jsonObject.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return jsonObject;
+    }
+
 
     public JSONObject toUserJson(UserModel userModel) {
         JSONObject jsonObject = new JSONObject();
@@ -142,7 +188,7 @@ public class JsonFormater {
             jsonObject.put("name",productModel.getProduct_name() );
             jsonObject.put("description",productModel.getDescription() );
             jsonObject.put("searchKey", "dd");
-            jsonObject.put("active", productModel.isActive());
+            jsonObject.put("active", true);
             jsonObject.put("productCategoryId", 1);
 
 

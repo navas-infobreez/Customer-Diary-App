@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,12 +12,23 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.R;
+import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
+import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
+import com.plannet.apps.diarybook.models.CustomerContact;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.models.RoleModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,10 +130,10 @@ public class ReceptionForm extends AppCompatActivity {
         CustomerModel customerModel=customerDb.getCustomer(customerId);
         if (customerModel!=null) {
             name.setText( customerModel.getCustomerName() );
-            address.setText( customerModel.getAddress1() );
-            phone.setText( customerModel.getPhone_no() );
-            email.setText( customerModel.getEmail() );
-            place.setText( customerModel.getCity() );
+            address.setText( customerModel.getCustomerContact().getAddress1() );
+            phone.setText( customerModel.getCustomerContact().getContactNo() );
+            email.setText( customerModel.getCustomerContact().getEmail() );
+            place.setText( customerModel.getCustomerContact().getCity() );
             noOfperson.setVisibility( View.GONE );
             qtyRequierd.setVisibility( View.GONE );
 
@@ -133,19 +145,48 @@ public class ReceptionForm extends AppCompatActivity {
     private void getData() {
         if (customerId==0) {//for check is not edit
             List<CustomerModel> customerModelList = new ArrayList<>();
+            CustomerContact customerContact=new CustomerContact();
 
             CustomerModel customerModel = new CustomerModel();
             customerModel.setCustomerName( name.getText().toString() );
-            customerModel.setAddress1( address.getText().toString() );
-            customerModel.setPhone_no( phone.getText().toString() );
-            customerModel.setEmail( email.getText().toString() );
-            customerModel.setCity( place.getText().toString() );
+            customerContact.setAddress1( address.getText().toString() );
+            customerContact.setContactNo( phone.getText().toString() );
+            customerContact.setEmail( email.getText().toString() );
+            customerContact.setCity( place.getText().toString() );
+            customerModel.setCustomerContact( customerContact );
             customerModelList.add( customerModel );
             customerDb.insertCustomers( customerModelList );
+            syncCustomer(customerModel);
         }
          insertDiary();
         cearData();
 
+    }
+
+    private void syncCustomer(CustomerModel customerModel) {
+        final String url = " https://planet-customerdiary.herokuapp.com/customer/createorupdatecustomer";
+        final JsonFormater formatter = new JsonFormater();
+        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest(this,  url, formatter.customerJson(customerModel),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d( "error Response", error.toString() );
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitRoll" );
     }
 
     private void insertDiary() {

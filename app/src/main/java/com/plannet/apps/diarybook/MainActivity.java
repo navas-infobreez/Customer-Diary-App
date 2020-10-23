@@ -118,35 +118,36 @@ public class MainActivity extends AppCompatActivity {
             getAllProducts();
             getAllProductsCategory();
             getallUom();
+            getallCustomers();
 
         }
         return super.onOptionsItemSelected( item );
     }
 
-            public void getAllUsers() {
-                final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
-                JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
-                                    Log.d( "Response", response.toString() );
+     public void getAllUsers() {
+         final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
+         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                 new Response.Listener<JSONObject>() {
+                     @Override
+                     public void onResponse(JSONObject response) {
+                         try {
+                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                             Log.d( "Response", response.toString() );
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d( "Response", error.toString() );
+                         } catch (JSONException e) {
+                             e.printStackTrace();
+                         }
+                     }
+                 }, new Response.ErrorListener() {
+             @Override
+             public void onErrorResponse(VolleyError error) {
+                 Log.d( "Response", error.toString() );
 
-                    }
-                } );
+             }
+         } );
 
-                AppController.getInstance().submitServerRequest( req, "submitShipmet" );
-            }
+         AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+     }
 
     public void getAllProducts() {
         final JsonFormater formatter = new JsonFormater();
@@ -178,6 +179,33 @@ public class MainActivity extends AppCompatActivity {
     public void getallUom() {
         final JsonFormater formatter = new JsonFormater();
         final String url = " https://planet-customerdiary.herokuapp.com/uom/getalluom";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+    }
+
+
+    public void getallCustomers() {
+        final JsonFormater formatter = new JsonFormater();
+        final String url = "https://planet-customerdiary.herokuapp.com/customer/getallcustomerdetails";
         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

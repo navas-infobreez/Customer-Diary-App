@@ -253,7 +253,7 @@ public class CreateProductsActivity extends AppCompatActivity {
 
 
     private void sycUom(UomModel uomModel) {
-        final String url = "https://planet-customerdiary.herokuapp.com/product/createorupdateproductcategory";
+        final String url = " https://planet-customerdiary.herokuapp.com/uom/createorupdateuom";
         final JsonFormater formatter = new JsonFormater();
         DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest(this,  url, formatter.UomJson(uomModel),
                 new Response.Listener<JSONObject>() {

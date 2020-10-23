@@ -79,9 +79,9 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         if (isCustomerList) {
             final CustomerModel eachItem = customerModels.get( position );
-            holder.phoneNo.setText( eachItem.getPhone_no() );
+            holder.phoneNo.setText( eachItem.getCustomerContact().getContactNo() );
             holder.customerName.setText( eachItem.getCustomerName() );
-            holder.btnpick.setText( eachItem.getAddress1() );
+            //holder.btnpick.setText( eachItem.getAddress1() );
             holder.btnpick.setVisibility( View.GONE );
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

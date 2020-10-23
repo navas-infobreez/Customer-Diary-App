@@ -6,6 +6,7 @@ import android.util.Log;
 import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
+import com.plannet.apps.diarybook.models.CustomerContact;
 import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
@@ -53,8 +54,9 @@ public class Customer extends DatabaseHandlerController {
             for (CustomerModel customer : customers) {
                 count++;
                 Object[] values_ar = {customer.getCustomerId(),customer.getCustomerName(),customer.getCustomerCode(),
-                        customer.getCountryName(), customer.getCity(),customer.getAddress1(),customer.getAddress2(),customer.getEmail(),
-                        customer.getPhone_no(),customer.getLocation(),customer.getGst_no()};
+                        customer.getCustomerContact().getCountry(), customer.getCustomerContact().getCity(),customer.getCustomerContact().getAddress1(),
+                        customer.getCustomerContact().getAddress2(),customer.getCustomerContact().getEmail(),
+                        customer.getCustomerContact().getContactNo(),customer.getLocation(),customer.getGst_no()};
                 String values = "", fields = "";
                     for (int i = 0; i < values_ar.length; i++) {
                         if (values_ar[i] != null) {
@@ -116,20 +118,22 @@ public class Customer extends DatabaseHandlerController {
         for (ArrayList<String> tuple:data){
 
             CustomerModel temp= new CustomerModel();
+            CustomerContact customerContact=new CustomerContact();
             temp.setId( CommonUtils.toInt(tuple.get(0)));
             temp.setCustomerId(CommonUtils.toInt(tuple.get(1)) );
             temp.setCustomerName(tuple.get(2));// Add this in getTitle() // + (tuple.get(16) != null ? "("+tuple.get(16)+")":"")); // add location name if exists
             temp.setCustomerCode(tuple.get(3));
-            temp.setCountryName(tuple.get(4));
-            temp.setCity(tuple.get(5));
-            temp.setAddress1(tuple.get(6));
-            temp.setAddress2(tuple.get(7));
-            temp.setEmail(tuple.get(8));
-            temp.setPhone_no(tuple.get(9));
+            customerContact.setCountry(tuple.get(4));
+            customerContact.setCity(tuple.get(5));
+            customerContact.setAddress1(tuple.get(6));
+            customerContact.setAddress2(tuple.get(7));
+            customerContact.setEmail(tuple.get(8));
+            customerContact.setContactNo(tuple.get(9));
             temp.setRegion(tuple.get(10));
             temp.setLocation(tuple.get(11));
             //temp.setLocationId(CommonUtils.toInt(tuple.get(19)));
             temp.setGst_no(tuple.get(12));
+            temp.setCustomerContact( customerContact );
             customerModels.add(temp);
 
         }

@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 
 public class ProductPriceDto {
 
-       int id;
+       transient int id;
        int uomId;
        BigDecimal purchasePrice;
        BigDecimal salesPrice;
        BigDecimal discntSalesPrice;
-       int productId;
+       transient int productId;
 
     public int getId() {
         return id;

@@ -10,14 +10,26 @@ public class CustomerModel {
     String customerCode;
     String location;
     int locationId;
-    String email;
-    String countryName;
-    String city;
     String region;
-    String address1;
-    String address2;
-     String phone_no;
     String gst_no;
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    CustomerContact customerContact;
+
+    public CustomerContact getCustomerContact() {
+        return customerContact;
+    }
+
+    public void setCustomerContact(CustomerContact customerContact) {
+        this.customerContact = customerContact;
+    }
 
     public int getId() {
         return id;
@@ -65,62 +77,6 @@ public class CustomerModel {
 
     public void setLocationId(int locationId) {
         this.locationId = locationId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCountryName() {
-        return countryName;
-    }
-
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getAddress1() {
-        return address1;
-    }
-
-    public void setAddress1(String address1) {
-        this.address1 = address1;
-    }
-
-    public String getAddress2() {
-        return address2;
-    }
-
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
-
-    public String getPhone_no() {
-        return phone_no;
-    }
-
-    public void setPhone_no(String phone_no) {
-        this.phone_no = phone_no;
     }
 
     public String getGst_no() {
