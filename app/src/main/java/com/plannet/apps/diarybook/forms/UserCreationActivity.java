@@ -52,11 +52,12 @@ import java.util.List;
 public class UserCreationActivity extends AppCompatActivity {
     Button addUser,addRoll;
     EditText name,password,confirmPassword,userName;
-    String roll;
+    RoleModel selectedRolModel=new RoleModel();
     Spinner rollSpinner;
     String[] rolls = { "Sales man", "Manager", "Reception", "Accountant", "Other"};
     User userDb;
     Role roleDb;
+    List<RoleModel>roleModels=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +65,7 @@ public class UserCreationActivity extends AppCompatActivity {
         initUi();
         initDb();
         getRoll();
+//        roleModels=roleDb.getAllRoles();
     }
 
     private void initDb() {
@@ -90,7 +92,7 @@ public class UserCreationActivity extends AppCompatActivity {
         rollSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                roll=rolls[position];
+                selectedRolModel=roleModels.get(position);
             }
 
             @Override
@@ -106,7 +108,14 @@ public class UserCreationActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,rolls);
+    }
+
+    private void setRolSpinner() {
+        List<String>roleName=new ArrayList<>();
+        for (RoleModel temp:roleModels){
+            roleName.add(temp.getRoleName()!=null?temp.getRoleName():"");
+        }
+        ArrayAdapter aa = new ArrayAdapter(UserCreationActivity.this,android.R.layout.simple_spinner_item,roleName);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         rollSpinner.setAdapter(aa);
@@ -130,7 +139,7 @@ public class UserCreationActivity extends AppCompatActivity {
         List<UserModel>userModelList=new ArrayList<>();
         UserModel userModel=new UserModel();
         userModel.setName(name.getText().toString());
-        userModel.setRole_name(roll);
+        userModel.setRole_name(selectedRolModel.getRoleName());
         userModel.setPassword(password.getText().toString());
         userModel.setConfirmPassword(confirmPassword.getText().toString());
         userModel.setUserName(userName.getText().toString());
@@ -185,12 +194,18 @@ public class UserCreationActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<RoleModel>roleModels1=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                RoleModel roleModel=gson.fromJson(str,RoleModel.class);
 
-                            Gson gson = new Gson();
-                            RoleModel roleModel=gson.fromJson(response.toString(),RoleModel.class);
-                            List<RoleModel>roleModels=new ArrayList<>();
-                            roleModels.add(roleModel);
-                            roleDb.insertRole(roleModels);
+                                roleModels1.add(roleModel);
+                            }
+                            roleModels=roleModels1;
+                            setRolSpinner();
+                            roleDb.insertRole(roleModels1);
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
 
@@ -237,8 +252,6 @@ public class UserCreationActivity extends AppCompatActivity {
 
     private void addRollDialogue(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Product");
-        builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout. add_roll_activity, null);
         builder.setView(dialogView);
@@ -262,25 +275,14 @@ public class UserCreationActivity extends AppCompatActivity {
                     roleModel.setActive(isActive.isChecked());
                     roleModel.setPriority(1);
                     synRoll(roleModel);
+                    Toast.makeText(getApplicationContext(),"Roll added successfully",Toast.LENGTH_SHORT).show();
+                    rollName.getText().clear();
+                    description.getText().clear();
+                    getRoll();
                 }
 
             }
         });
-
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
         builder.show();
     }
 

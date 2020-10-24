@@ -68,6 +68,14 @@ public class Role extends DatabaseHandlerController {
 
     }
 
+    public List<RoleModel> getAllRoles() {
+
+        String query = "select * from " + TABLE_NAME ;
+
+        List<RoleModel> roleModels = prepareRoleModel( super.executeQuery( context, query ) );
+        return roleModels;
+    }
+
     public List<RoleModel> prepareRoleModel(ArrayList<ArrayList<String>> data) {
         List<RoleModel> roleModels = new ArrayList<>();
         for (ArrayList<String> tuple : data) {

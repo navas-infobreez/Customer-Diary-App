@@ -2,6 +2,7 @@ package com.plannet.apps.diarybook.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 public class RoleModel {
+
     transient int id;
     @SerializedName("name")
     @Expose

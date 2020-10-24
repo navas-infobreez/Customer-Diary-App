@@ -1,17 +1,31 @@
 package com.plannet.apps.diarybook.models;
 
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class CustomerModel {
 
     int id;
+    @SerializedName("firstName")
+    @Expose
     String customerName;
+    @SerializedName("customerId")
+    @Expose
     int customerId;
+    @SerializedName("searchKey")
+    @Expose
     String customerCode;
+
     String location;
+
     int locationId;
+
     String region;
+    @SerializedName("11111111")
+    @Expose
     String gst_no;
+
 
     public String getRegion() {
         return region;

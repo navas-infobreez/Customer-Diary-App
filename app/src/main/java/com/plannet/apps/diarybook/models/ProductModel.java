@@ -1,23 +1,45 @@
 package com.plannet.apps.diarybook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 
 public class ProductModel {
-
+    @SerializedName("name")
+    @Expose
     transient int id;
+    @SerializedName("name")
+    @Expose
     String product_name;
+    @SerializedName("productId")
+    @Expose
     int product_id;
+
     String product_category;
+    @SerializedName("productCategoryId")
+    @Expose
     int productCategoryId;
+
     String uom;
+
     int uomId;
+    @SerializedName("description")
+    @Expose
     String description;
+
     BigDecimal sale_price;
+
     BigDecimal cost_price;
+
     int taxId;
+    @SerializedName("searchKey")
+    @Expose
     String searchKey;
+    @SerializedName("active")
+    @Expose
     boolean isActive;
 
     List<ProductPriceDto> productPriceDTOList;

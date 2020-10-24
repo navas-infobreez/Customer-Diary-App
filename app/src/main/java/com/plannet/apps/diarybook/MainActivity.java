@@ -21,15 +21,30 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
+import com.plannet.apps.diarybook.databases.Customer;
+import com.plannet.apps.diarybook.databases.ProductCategory;
+import com.plannet.apps.diarybook.databases.Products;
+import com.plannet.apps.diarybook.databases.Role;
+import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
+import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
+import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.models.ProductCategoryModel;
+import com.plannet.apps.diarybook.models.ProductModel;
+import com.plannet.apps.diarybook.models.RoleModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Fragment[]  PAGES;
@@ -40,11 +55,16 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TabLayout tabLayout;
     public int customerId;
+    Role roleDb;
+    User userDb;
+    Products productsDb;
+    Customer customerDb;
+    ProductCategory productCategoryDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main2);
-
+        initDb();
         myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(myPagerAdapter);
@@ -124,6 +144,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected( item );
     }
 
+    private void  initDb(){
+        roleDb=new Role(this);
+        userDb=new User(this);
+        customerDb =new Customer(this);
+        productsDb=new Products(this);
+        productCategoryDb = new ProductCategory(this);
+    }
      public void getAllUsers() {
          final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
          JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
@@ -133,6 +160,15 @@ public class MainActivity extends AppCompatActivity {
                          try {
                              VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                              Log.d( "Response", response.toString() );
+                             JSONArray jsonArrayChanged = response.getJSONArray("result");
+                             List<RoleModel> roleModels1=new ArrayList<>();
+                             for(int i=0;i<jsonArrayChanged.length();i++){
+                                 String str = jsonArrayChanged.getString(i);
+                                 Gson gson = new Gson();
+                                 RoleModel roleModel=gson.fromJson(str,RoleModel.class);
+                                 roleModels1.add(roleModel);
+                             }
+                             roleDb.insertRole(roleModels1);
 
                          } catch (JSONException e) {
                              e.printStackTrace();
@@ -146,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
              }
          } );
 
-         AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+         AppController.getInstance().submitServerRequest( req, "getUser" );
      }
 
     public void getAllProducts() {
@@ -159,7 +195,15 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
-
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<ProductModel> productModels=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                ProductModel productModel=gson.fromJson(str,ProductModel.class);
+                                productModels.add(productModel);
+                            }
+                            productsDb.insertProducts(productModels);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -172,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+        AppController.getInstance().submitServerRequest( req, "getProduct" );
     }
 
 
@@ -186,7 +230,15 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
-
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<UomModel> uomModels=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                UomModel UomModel=gson.fromJson(str,UomModel.class);
+                                uomModels.add(UomModel);
+                            }
+//                            customerDb.insertCustomers(uomModels);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -199,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+        AppController.getInstance().submitServerRequest( req, "getUom" );
     }
 
 
@@ -213,7 +265,15 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
-
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<CustomerModel> customerModelList=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                CustomerModel customerModel=gson.fromJson(str,CustomerModel.class);
+                                customerModelList.add(customerModel);
+                            }
+                            customerDb.insertCustomers(customerModelList);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -226,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+        AppController.getInstance().submitServerRequest( req, "getCustomer" );
     }
 
 
@@ -240,6 +300,15 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<ProductCategoryModel> productCategoryModels=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                ProductCategoryModel productCategoryModel=gson.fromJson(str, ProductCategoryModel.class);
+                                productCategoryModels.add(productCategoryModel);
+                            }
+                            productCategoryDb.insertProductCategory(productCategoryModels);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -253,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitShipmet" );
+        AppController.getInstance().submitServerRequest( req, "getProductCategory" );
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {

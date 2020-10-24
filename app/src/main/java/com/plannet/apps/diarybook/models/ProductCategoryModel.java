@@ -1,13 +1,27 @@
 package com.plannet.apps.diarybook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class ProductCategoryModel {
 
     int id;
+    @SerializedName("name")
+    @Expose
     String categoryName;
+    @SerializedName("CategoryId")
+    @Expose
     int productCategoryId;
+
     int parentCategoryId;
+    @SerializedName("searchKey")
+    @Expose
     String searchKey;
+    @SerializedName("description")
+    @Expose
     String description;
+    @SerializedName("active")
+    @Expose
     boolean active;
 
     public String getSearchKey() {
