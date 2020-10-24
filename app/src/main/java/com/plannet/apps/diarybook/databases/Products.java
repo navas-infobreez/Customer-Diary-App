@@ -103,8 +103,8 @@ public class  Products extends DatabaseHandlerController {
         return productModels;
     }
 
-    public List<ProductModel> selectAllByCategory(String category) {
-        String query = "select * from " + TABLE_NAME + " where  product_category =" + CommonUtils.quoteString( category );
+    public List<ProductModel> selectAllByCategory(int category) {
+        String query = "select * from " + TABLE_NAME + " where  product_category_Id =" +  category ;
 
         List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
         return productModels;

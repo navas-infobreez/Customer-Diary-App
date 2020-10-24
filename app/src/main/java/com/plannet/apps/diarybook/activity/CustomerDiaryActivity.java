@@ -39,11 +39,13 @@ import com.plannet.apps.diarybook.adapters.DiaryLineAdapter;
 import com.plannet.apps.diarybook.adapters.ProductListAdapter;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.CustomerDiaryLinesDao;
+import com.plannet.apps.diarybook.databases.ProductCategory;
 import com.plannet.apps.diarybook.databases.Products;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
+import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
@@ -69,8 +71,9 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     EditText details,quotationNo,invoiceNo;
     RecyclerView productDetails;
     TextView customerName,customerAddress,customerPhone,salesMan;
-    String selectedCategory;
+    int selectedCategory;
     Products productsDb;
+    ProductCategory productCategory;
     int diaryId;
     RadioGroup radioGroup;
     CustomerDiaryModel selectedCustomerDiary=new CustomerDiaryModel();
@@ -81,14 +84,15 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     User userDb;
     BigDecimal grant_Total;
     UserModel userModel=new UserModel();
+    ArrayList<String> categoryNames=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custromer_diary);
         diaryId= getIntent().getExtras().getInt("diaryId");
         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
-            isEdit=false;
-            isManager=true;
+            isEdit=true;
+            isManager=false;
         }else {
             isManager=false;
             isEdit=true;
@@ -97,14 +101,28 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         initUi();
         initView();
 
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,pCategories);
+        final List<ProductCategoryModel> productCategoryModels=productCategory.selectAllCategory();
+
+
+            for (int i = 0; i < productCategoryModels.size(); i++) {
+                if (productCategoryModels.get(i).getCategoryName() != null) {
+                    categoryNames.add(productCategoryModels.get(i).getCategoryName());
+                    //expenseId.add(String.valueOf(ChargeModels.get(i).getChargeId()));
+                }
+            }
+
+
+
+
+
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,categoryNames);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         category.setAdapter(aa);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedCategory=pCategories[position];
+                selectedCategory=productCategoryModels.get( position ).getProductCategoryId();
             }
 
             @Override
@@ -301,6 +319,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         customerDiaryLinesDao = new CustomerDiaryLinesDao(getApplicationContext());
         customerDiaryDao = new CustomerDiaryDao(getApplicationContext());
         userDb=new User(getApplicationContext());
+         productCategory=new ProductCategory(getApplicationContext()  );
 
     }
 

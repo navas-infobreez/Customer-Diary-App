@@ -9,6 +9,7 @@ import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
+import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
 import java.util.ArrayList;
@@ -68,6 +69,14 @@ public class ProductCategory extends DatabaseHandlerController {
 
         }
 
+    }
+
+
+    public List<ProductCategoryModel> selectAllCategory() {
+        String query = "select * from " + TABLE_NAME ;
+
+        List<ProductCategoryModel> categoryList = prepareProductCAtegoryModel( super.executeQuery( context, query ) );
+        return categoryList;
     }
 
     public List<ProductCategoryModel> prepareProductCAtegoryModel(ArrayList<ArrayList<String>> data) {

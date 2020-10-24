@@ -1,9 +1,16 @@
 package com.plannet.apps.diarybook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class ProductCategoryModel {
 
-    int id;
+    transient int id;
+    @SerializedName("name")
+    @Expose
     String categoryName;
+    @SerializedName("id")
+    @Expose
     int productCategoryId;
     int parentCategoryId;
     String searchKey;

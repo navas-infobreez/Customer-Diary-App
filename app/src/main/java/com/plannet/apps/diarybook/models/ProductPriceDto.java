@@ -1,15 +1,20 @@
 package com.plannet.apps.diarybook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 
 public class ProductPriceDto {
 
        transient int id;
+    @SerializedName("id")
+    @Expose
        int uomId;
        BigDecimal purchasePrice;
        BigDecimal salesPrice;
        BigDecimal discntSalesPrice;
-       transient int productId;
+       int productId;
 
     public int getId() {
         return id;

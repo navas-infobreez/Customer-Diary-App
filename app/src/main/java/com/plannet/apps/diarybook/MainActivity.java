@@ -2,6 +2,7 @@ package com.plannet.apps.diarybook;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,15 +22,28 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
+import com.plannet.apps.diarybook.databases.Customer;
+import com.plannet.apps.diarybook.databases.ProductCategory;
+import com.plannet.apps.diarybook.databases.Products;
+import com.plannet.apps.diarybook.databases.UomDao;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
+import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
+import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.models.ProductCategoryModel;
+import com.plannet.apps.diarybook.models.ProductModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Fragment[]  PAGES;
@@ -157,8 +171,30 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            String result = null;
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
+                            JSONObject json= new JSONObject(response.toString());  //your response
+                            try {
+                                 result = json.getString("result");    //result is key for which you need to retrieve data
+                            } catch (JSONException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<List<ProductModel>>() {
+                            }.getType();
+
+                            final List<ProductModel> productModels = gson.fromJson(result,type);
+                            AsyncTask.execute( new Runnable() {
+                                @Override
+                                public void run() {
+                                    Products products=new Products( getApplicationContext() );
+                                    products.insertProducts(productModels); // Also inserts lines
+                                }
+                            });
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -187,6 +223,27 @@ public class MainActivity extends AppCompatActivity {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
 
+                            String result = null;
+                            JSONObject json= new JSONObject(response.toString());  //your response
+                            try {
+                                result = json.getString("result");    //result is key for which you need to retrieve data
+                            } catch (JSONException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<List<UomModel>>() {
+                            }.getType();
+
+                            final List<UomModel> uomModels = gson.fromJson(result.toString(), type);
+                            AsyncTask.execute( new Runnable() {
+                                @Override
+                                public void run() {
+                                    UomDao uomDao=new UomDao( getApplicationContext() );
+                                    uomDao.insertUom(uomModels);
+                                }
+                            });
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -214,6 +271,27 @@ public class MainActivity extends AppCompatActivity {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
 
+                            String result = null;
+                            JSONObject json= new JSONObject(response.toString());  //your response
+                            try {
+                                result = json.getString("result");    //result is key for which you need to retrieve data
+                            } catch (JSONException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<List<CustomerModel>>() {
+                            }.getType();
+
+                            final List<CustomerModel> customerModels = gson.fromJson(result.toString(), type);
+                            AsyncTask.execute( new Runnable() {
+                                @Override
+                                public void run() {
+                                    Customer customer=new Customer( getApplicationContext() );
+                                    customer.insertCustomers(customerModels);
+                                }
+                            });
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -240,6 +318,28 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
+                            String result = null;
+                            JSONObject json= new JSONObject(response.toString());  //your response
+                            try {
+                                result = json.getString("result");    //result is key for which you need to retrieve data
+                            } catch (JSONException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<List<ProductCategoryModel>>() {
+                            }.getType();
+
+                            final List<ProductCategoryModel> productCategoryList = gson.fromJson(result.toString(), type);
+                            AsyncTask.execute( new Runnable() {
+                                @Override
+                                public void run() {
+                                    ProductCategory productCategory=new ProductCategory( getApplicationContext() );
+                                    productCategory.insertProductCategory(productCategoryList);
+                                }
+                            });
+
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
