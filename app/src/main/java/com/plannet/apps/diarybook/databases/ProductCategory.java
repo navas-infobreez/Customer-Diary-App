@@ -8,6 +8,7 @@ import android.util.Log;
 import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
+import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
@@ -67,6 +68,15 @@ public class ProductCategory extends DatabaseHandlerController {
             dbhelper.close();
 
         }
+
+    }
+
+
+    public List<ProductCategoryModel> getAll() {
+        String query="select * from "+TABLE_NAME;
+        List<ProductCategoryModel> list = prepareProductCAtegoryModel(super.executeQuery(context,query));
+
+        return list;
 
     }
 

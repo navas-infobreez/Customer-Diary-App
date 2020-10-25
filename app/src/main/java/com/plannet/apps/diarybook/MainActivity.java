@@ -38,6 +38,7 @@ import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.RoleModel;
+import com.plannet.apps.diarybook.models.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -161,15 +162,16 @@ public class MainActivity extends AppCompatActivity {
                              VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                              Log.d( "Response", response.toString() );
                              JSONArray jsonArrayChanged = response.getJSONArray("result");
-                             List<RoleModel> roleModels1=new ArrayList<>();
+                             List<UserModel> userModelList=new ArrayList<>();
                              for(int i=0;i<jsonArrayChanged.length();i++){
                                  String str = jsonArrayChanged.getString(i);
                                  Gson gson = new Gson();
-                                 RoleModel roleModel=gson.fromJson(str,RoleModel.class);
-                                 roleModels1.add(roleModel);
+                                 UserModel userModel=gson.fromJson(str,UserModel.class);
+                                 userModelList.add(userModel);
                              }
-                             roleDb.insertRole(roleModels1);
-
+                             userDb.insertUser(userModelList);
+                             List<UserModel>test=userDb.getAllUser();
+                             Log.d( "Response", test.toString());
                          } catch (JSONException e) {
                              e.printStackTrace();
                          }
@@ -204,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
                                 productModels.add(productModel);
                             }
                             productsDb.insertProducts(productModels);
+                            List<ProductModel>test=productsDb.selectAll();
+                            Log.d( "Response", test.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -267,13 +271,15 @@ public class MainActivity extends AppCompatActivity {
                             Log.d( "Response", response.toString() );
                             JSONArray jsonArrayChanged = response.getJSONArray("result");
                             List<CustomerModel> customerModelList=new ArrayList<>();
-                            for(int i=0;i<jsonArrayChanged.length();i++){
+                             for(int i=0;i<jsonArrayChanged.length();i++){
                                 String str = jsonArrayChanged.getString(i);
                                 Gson gson = new Gson();
                                 CustomerModel customerModel=gson.fromJson(str,CustomerModel.class);
                                 customerModelList.add(customerModel);
                             }
                             customerDb.insertCustomers(customerModelList);
+                            List<CustomerModel>test=customerDb.getAll();
+                            Log.d( "Response", test.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -309,6 +315,8 @@ public class MainActivity extends AppCompatActivity {
                                 productCategoryModels.add(productCategoryModel);
                             }
                             productCategoryDb.insertProductCategory(productCategoryModels);
+                            List<ProductCategoryModel>test=productCategoryDb.getAll();
+                            Log.d( "Response", test.toString());
 
                         } catch (JSONException e) {
                             e.printStackTrace();

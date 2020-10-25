@@ -206,6 +206,8 @@ public class UserCreationActivity extends AppCompatActivity {
                             roleModels=roleModels1;
                             setRolSpinner();
                             roleDb.insertRole(roleModels1);
+                            List<RoleModel>test=roleDb.getAllRoles();
+                            Log.d( "Response", test.toString());
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
 

@@ -109,5 +109,11 @@ public class  Products extends DatabaseHandlerController {
         List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
         return productModels;
     }
+    public List<ProductModel> selectAll() {
+        String query = "select * from " + TABLE_NAME ;
+
+        List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
+        return productModels;
+    }
 }
 

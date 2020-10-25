@@ -53,10 +53,19 @@ public class Customer extends DatabaseHandlerController {
 
             for (CustomerModel customer : customers) {
                 count++;
-                Object[] values_ar = {customer.getCustomerId(),customer.getCustomerName(),customer.getCustomerCode(),
-                        customer.getCustomerContact().getCountry(), customer.getCustomerContact().getCity(),customer.getCustomerContact().getAddress1(),
-                        customer.getCustomerContact().getAddress2(),customer.getCustomerContact().getEmail(),
-                        customer.getCustomerContact().getContactNo(),customer.getLocation(),customer.getGst_no()};
+                Object[] values_ar;
+                if (customer.getCustomerContact()!=null){
+                     values_ar = new Object[]{customer.getCustomerId(), customer.getCustomerName(), customer.getCustomerCode(),
+                             customer.getCustomerContact().getCountry(), customer.getCustomerContact().getCity(), customer.getCustomerContact().getAddress1(),
+                             customer.getCustomerContact().getAddress2(), customer.getCustomerContact().getEmail(),
+                             customer.getCustomerContact().getContactNo(), customer.getLocation(), customer.getGst_no()};
+                }else {
+                     values_ar = new Object[]{customer.getCustomerId(),customer.getCustomerName(),customer.getCustomerCode(),
+                            "","","",
+                           "","",
+                            "",customer.getLocation(),customer.getGst_no()};
+                }
+
                 String values = "", fields = "";
                     for (int i = 0; i < values_ar.length; i++) {
                         if (values_ar[i] != null) {

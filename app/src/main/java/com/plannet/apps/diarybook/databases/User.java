@@ -101,6 +101,13 @@ public class User extends DatabaseHandlerController {
         List<UserModel> userModelList = prepareUserModels( super.executeQuery( context, query ) );
         return userModelList.size() > 0 ? userModelList.get( 0 ) : null;
     }
+    public List<UserModel> getAllUser() {
+
+        String query = "select * from " + TABLE_NAME ;
+
+        List<UserModel> userModelList = prepareUserModels( super.executeQuery( context, query ) );
+        return userModelList;
+    }
 
 }
 

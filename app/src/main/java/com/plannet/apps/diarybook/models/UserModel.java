@@ -1,18 +1,34 @@
 package com.plannet.apps.diarybook.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class UserModel {
 
     int id;
+    @SerializedName("firstName")
+    @Expose
     String name;
+    @SerializedName("userId")
+    @Expose
     int role_id;
-    String role_name;
-    String userName;
-    String password;
-    String confirmPassword;
 
+    String role_name;
+    @SerializedName("userName")
+    @Expose
+    String userName;
+    @SerializedName("password")
+    @Expose
+    String password;
+
+    String confirmPassword;
+    @SerializedName("userContact")
+    @Expose
     UserContacts userContacts;
+    @SerializedName("roles")
+    @Expose
     List<RoleModel> roles;
 
     public List<RoleModel> getRoles() {
