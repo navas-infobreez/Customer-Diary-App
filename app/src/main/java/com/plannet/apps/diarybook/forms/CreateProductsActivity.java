@@ -50,21 +50,33 @@ public class CreateProductsActivity extends AppCompatActivity {
     String[] categories =  {"Tiles", "PVC Pipe & Fittings", "Sanitaryware"};;
     Products products;
     String selectedCategory;
+    ProductCategory productCategoryDb;
+    List<ProductCategoryModel>productCategoryModels=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_create_products );
 
-
-        initUi();
         initDb();
+        initUi();
+
     }
 
     private void initDb() {
         products = new Products( getApplicationContext() );
+        productCategoryDb=new ProductCategory(this);
     }
-
+    private void setCategorySpinner() {
+        List<String>category=new ArrayList<>();
+        for (ProductCategoryModel temp:productCategoryModels){
+            category.add(temp.getCategoryName()!=null?temp.getCategoryName():"");
+        }
+        ArrayAdapter aa = new ArrayAdapter( this, android.R.layout.simple_spinner_item, category );
+        aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        //Setting the ArrayAdapter data on the Spinner
+        category_spinner.setAdapter( aa );
+    }
     private void initUi() {
         product_name = (EditText) findViewById( R.id.name );
         code = (EditText) findViewById( R.id.product_code );
@@ -74,12 +86,13 @@ public class CreateProductsActivity extends AppCompatActivity {
         submit = (Button) findViewById( R.id.add_button );
         addCategory=(Button)findViewById(R.id.add_category);
         addUom=(Button)findViewById(R.id.add_uom);
+        productCategoryModels=productCategoryDb.getAll();
+        setCategorySpinner();
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getData();
-//                        Intent intent = new Intent( CreateProductsActivity.this, CustomerDiaryActivity.class );
-//                        startActivity(intent);
+
 
             }
         } );
@@ -114,11 +127,7 @@ public class CreateProductsActivity extends AppCompatActivity {
 
         } );
 
-        selectedCategory = categories[0];
-        ArrayAdapter aa = new ArrayAdapter( this, android.R.layout.simple_spinner_item, categories );
-        aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-        //Setting the ArrayAdapter data on the Spinner
-        category_spinner.setAdapter( aa );
+
     }
 
 

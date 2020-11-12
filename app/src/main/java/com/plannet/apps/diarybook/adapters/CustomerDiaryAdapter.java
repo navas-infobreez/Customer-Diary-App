@@ -112,7 +112,7 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             }
 
             holder.textDate.setText( eachItem.getDate() );
-            holder.customerName.setText( eachItem.getCustomerName() );
+            holder.customerName.setText( eachItem.getCustomerModel().getCustomerName() );
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

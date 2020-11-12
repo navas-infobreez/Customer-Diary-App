@@ -9,7 +9,7 @@ public class ProductCategoryModel {
     @SerializedName("name")
     @Expose
     String categoryName;
-    @SerializedName("CategoryId")
+    @SerializedName("remoteId")
     @Expose
     int productCategoryId;
 

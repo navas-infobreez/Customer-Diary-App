@@ -1,11 +1,15 @@
 package com.plannet.apps.diarybook.models;
 
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 
 public class CustomerDiaryLineModel {
 
-
+    @SerializedName("remoteId")
+    @Expose
     int id ;
     int headerId;
     String product_name ;

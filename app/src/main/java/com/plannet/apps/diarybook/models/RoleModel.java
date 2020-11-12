@@ -7,7 +7,7 @@ public class RoleModel {
     @SerializedName("name")
     @Expose
     String roleName;
-    @SerializedName("id")
+    @SerializedName("remoteId")
     @Expose
     int roleId;
     @SerializedName("description")

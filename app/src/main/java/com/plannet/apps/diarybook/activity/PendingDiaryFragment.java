@@ -179,7 +179,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         if (data instanceof CustomerDiaryModel) {
             CustomerDiaryModel customerDiaryModel = (CustomerDiaryModel) data;
             Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
-            intent.putExtra("diaryId",customerDiaryModel.getId());
+            intent.putExtra("diaryId",customerDiaryModel.getDiaryId());
             startActivity(intent);
         }
 
@@ -191,7 +191,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         customerDiaryDao.updateStatus(customerDiaryModel.getId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getId());
 
             Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
-            intent.putExtra("diaryId",customerDiaryModel.getId());
+            intent.putExtra("diaryId",customerDiaryModel.getDiaryId());
             startActivity(intent);
 
         refreshview();

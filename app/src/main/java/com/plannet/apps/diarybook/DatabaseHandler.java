@@ -13,6 +13,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final String TAG = "DatabaseHandler";
     private final Context context;
 
+    public static final String DRAFT = "DRAFT";
     public static final String PENDING = "PENDING";
     public static final String PICKED = "PICKED";
     public static final String COMPLETED = "COMPLETED";
@@ -101,7 +102,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL("CREATE TABLE IF NOT EXISTS ProductCategory(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,category_name TEXT ,category_Id INTEGER ," +
                     "parentCategoryId INTEGER)");
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,customerName TEXT ," +
+            db.execSQL("CREATE TABLE IF NOT EXISTS CustomerDiary(  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,diaryId INTEGER ,customerName TEXT ," +
                     "address TEXT,phone TEXT,customerId INTEGER ,date TEXT,time TEXT,salesman_name TEXT,salesmanId INTEGER,invoice_no TEXT,quotation_no TEXT,descripion TEXT,status TEXT," +
                     "isVisit INTEGER,isQuotation INTEGER,isInvoiced INTEGER,totalAmount TEXT)");
 

@@ -34,6 +34,7 @@ import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
+import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.adapters.DiaryLineAdapter;
 import com.plannet.apps.diarybook.adapters.ProductListAdapter;
@@ -44,6 +45,7 @@ import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
+import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
@@ -74,6 +76,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     int diaryId;
     RadioGroup radioGroup;
     CustomerDiaryModel selectedCustomerDiary=new CustomerDiaryModel();
+    CustomerDiaryModel syncCustomerDiary=new CustomerDiaryModel();
     CustomerDiaryDao customerDiaryDao;
     CustomerDiaryLinesDao customerDiaryLinesDao;
     TextView grandTotal;
@@ -189,14 +192,15 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         }
         if (selectedCustomerDiary.getDescripion()!=null)
             details.setText(selectedCustomerDiary.getDescripion());
-        customerName.setText(selectedCustomerDiary.getCustomerName());
+        customerName.setText(selectedCustomerDiary.getCustomerModel().getCustomerName());
         customerPhone.setText("Phone : "+selectedCustomerDiary.getCustomerPhone());
         customerAddress.setText("Place  : "+selectedCustomerDiary.getCustomerAddress());
         if (selectedCustomerDiary.getInvoice_no()!=null)
             invoiceNo.setText(selectedCustomerDiary.getInvoice_no());
         if (selectedCustomerDiary.getQuotationNo()!=null)
             quotationNo.setText(selectedCustomerDiary.getQuotationNo());
-        grandTotal.setText(String.valueOf(selectedCustomerDiary.getTotalAmount()));
+        grant_Total=customerDiaryLinesDao.getSumOfLineTotal(diaryId);
+        grandTotal.setText(grant_Total!=null?grant_Total.toPlainString():"0.00");
         if (userModel!=null)
             salesMan.setText(userModel.getName());
     }
@@ -251,6 +255,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     customerDiaryDao.updateDiary(diaryId, COMPLETED, invoiceNo.getText().toString(), quotationNo.getText().toString(), details.getText().toString(),
                             isVisit, isInvoiced, isQuotation, grant_Total != null ? grant_Total.toPlainString() : "00.00");
                 }
+                syncCustomerDiary=customerDiaryDao.getAll(diaryId);
+                sycDairy(syncCustomerDiary);
                 Intent intent2 = new Intent(CustomerDiaryActivity.this, MainActivity.class );
                 startActivity(intent2);
             }
@@ -394,6 +400,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     sqrft.getText().clear();
                     details.getText().clear();
                     lineRefresh();
+                    initView();
                 }
 
             }
@@ -406,6 +413,32 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    private void sycDairy(CustomerDiaryModel customerDiaryModel) {
+        final String url = " https://planet-customerdiary.herokuapp.com/customerdiary/createorupdatecustomerdiary";
+        final JsonFormater formatter = new JsonFormater();
+        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest(this,  url, formatter.customerDiaryJson(customerDiaryModel),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d( "error Response", error.toString() );
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "sycDairy" );
     }
 
     private void lineRefresh() {

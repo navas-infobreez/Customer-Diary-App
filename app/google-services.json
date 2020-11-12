@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "110432522627",
+    "firebase_url": "https://planet-diary-44f70.firebaseio.com",
+    "project_id": "planet-diary-44f70",
+    "storage_bucket": "planet-diary-44f70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110432522627:android:8a7d9e4ea094bf048126b6",
+        "android_client_info": {
+          "package_name": "com.plannet.apps.diarybook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110432522627-m7h0sfra5212l4tlsrq43v586fk1fbgt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2Uw2b1R9hv1qnb9Tk2xg1QEMa6JPr_Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110432522627-m7h0sfra5212l4tlsrq43v586fk1fbgt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

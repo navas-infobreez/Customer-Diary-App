@@ -14,7 +14,7 @@ public class ProductModel {
     @SerializedName("name")
     @Expose
     String product_name;
-    @SerializedName("productId")
+    @SerializedName("remoteId")
     @Expose
     int product_id;
 

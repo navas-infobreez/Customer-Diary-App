@@ -11,7 +11,7 @@ public class UserModel {
     @SerializedName("firstName")
     @Expose
     String name;
-    @SerializedName("userId")
+    @SerializedName("remoteId")
     @Expose
     int role_id;
 

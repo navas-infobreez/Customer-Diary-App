@@ -163,6 +163,32 @@ public class ReceptionForm extends AppCompatActivity {
 
     }
 
+    private void syncDiary(CustomerDiaryModel cDiary) {
+        final String url = " https://planet-customerdiary.herokuapp.com/customerdiary/createorupdatecustomerdiary";
+        final JsonFormater formatter = new JsonFormater();
+        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest(this,  url, formatter.customerDiaryJson(cDiary),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d( "error Response", error.toString() );
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "submitCustomer" );
+    }
+
     private void syncCustomer(CustomerModel customerModel) {
         final String url = " https://planet-customerdiary.herokuapp.com/customer/createorupdatecustomer";
         final JsonFormater formatter = new JsonFormater();
@@ -186,7 +212,7 @@ public class ReceptionForm extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitRoll" );
+        AppController.getInstance().submitServerRequest( req, "submitCustomer" );
     }
 
     private void insertDiary() {
@@ -201,7 +227,8 @@ public class ReceptionForm extends AppCompatActivity {
         customerDiaryModel.setVisit(isVisit);
         customerDiaryModel.setDate(CommonUtils.getCurrentDateAndTime());
         customerDiaryModel.setStatus(PENDING);
-        customerDiaryDao.insertCustomerDiary(customerDiaryModels);
+//        syncDiary(customerDiaryModel);
+//        customerDiaryDao.insertCustomerDiary(customerDiaryModels);
     }
 
     private void cearData() {

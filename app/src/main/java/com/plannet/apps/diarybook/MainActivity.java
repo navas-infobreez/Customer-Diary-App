@@ -26,6 +26,7 @@ import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.databases.Customer;
+import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.ProductCategory;
 import com.plannet.apps.diarybook.databases.Products;
 import com.plannet.apps.diarybook.databases.Role;
@@ -34,6 +35,7 @@ import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
+import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public int customerId;
     Role roleDb;
     User userDb;
+    CustomerDiaryDao customerDiaryDb;
     Products productsDb;
     Customer customerDb;
     ProductCategory productCategoryDb;
@@ -136,11 +139,11 @@ public class MainActivity extends AppCompatActivity {
         int i = item.getItemId();
         if (i == R.id.sync) {
             getAllUsers();
+            getallCustomers();
             getAllProducts();
             getAllProductsCategory();
             getallUom();
-            getallCustomers();
-
+            getAllDiary();
         }
         return super.onOptionsItemSelected( item );
     }
@@ -151,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         customerDb =new Customer(this);
         productsDb=new Products(this);
         productCategoryDb = new ProductCategory(this);
+        customerDiaryDb = new CustomerDiaryDao(this);
     }
      public void getAllUsers() {
          final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
@@ -221,6 +225,41 @@ public class MainActivity extends AppCompatActivity {
         } );
 
         AppController.getInstance().submitServerRequest( req, "getProduct" );
+    }
+
+    private void getAllDiary() {
+        final String url = "https://planet-customerdiary.herokuapp.com/customerdiary/getallcustomerdiary";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<CustomerDiaryModel> customerDiaryModels=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                CustomerDiaryModel cDiary=gson.fromJson(str,CustomerDiaryModel.class);
+                                customerDiaryModels.add(cDiary);
+                            }
+                            customerDiaryDb.insertCustomerDiary(customerDiaryModels);
+                            List<CustomerDiaryModel>test=customerDiaryDb.getAll();
+                            Log.d( "Response", test.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "getDiary" );
     }
 
 

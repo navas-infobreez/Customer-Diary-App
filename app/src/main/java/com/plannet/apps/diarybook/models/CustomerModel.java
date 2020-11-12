@@ -10,7 +10,7 @@ public class CustomerModel {
     @SerializedName("firstName")
     @Expose
     String customerName;
-    @SerializedName("customerId")
+    @SerializedName("remoteId")
     @Expose
     int customerId;
     @SerializedName("searchKey")

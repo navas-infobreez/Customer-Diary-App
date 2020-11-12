@@ -159,9 +159,6 @@ public class UserCreationActivity extends AppCompatActivity {
     }
 
     private void syncUser(UserModel userModel) {
-
-       // https://planet-customerdiary.herokuapp.com/user/createorupdateuser  post
-
         final String url ="https://planet-customerdiary.herokuapp.com/user/createorupdateuser";
         final JsonFormater formatter = new JsonFormater();
         DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, formatter.toUserJson(userModel),
@@ -179,7 +176,7 @@ public class UserCreationActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d( "error", error.toString() );
 
             }
         } );

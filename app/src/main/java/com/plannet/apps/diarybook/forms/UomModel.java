@@ -9,7 +9,7 @@ public class UomModel {
     @SerializedName("name")
     @Expose
     String name;
-    @SerializedName("uomId")
+    @SerializedName("remoteId")
     @Expose
     int uomId;
     @SerializedName("searchKey")

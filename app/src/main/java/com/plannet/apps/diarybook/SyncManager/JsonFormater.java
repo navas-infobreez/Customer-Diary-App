@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.models.CustomerContact;
+import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
+import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
@@ -61,6 +63,42 @@ public class JsonFormater {
         return jsonObject;
     }
 
+
+    public JSONObject customerDiaryJson(CustomerDiaryModel customerDiaryModel) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+            jsonObject.put("invoiceNo",customerDiaryModel.getInvoice_no());
+            jsonObject.put("quotationNo",customerDiaryModel.getQuotationNo() );
+            jsonObject.put("searchKey", "");
+            jsonObject.put("description",customerDiaryModel.getDescripion() );
+            jsonObject.put("active", true);
+            if (customerDiaryModel.isVisit()){
+                jsonObject.put("purpose", "VISTED");
+            }else if (customerDiaryModel.isQuotation()){
+                jsonObject.put("purpose", "QUOTATION");
+            }else {
+                jsonObject.put("purpose","INVOICE");
+            }
+
+            jsonObject.put("shiptoCustomerAddress", customerDiaryModel.getCustomerAddress());
+            jsonObject.put("customerId",customerDiaryModel.getCustomerId() );
+            jsonObject.put("salesRepId", customerDiaryModel.getSalesmanId());
+            jsonObject.put("totalAmount", customerDiaryModel.getTotalAmount());
+            jsonObject.put("status", customerDiaryModel.getState());
+            jsonObject.put("CustomerDiaryLineDTOList", diaryLineJson( customerDiaryModel.getCustomerDiaryLineDTOList() ));
+            Log.d("orderjson", jsonObject.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return jsonObject;
+    }
+
+
     public JSONObject customerJson(CustomerModel customerModel) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -79,6 +117,33 @@ public class JsonFormater {
 
 
         return jsonObject;
+    }
+
+    public JSONArray diaryLineJson(List<CustomerDiaryLineModel> customerDiaryLineModel) {
+        JSONArray jArray = new JSONArray();
+        try {
+            //Todo  please fill the json
+
+            for (CustomerDiaryLineModel c : customerDiaryLineModel)
+            {
+                JSONObject studentJSON = new JSONObject();
+                studentJSON.put("id",c.getId());
+                studentJSON.put("remoteId",c.getHeaderId() );
+                studentJSON.put("productId", c.getProduct_id());
+                studentJSON.put("uomId","");
+                studentJSON.put("productCategoryId",c.getCategory());
+                studentJSON.put("salesPrice",c.getPrice());
+                studentJSON.put("Qty", c.getQty());
+                studentJSON.put("Description","" );
+                jArray.put(studentJSON);
+            }
+            Log.d("line", jArray.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return jArray;
     }
 
     public JSONObject customerContactJson(CustomerContact customerContact) {
@@ -104,13 +169,12 @@ public class JsonFormater {
         return jsonObject;
     }
 
-
     public JSONObject toUserJson(UserModel userModel) {
         JSONObject jsonObject = new JSONObject();
         try {
 
 
-            jsonObject.put("id", 0);
+            jsonObject.put("remoteId", 0);
             jsonObject.put("firstName", userModel.getName());
             jsonObject.put("lastName", "h");
             jsonObject.put("userName", userModel.getUserName());
@@ -122,9 +186,9 @@ public class JsonFormater {
             List<RoleModel> lines = new ArrayList<>();
             RoleModel line = new RoleModel();
             line.setRoleId( 1 );
-            line.setRoleName( "ADMIN" );
+            line.setRoleName( userModel.getRole_name() );
             line.setActive( true );
-            line.setDescription( "ADMIN" );
+            line.setDescription( userModel.getRole_name() );
             line.setPriority( 1 );
             lines.add( line );
 

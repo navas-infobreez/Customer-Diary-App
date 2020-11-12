@@ -111,9 +111,9 @@ public class Customer extends DatabaseHandlerController {
     }
 
     public CustomerModel getCustomer(int cusId) {
-        String query = "select * from " + TABLE_NAME + " where id= " + cusId;
+        String query = "select * from " + TABLE_NAME + " where customer_id= " + cusId;
         List<CustomerModel> list = prepareModelList( super.executeQuery( context, query ) );
-        if (list != null) {
+        if (list != null&&list.size()>0) {
             return list.get( 0 );
         }
         return null;

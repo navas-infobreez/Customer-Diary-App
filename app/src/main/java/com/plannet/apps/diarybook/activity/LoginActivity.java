@@ -105,14 +105,13 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onError(Exception error) {
                             AppController.getInstance().setAuthToken( null );
-                            //progressDialog.dismiss();
                             Toast.makeText( getApplicationContext(), "User Not Exsists", Toast.LENGTH_SHORT ).show();
                         }
 
                         @Override
                         public void onComplete() {
                             AppController.getInstance().setAuthToken(loginManager.getAuthModel());
-                            login(  userModel );
+                            login( userModel );
 
                         }
                     } ); //
@@ -128,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent( LoginActivity.this, CustomerSearchActivity.class );
             intent.putExtra( "role_name", userModel.getRole_name() );
             LoginActivity.this.startActivity( intent );
-        } else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" )) {
+        } else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" )||userModel.getRole_name().equalsIgnoreCase( "Accountant" )) {
             Intent intent = new Intent( LoginActivity.this, MainActivity.class );
             intent.putExtra( "role_name", userModel.getRole_name() );
             LoginActivity.this.startActivity( intent );
