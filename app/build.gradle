@@ -40,4 +40,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 
     implementation 'com.google.firebase:firebase-crashlytics'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
 }

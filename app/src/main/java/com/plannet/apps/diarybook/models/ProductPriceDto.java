@@ -8,14 +8,25 @@ import java.math.BigDecimal;
 public class ProductPriceDto {
 
        transient int id;
-    @SerializedName("remoteId")
-    @Expose
-       int productPriceId;
+        @SerializedName("remoteId")
+        @Expose
+        int productPriceId;
+
+        @SerializedName("uomId")
+        @Expose
        int uomId;
-       BigDecimal purchasePrice;
-       BigDecimal salesPrice;
-       BigDecimal discntSalesPrice;
-       transient int productId;
+        @SerializedName("purchasePrice")
+         @Expose
+        BigDecimal purchasePrice;
+        @SerializedName("salesPrice")
+         @Expose
+        BigDecimal salesPrice;
+        @SerializedName("discntSalesPrice")
+        @Expose
+        BigDecimal discntSalesPrice;
+        @SerializedName("productId")
+         @Expose
+         int productId;
 
     public int getId() {
         return id;

@@ -2,6 +2,7 @@ package com.plannet.apps.diarybook.activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
@@ -40,13 +43,18 @@ import com.plannet.apps.diarybook.adapters.DiaryLineAdapter;
 import com.plannet.apps.diarybook.adapters.ProductListAdapter;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.CustomerDiaryLinesDao;
+import com.plannet.apps.diarybook.databases.ProductCategory;
+import com.plannet.apps.diarybook.databases.ProductPrice;
 import com.plannet.apps.diarybook.databases.Products;
+import com.plannet.apps.diarybook.databases.Uom;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
+import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
+import com.plannet.apps.diarybook.models.ProductPriceDto;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
@@ -63,7 +71,6 @@ import static com.plannet.apps.diarybook.DatabaseHandler.APPROVERETURN;
 import static com.plannet.apps.diarybook.DatabaseHandler.COMPLETED;
 
 public class CustomerDiaryActivity extends AppCompatActivity {
-    String[] pCategories = {"Tiles", "PVC Pipe & Fittings", "Sanitaryware"};
     Spinner category;
     RadioButton visit,invoiced,quotation;
     boolean isVisit,isInvoiced,isQuotation;
@@ -71,8 +78,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     EditText details,quotationNo,invoiceNo;
     RecyclerView productDetails;
     TextView customerName,customerAddress,customerPhone,salesMan;
-    String selectedCategory;
+    ProductCategoryModel selectedCategory=new ProductCategoryModel();
     Products productsDb;
+    Uom uomDb;
+    ProductPrice productPriceDb;
     int diaryId;
     RadioGroup radioGroup;
     CustomerDiaryModel selectedCustomerDiary=new CustomerDiaryModel();
@@ -84,6 +93,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     User userDb;
     BigDecimal grant_Total;
     UserModel userModel=new UserModel();
+    private IntentIntegrator qrScan;
+    ProductCategory productCategoryDb;
+    List<ProductCategoryModel>productCategoryModelList=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,15 +112,12 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         initDb();
         initUi();
         initView();
+        getAllProducts();
 
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,pCategories);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        category.setAdapter(aa);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedCategory=pCategories[position];
+                selectedCategory = productCategoryModelList.get(0);
             }
 
             @Override
@@ -125,14 +135,57 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         lineRefresh();
     }
 
+    private void setCategorySpinner() {
+        List<String>categoryList=new ArrayList<>();
+        for (ProductCategoryModel temp:productCategoryModelList){
+            categoryList.add(temp.getCategoryName()!=null?temp.getCategoryName():"");
+        }
+        ArrayAdapter aa = new ArrayAdapter( this, android.R.layout.simple_spinner_item, categoryList );
+        aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        category.setAdapter( aa );
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                //if qr contains data
+                try {
+                    //converting the data to json
+                    JSONObject obj = new JSONObject(result.getContents());
+                    //setting values to textviews
+                    ProductModel productModel=new ProductModel();
+                    String id=result.getContents();
+                    productsDb.selectProductById(CommonUtils.toInt(id));
+                    detailsDialogue(productModel);
+//                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    //if control comes here
+                    //that means the encoded format not matches
+                    //in this case you can display whatever data is available on the qrcode
+                    //to a toast
+                    ProductModel productModel=new ProductModel();
+                    String id=result.getContents();
+                    productsDb.selectProductById(CommonUtils.toInt(id));
+                    detailsDialogue(productModel);
+//                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
 
-        inflater.inflate(R.menu.option_menu, menu);
-
+        inflater.inflate(R.menu.barcode_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -141,8 +194,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int i = item.getItemId();
-        if (i == R.id.sync) {
-            getAllProducts();
+        if (i == R.id.qrcCde) {
+            qrScan.initiateScan();
 
         }
         return super.onOptionsItemSelected( item );
@@ -203,6 +256,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         grandTotal.setText(grant_Total!=null?grant_Total.toPlainString():"0.00");
         if (userModel!=null)
             salesMan.setText(userModel.getName());
+
+        qrScan = new IntentIntegrator(this);
+
+
     }
 
     private void initUi() {
@@ -223,8 +280,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         grandTotal=(TextView)findViewById(R.id.total);
         rejectButton=(Button)findViewById(R.id.reject);
         salesMan=(TextView)findViewById(R.id.salesman);
-
-
+        productCategoryModelList=productCategoryDb.getAll();
+        setCategorySpinner();
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -259,6 +316,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                 sycDairy(syncCustomerDiary);
                 Intent intent2 = new Intent(CustomerDiaryActivity.this, MainActivity.class );
                 startActivity(intent2);
+                finish();
             }
         });
 
@@ -266,8 +324,11 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customerDiaryDao.updateDiaryStatus(diaryId,APPROVERETURN);
+                syncCustomerDiary=customerDiaryDao.getAll(diaryId);
+                sycDairy(syncCustomerDiary);
                 Intent intent2 = new Intent(CustomerDiaryActivity.this, MainActivity.class );
                 startActivity(intent2);
+                finish();
             }
         });
         if (isManager){
@@ -307,11 +368,15 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         customerDiaryLinesDao = new CustomerDiaryLinesDao(getApplicationContext());
         customerDiaryDao = new CustomerDiaryDao(getApplicationContext());
         userDb=new User(getApplicationContext());
+        uomDb = new Uom(this);
+        productPriceDb = new ProductPrice(this);
+        productCategoryDb = new ProductCategory(this);
 
     }
 
+
     private void dialogue(){
-        List<ProductModel>productModels=productsDb.selectAllByCategory(selectedCategory);
+        List<ProductModel>productModels=productsDb.selectAllByCategory(selectedCategory.getProductCategoryId());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Product");
         builder.setCancelable(false);
@@ -355,21 +420,48 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     }
 
     private void detailsDialogue(final ProductModel productsModel){
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout. product_detais_data, null);
         builder.setView(dialogView);
 
+        final List<ProductPriceDto>productPriceList=productPriceDb.getAllById(productsModel.getProduct_id());
+
         final EditText sqrft,details;
-        TextView name,amount;
+        final TextView name,amount,uom;
+        Spinner price_spinner;
         Button save;
         sqrft=(EditText)dialogView.findViewById(R.id.sqrft);
         details=(EditText)dialogView.findViewById(R.id.details);
+        uom=(TextView) dialogView.findViewById(R.id.uom);
         name=(TextView) dialogView.findViewById(R.id.name);
         amount=(TextView) dialogView.findViewById(R.id.amount);
         save=(Button) dialogView.findViewById(R.id.save);
+        price_spinner=(Spinner)dialogView.findViewById(R.id.price_spinner);
+
+        final List<String>priceList=new ArrayList<>();
+        for (ProductPriceDto temp:productPriceList){
+            priceList.add(String.valueOf(temp.getSalesPrice()));
+        }
+        ArrayAdapter aa = new ArrayAdapter( CustomerDiaryActivity.this, android.R.layout.simple_spinner_item, priceList );
+        aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        price_spinner.setAdapter( aa );
+
+        price_spinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                ProductPriceDto selectedPrice = productPriceList.get(position);
+                UomModel uomModel=uomDb.getUom(selectedPrice.getUomId());
+                uom.setText(uomModel.getName());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        } );
         save.setVisibility(View.GONE);
 
         name.setText(productsModel.getProduct_name());
@@ -392,7 +484,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     String qty = sqrft.getText().toString();
                     customerDiaryLineModel.setQty(CommonUtils.toInt(qty));
                     customerDiaryLineModel.setDetails(details.getText().toString());
-                    customerDiaryLineModel.setProduct_id(productsModel.getId());
+                    customerDiaryLineModel.setProduct_id(productsModel.getProduct_id());
                     customerDiaryLineModel.setHeaderId(diaryId);
                     customerDiaryLineModel.setCategory(productsModel.getProduct_category());
                     customerDiaryLineModel.setPrice(productsModel.getSale_price().multiply(CommonUtils.toBigDecimal(qty)));

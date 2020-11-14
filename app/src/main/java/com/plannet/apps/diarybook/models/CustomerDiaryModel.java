@@ -38,7 +38,8 @@ public class CustomerDiaryModel {
     @SerializedName("status")
     @Expose
      String status;
-
+    @SerializedName("customerAddress")
+    @Expose
      String customerAddress;
 
      String customerPhone;

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
+import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
@@ -32,10 +33,12 @@ public class  Products extends DatabaseHandlerController {
     private DatabaseHandler dbhelper;
     private SQLiteDatabase sqliteDB;
     private Context context;
+    ProductPrice productPriceDb;
 
 
     public Products(Context context) {
         this.context = context;
+        productPriceDb=new ProductPrice(context);
     }
 
     public void insertProducts(List<ProductModel> productModel) {
@@ -66,8 +69,9 @@ public class  Products extends DatabaseHandlerController {
                         Log.d( "Insert Products", query );
                         sqliteDB.execSQL( query );
                     }
-
+                productPriceDb.insertProductPrice(tuple.getProductPriceDTOList());
             }
+
             sqliteDB.setTransactionSuccessful();
         } catch (Exception e) {
             ErrorMsg.showError(context, "Error while running DB query", e,"");
@@ -96,6 +100,7 @@ public class  Products extends DatabaseHandlerController {
             temp.setDescription(tuple.get(7));
             temp.setSale_price(CommonUtils.toBigDecimal(tuple.get(8)));
             temp.setCost_price(CommonUtils.toBigDecimal(tuple.get(9)));
+            temp.setProductPriceDTOList(productPriceDb.getAllById(CommonUtils.toInt(tuple.get(2))));
             temp.setTaxId(CommonUtils.toInt(tuple.get(10)));
             productModels.add(temp);
 
@@ -103,17 +108,34 @@ public class  Products extends DatabaseHandlerController {
         return productModels;
     }
 
-    public List<ProductModel> selectAllByCategory(String category) {
-        String query = "select * from " + TABLE_NAME + " where  product_category =" + CommonUtils.quoteString( category );
+    public List<ProductModel> selectAllByCategory(int categoryId) {
+        String query = "select * from " + TABLE_NAME + " where  product_category_Id =" + categoryId;
 
         List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
         return productModels;
     }
+
+    public ProductModel selectProductById(int id) {
+        String query = "select * from " + TABLE_NAME + " where  product_id =" + id ;
+
+        List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
+        if (productModels.size()>0)
+            return productModels.get(0);
+        else
+            return null;
+    }
+
     public List<ProductModel> selectAll() {
         String query = "select * from " + TABLE_NAME ;
 
         List<ProductModel> productModels = prepareProductModels( super.executeQuery( context, query ) );
         return productModels;
+    }
+
+    public void deleteAll() {
+        String query="delete from "+TABLE_NAME;
+        List<ProductModel> list = prepareProductModels(super.executeQuery(context,query));
+
     }
 }
 

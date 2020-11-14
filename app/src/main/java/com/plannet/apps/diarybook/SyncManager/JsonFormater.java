@@ -34,7 +34,7 @@ public class JsonFormater {
 
             jsonObject.put("username", "superuser");
             jsonObject.put("password", "superuser");
-            Log.d("orderjson", jsonObject.toString());
+            Log.d("loginJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class JsonFormater {
             jsonObject.put("description",roleModel.getDescription() );
             jsonObject.put("priority", roleModel.getPriority());
             jsonObject.put("active", roleModel.isActive());
-            Log.d("orderjson", jsonObject.toString());
+            Log.d("RollCreationJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -68,10 +68,14 @@ public class JsonFormater {
 
         JSONObject jsonObject = new JSONObject();
         try {
-
-            jsonObject.put("invoiceNo",customerDiaryModel.getInvoice_no());
-            jsonObject.put("quotationNo",customerDiaryModel.getQuotationNo() );
+            String s=customerDiaryModel.getStatus();
+            jsonObject.put("remoteId",customerDiaryModel.getDiaryId());
+            if (customerDiaryModel.getInvoice_no()!=null)
+                 jsonObject.put("invoiceNo",customerDiaryModel.getInvoice_no());
+            if (customerDiaryModel.getQuotationNo()!=null)
+                jsonObject.put("quotationNo",customerDiaryModel.getQuotationNo() );
             jsonObject.put("searchKey", "");
+            jsonObject.put("status",s);
             jsonObject.put("description",customerDiaryModel.getDescripion() );
             jsonObject.put("active", true);
             if (customerDiaryModel.isVisit()){
@@ -81,14 +85,12 @@ public class JsonFormater {
             }else {
                 jsonObject.put("purpose","INVOICE");
             }
-
             jsonObject.put("shiptoCustomerAddress", customerDiaryModel.getCustomerAddress());
             jsonObject.put("customerId",customerDiaryModel.getCustomerId() );
             jsonObject.put("salesRepId", customerDiaryModel.getSalesmanId());
             jsonObject.put("totalAmount", customerDiaryModel.getTotalAmount());
-            jsonObject.put("status", customerDiaryModel.getState());
             jsonObject.put("CustomerDiaryLineDTOList", diaryLineJson( customerDiaryModel.getCustomerDiaryLineDTOList() ));
-            Log.d("orderjson", jsonObject.toString());
+            Log.d("customerDiaryJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -109,7 +111,7 @@ public class JsonFormater {
             jsonObject.put("searchKey","key" );
             jsonObject.put("gstNo", customerModel.getGst_no());
             jsonObject.put("CustomerContact", customerContactJson( customerModel.getCustomerContact() ));
-            Log.d("orderjson", jsonObject.toString());
+            Log.d("customerJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -137,7 +139,7 @@ public class JsonFormater {
                 studentJSON.put("Description","" );
                 jArray.put(studentJSON);
             }
-            Log.d("line", jArray.toString());
+            Log.d("diaryLineJson", jArray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -159,7 +161,7 @@ public class JsonFormater {
             jsonObject.put("contactNo", customerContact.getContactNo());
             jsonObject.put("contactNo2",customerContact.getContactNo2() );
             jsonObject.put("landmark", customerContact.getLandmark());
-            Log.d("contcat", jsonObject.toString());
+            Log.d("customerContactJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -232,7 +234,7 @@ public class JsonFormater {
             jsonObject.put("active", productCategoryModel.isActive());
 
 
-            Log.d("Category", jsonObject.toString());
+            Log.d("CategoryJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -248,33 +250,16 @@ public class JsonFormater {
         JSONObject jsonObject = new JSONObject();
         try {
 
-            jsonObject.put("id",0);
-            jsonObject.put("name",productModel.getProduct_name() );
+            jsonObject.put("remoteId",productModel.getProduct_id());
+            jsonObject.put("name",productModel.getProduct_name());
             jsonObject.put("description",productModel.getDescription() );
-            jsonObject.put("searchKey", "dd");
+            jsonObject.put("searchKey", productModel.getProduct_name());
             jsonObject.put("active", true);
             jsonObject.put("productCategoryId", 1);
+            jsonObject.put("productPriceDTOList", productPriceJson(productModel.getProductPriceDTOList()));
 
 
-            List<ProductPriceDto> lines = new ArrayList<>();
-            ProductPriceDto line = new ProductPriceDto();
-            //line.setId( 0 );
-            line.setUomId( 1 );
-            line.setPurchasePrice( CommonUtils.toBigDecimal( "100" ));
-            line.setSalesPrice( CommonUtils.toBigDecimal( "120" ));
-            line.setDiscntSalesPrice( CommonUtils.toBigDecimal( "110" ));
-            //line.setProductId( 0 );
-            lines.add( line );
-
-            if(lines != null ) {
-                Gson gson = new Gson();
-                JSONArray json_lines = new JSONArray();
-                Type type = new TypeToken<List<ProductPriceDto>>() {}.getType();
-                json_lines = new JSONArray(gson.toJson(lines, type));
-                jsonObject.put("productPriceDTOList", json_lines);
-            }
-
-            Log.d("Products", jsonObject.toString());
+            Log.d("ProductJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -282,6 +267,27 @@ public class JsonFormater {
 
 
         return jsonObject;
+    }
+
+    public JSONArray productPriceJson(List<ProductPriceDto> productPriceDtoList) {
+        JSONArray jArray = new JSONArray();
+        try {
+            for (ProductPriceDto c : productPriceDtoList)
+            {
+                JSONObject studentJSON = new JSONObject();
+                studentJSON.put("remoteId",c.getProductPriceId());
+                studentJSON.put("productId", c.getProductId());
+                studentJSON.put("uomId",c.getUomId());
+                studentJSON.put("purchasePrice",c.getPurchasePrice());
+                studentJSON.put("salesPrice",c.getSalesPrice());
+                studentJSON.put("discntSalesPrice", c.getDiscntSalesPrice());
+                jArray.put(studentJSON);
+            }
+            Log.d("productPriceJson", jArray.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jArray;
     }
 
     public JSONObject UomJson(UomModel uomModel) {
@@ -294,7 +300,7 @@ public class JsonFormater {
             jsonObject.put("description",uomModel.getDescription() );
             jsonObject.put("searchKey", uomModel.getSearchKey());
             jsonObject.put("active", uomModel.isActive());
-            Log.d("uom", jsonObject.toString());
+            Log.d("UomJson", jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();

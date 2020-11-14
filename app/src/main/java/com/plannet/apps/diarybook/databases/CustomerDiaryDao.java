@@ -64,17 +64,13 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             sqliteDB = dbhelper.getWritableDatabase();
             sqliteDB.beginTransaction();
 
-
-
-
-
             for (CustomerDiaryModel tuple :customerDiaryModels ) {
-
+                if (tuple.getStatus()==null)
+                    tuple.setStatus(PENDING);
                 if (tuple.getStatus().equals("DRAFTED")) {
                     tuple.setStatus(PENDING);
                     tuple.setSalesmanId(0);
                 }
-
                 if (tuple.getPurpose()!=null&&tuple.getPurpose().equals("VISTED")){
                     tuple.setVisit(true);
                     tuple.setQuotation(false);

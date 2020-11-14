@@ -21,22 +21,29 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
+import com.plannet.apps.diarybook.Preference;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.activity.CustomerDiaryActivity;
 import com.plannet.apps.diarybook.databases.ProductCategory;
+import com.plannet.apps.diarybook.databases.ProductPrice;
 import com.plannet.apps.diarybook.databases.Products;
+import com.plannet.apps.diarybook.databases.Uom;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
+import com.plannet.apps.diarybook.models.ProductPriceDto;
 import com.plannet.apps.diarybook.models.RoleModel;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,12 +53,15 @@ import java.util.List;
 public class CreateProductsActivity extends AppCompatActivity {
     Button submit,addCategory,addUom;
     EditText product_name, code, amount, details;
-    Spinner category_spinner;
-    String[] categories =  {"Tiles", "PVC Pipe & Fittings", "Sanitaryware"};;
+    Spinner category_spinner,uom_spinner;
     Products products;
-    String selectedCategory;
+    ProductPrice productPriceDb;
+    ProductCategoryModel  selectedCategory;
     ProductCategory productCategoryDb;
+    UomModel selectedUom;
+    Uom uomDb;
     List<ProductCategoryModel>productCategoryModels=new ArrayList<>();
+    List<UomModel>uomModelList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +76,8 @@ public class CreateProductsActivity extends AppCompatActivity {
     private void initDb() {
         products = new Products( getApplicationContext() );
         productCategoryDb=new ProductCategory(this);
+        uomDb = new Uom(this);
+        productPriceDb = new ProductPrice(this);
     }
     private void setCategorySpinner() {
         List<String>category=new ArrayList<>();
@@ -74,8 +86,17 @@ public class CreateProductsActivity extends AppCompatActivity {
         }
         ArrayAdapter aa = new ArrayAdapter( this, android.R.layout.simple_spinner_item, category );
         aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-        //Setting the ArrayAdapter data on the Spinner
         category_spinner.setAdapter( aa );
+    }
+
+    private void setUomSpinner() {
+        List<String>uoms=new ArrayList<>();
+        for (UomModel temp:uomModelList){
+            uoms.add(temp.getName()!=null?temp.getName():"");
+        }
+        ArrayAdapter aa = new ArrayAdapter( this, android.R.layout.simple_spinner_item, uoms );
+        aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        uom_spinner.setAdapter( aa );
     }
     private void initUi() {
         product_name = (EditText) findViewById( R.id.name );
@@ -83,11 +104,14 @@ public class CreateProductsActivity extends AppCompatActivity {
         amount = (EditText) findViewById( R.id.rate );
         details = (EditText) findViewById( R.id.details );
         category_spinner = (Spinner) findViewById( R.id.category_spinner );
+        uom_spinner = (Spinner) findViewById( R.id.uom_spinner );
         submit = (Button) findViewById( R.id.add_button );
         addCategory=(Button)findViewById(R.id.add_category);
         addUom=(Button)findViewById(R.id.add_uom);
         productCategoryModels=productCategoryDb.getAll();
+        uomModelList=uomDb.getAll();
         setCategorySpinner();
+        setUomSpinner();
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,7 +141,21 @@ public class CreateProductsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
-                selectedCategory = categories[position];
+                selectedCategory = productCategoryModels.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        } );
+
+        uom_spinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                selectedUom = uomModelList.get(position);
             }
 
             @Override
@@ -157,6 +195,7 @@ public class CreateProductsActivity extends AppCompatActivity {
                     productCategoryModel.setCategoryName(categoryName.getText().toString());
                     productCategoryModel.setDescription(description.getText().toString());
                     productCategoryModel.setActive(isActive.isChecked());
+                    productCategoryModel.setProductCategoryId(Preference.NextCategoryId(CreateProductsActivity.this));
                     productCategoryModel.setSearchKey(searchKey.getText().toString());
                     sycCategory(productCategoryModel);
                 }
@@ -209,6 +248,7 @@ public class CreateProductsActivity extends AppCompatActivity {
                     uom.setName(categoryName.getText().toString());
                     uom.setDescription(description.getText().toString());
                     uom.setActive(isActive.isChecked());
+                    uom.setUomId(Preference.NextUomId(CreateProductsActivity.this));
                     uom.setSearchKey(searchKey.getText().toString());
                     sycUom(uom);
                 }
@@ -232,8 +272,78 @@ public class CreateProductsActivity extends AppCompatActivity {
 
         builder.show();
     }
+    public void getAllProductsCategory() {
+        final JsonFormater formatter = new JsonFormater();
+        final String url = "https://planet-customerdiary.herokuapp.com/product/getallproductcategory";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<ProductCategoryModel> productCategoryModels=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                ProductCategoryModel productCategoryModel=gson.fromJson(str, ProductCategoryModel.class);
+                                productCategoryModels.add(productCategoryModel);
+                            }
+                            productCategoryDb.deleteAll();
+                            productCategoryDb.insertProductCategory(productCategoryModels);
+                            List<ProductCategoryModel>test=productCategoryDb.getAll();
+                            Log.d( "Response", test.toString());
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
 
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "getProductCategory" );
+    }
+    public void getallUom() {
+        final String url = " https://planet-customerdiary.herokuapp.com/uom/getalluom";
+        JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+                            JSONArray jsonArrayChanged = response.getJSONArray("result");
+                            List<UomModel> uomModels=new ArrayList<>();
+                            for(int i=0;i<jsonArrayChanged.length();i++){
+                                String str = jsonArrayChanged.getString(i);
+                                Gson gson = new Gson();
+                                UomModel UomModel=gson.fromJson(str,UomModel.class);
+                                uomModels.add(UomModel);
+                            }
+                            uomDb.deleteAll();
+                            uomDb.insertUom(uomModels);
+                            List<UomModel>test=uomDb.getAll();
+                            Log.d( "Response", test.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d( "Response", error.toString() );
+
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "getUom" );
+    }
     private void sycCategory(ProductCategoryModel productCategoryModel) {
         final String url = "https://planet-customerdiary.herokuapp.com/product/createorupdateproductcategory";
         final JsonFormater formatter = new JsonFormater();
@@ -271,6 +381,7 @@ public class CreateProductsActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
+                            getallUom();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -297,13 +408,28 @@ public class CreateProductsActivity extends AppCompatActivity {
 
     private void saveData() {
         List<ProductModel> productModels = new ArrayList<>();
+        List<ProductPriceDto> productPriceDtoList = new ArrayList<>();
         ProductModel productModel = new ProductModel();
+
+        ProductPriceDto productPriceDto = new ProductPriceDto();
+        productPriceDto.setProductPriceId(Preference.NextProductPriceId(this));
+        productPriceDto.setProductId(Preference.NextProductId(this));
+        productPriceDto.setSalesPrice(CommonUtils.toBigDecimal( amount.getText().toString() ));
+        productPriceDto.setUomId(selectedUom.getUomId());
+        productPriceDtoList.add(productPriceDto);
+
+
+        productModel.setProduct_id(Preference.NextProductId(this));
         productModel.setProduct_name( product_name.getText().toString() );
         productModel.setSale_price( CommonUtils.toBigDecimal( amount.getText().toString() ) );
         productModel.setDescription( details.getText().toString() );
-        productModel.setProduct_category( selectedCategory );
+        productModel.setProduct_category( selectedCategory.getCategoryName());
+        productModel.setProductCategoryId(selectedCategory.getProductCategoryId());
+        productModel.setProductPriceDTOList(productPriceDtoList);
         productModels.add( productModel );
+
         products.insertProducts( productModels );
+
         Toast.makeText( this, "Product "+product_name.getText()+" Added Succes", Toast.LENGTH_SHORT).show();
         sycProducts( productModel );
         clear();

@@ -42,6 +42,8 @@ public class ProductModel {
     @Expose
     boolean isActive;
 
+    @SerializedName("productPriceDTOList")
+    @Expose
     List<ProductPriceDto> productPriceDTOList;
 
     public List<ProductPriceDto> getProductPriceDTOList() {

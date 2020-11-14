@@ -30,6 +30,7 @@ import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.ProductCategory;
 import com.plannet.apps.diarybook.databases.Products;
 import com.plannet.apps.diarybook.databases.Role;
+import com.plannet.apps.diarybook.databases.Uom;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     CustomerDiaryDao customerDiaryDb;
     Products productsDb;
     Customer customerDb;
+    Uom uomDb;
     ProductCategory productCategoryDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         productsDb=new Products(this);
         productCategoryDb = new ProductCategory(this);
         customerDiaryDb = new CustomerDiaryDao(this);
+        uomDb=new Uom(this);
     }
      public void getAllUsers() {
          final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
@@ -281,7 +284,10 @@ public class MainActivity extends AppCompatActivity {
                                 UomModel UomModel=gson.fromJson(str,UomModel.class);
                                 uomModels.add(UomModel);
                             }
-//                            customerDb.insertCustomers(uomModels);
+                            uomDb.deleteAll();
+                            uomDb.insertUom(uomModels);
+                            List<UomModel>test=uomDb.getAll();
+                            Log.d( "Response", test.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
