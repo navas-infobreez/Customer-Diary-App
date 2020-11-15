@@ -74,7 +74,6 @@ public class Uom extends DatabaseHandlerController {
     public List<UomModel> getAll() {
         String query="select * from "+TABLE_NAME;
         List<UomModel> list = prepareUomModels(super.executeQuery(context,query));
-
         return list;
 
     }

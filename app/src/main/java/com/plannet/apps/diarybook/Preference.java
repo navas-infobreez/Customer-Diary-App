@@ -68,7 +68,7 @@ public class Preference {
         editor.commit();
     }
     public static int NextProductId(Context context){
-        int no= getNextProductId(context)+1;
+        int no= getNextProductId(context)-1;
         setNextProductId(context,no);
         return no;
 
@@ -84,7 +84,7 @@ public class Preference {
         editor.commit();
     }
     public static int NextProductPriceId(Context context){
-        int no= getNextProductPriceId(context)+1;
+        int no= getNextProductPriceId(context)-1;
         setNextProductPriceId(context,no);
         return no;
     }
@@ -99,7 +99,7 @@ public class Preference {
         editor.commit();
     }
     public static int NextUomId(Context context){
-        int no= getNextUomId(context)+1;
+        int no= getNextUomId(context)-1;
         setNextUomId(context,no);
         return no;
     }
@@ -114,7 +114,7 @@ public class Preference {
         editor.commit();
     }
     public static int NextCategoryId(Context context){
-        int no= getNextCategoryId(context)+1;
+        int no= getNextCategoryId(context)-1;
         setNextCategoryId(context,no);
         return no;
     }

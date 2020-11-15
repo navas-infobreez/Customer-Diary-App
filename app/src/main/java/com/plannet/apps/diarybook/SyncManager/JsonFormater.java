@@ -241,7 +241,7 @@ public class JsonFormater {
         JSONObject jsonObject = new JSONObject();
         try {
 
-            jsonObject.put("remoteId",productModel.getProduct_id());
+            jsonObject.put("remoteId",productModel.getProduct_id()>0?productModel.getProduct_id():0);
             jsonObject.put("name",productModel.getProduct_name());
             jsonObject.put("description",productModel.getDescription() );
             jsonObject.put("searchKey", productModel.getProduct_name());
@@ -266,9 +266,9 @@ public class JsonFormater {
             for (ProductPriceDto c : productPriceDtoList)
             {
                 JSONObject studentJSON = new JSONObject();
-                studentJSON.put("remoteId",c.getProductPriceId());
-                studentJSON.put("productId", c.getProductId());
-                studentJSON.put("uomId",c.getUomId());
+                studentJSON.put("remoteId",c.getProductPriceId()>0?c.getProductPriceId():0);
+                studentJSON.put("productId", c.getProductId()>0?c.getProductId():0);
+                studentJSON.put("uomId",c.getUomId()>0?c.getUomId():0);
                 studentJSON.put("purchasePrice",c.getPurchasePrice());
                 studentJSON.put("salesPrice",c.getSalesPrice());
                 studentJSON.put("discntSalesPrice", c.getDiscntSalesPrice());

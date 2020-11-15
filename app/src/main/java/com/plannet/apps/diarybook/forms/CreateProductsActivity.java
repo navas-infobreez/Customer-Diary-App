@@ -248,6 +248,8 @@ public class CreateProductsActivity extends AppCompatActivity {
         final EditText searchKey=(EditText)dialogView.findViewById(R.id.searchkey);
         final CheckBox isActive=(CheckBox)dialogView.findViewById(R.id.isActive);
         Button submit=(Button)dialogView.findViewById(R.id.add_button);
+        getAllProductsCategory();
+        getallUom();
 
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -434,18 +436,20 @@ public class CreateProductsActivity extends AppCompatActivity {
         List<ProductPriceDto> productPriceDtoList = new ArrayList<>();
         ProductModel productModel = new ProductModel();
 
+        int producId=Preference.NextProductId(this);
         ProductPriceDto productPriceDto = new ProductPriceDto();
         productPriceDto.setProductPriceId(Preference.NextProductPriceId(this));
-        productPriceDto.setProductId(Preference.NextProductId(this));
+        productPriceDto.setProductId(producId);
         productPriceDto.setSalesPrice(CommonUtils.toBigDecimal( amount.getText().toString() ));
         productPriceDto.setUomId(selectedUom.getUomId());
         productPriceDtoList.add(productPriceDto);
 
-
-        productModel.setProduct_id(Preference.NextProductId(this));
+        productModel.setProduct_id(producId);
         productModel.setProduct_name( product_name.getText().toString() );
         productModel.setSale_price( CommonUtils.toBigDecimal( amount.getText().toString() ) );
         productModel.setDescription( details.getText().toString() );
+        productModel.setUomId(selectedUom.getUomId());
+        productModel.setUom(selectedUom.getName());
         productModel.setProduct_category( selectedCategory.getCategoryName());
         productModel.setProductCategoryId(selectedCategory.getProductCategoryId());
         productModel.setProductPriceDTOList(productPriceDtoList);
