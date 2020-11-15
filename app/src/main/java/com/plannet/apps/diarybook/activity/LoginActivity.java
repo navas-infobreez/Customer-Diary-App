@@ -72,11 +72,13 @@ public class LoginActivity extends AppCompatActivity {
                 //getAllUsers();
                 progressBar = new ProgressDialog(LoginActivity.this);
                 progressBar.setCancelable(true);//you can cancel it by pressing back button
-                progressBar.setMessage(" Auathenticating ...");
+                progressBar.setTitle(" Login..");
+                progressBar.setMessage(" Please waite..");
                 progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressBar.setProgress(0);//initially progress is 0
                 progressBar.setMax(100);//sets the maximum value 100
                 progressBar.show();//displays t
+                progressBar.setCancelable(true);
 
                 String username = user_name.getText().toString();
                 final UserModel userModel = user.selectUser( username );

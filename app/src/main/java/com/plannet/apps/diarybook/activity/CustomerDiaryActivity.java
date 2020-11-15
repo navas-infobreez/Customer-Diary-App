@@ -103,7 +103,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custromer_diary);
         diaryId= getIntent().getExtras().getInt("diaryId");
-        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )||
+                AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Admin" )){
             isEdit=false;
             isManager=true;
         }else {
@@ -285,6 +286,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         salesMan=(TextView)findViewById(R.id.salesman);
         productCategoryModelList=productCategoryDb.getAll();
         setCategorySpinner();
+        selectedCustomerDiary=customerDiaryDao.getAll(diaryId);
+        userModel=userDb.getUser(selectedCustomerDiary.getSalesmanId());
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -334,6 +337,19 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        if (!selectedCustomerDiary.getStatus().equals(COMPLETED)&&isManager){
+            rejectButton.setEnabled(false);
+            save.setEnabled(false);
+            save.setBackgroundResource(R.drawable.picked_button);
+            rejectButton.setBackgroundResource(R.drawable.picked_button);
+        }else {
+            rejectButton.setEnabled(true);
+            save.setEnabled(true);
+            save.setBackgroundResource(R.drawable.login_button_bk);
+            rejectButton.setBackgroundResource(R.drawable.reject_button);
+        }
+
         if (isManager){
             rejectButton.setVisibility(View.VISIBLE);
             save.setText("APPROVE");
@@ -361,8 +377,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             quotation.setEnabled(false);
             visit.setEnabled(false);
         }
-        selectedCustomerDiary=customerDiaryDao.getAll(diaryId);
-        userModel=userDb.getUser(selectedCustomerDiary.getSalesmanId());
+
 
     }
 

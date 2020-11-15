@@ -65,12 +65,13 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     }
 
     public void refresh() {
-        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
+        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )||
+                AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Admin" )) {
             if (isPendingList) {
                 selected_status = COMPLETED;
                 refreshview();
             } else {
-                selected_status = ALL;
+                selected_status = PENDING;
                 currentRefreshview();
 
             }
@@ -88,9 +89,9 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     private void currentRefreshview() {
 
         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
-            customerDiaryModels=customerDiaryDao.getCustomerCurrentDiary(AppController.getInstance().getLoggedUser().getId(),selected_status);
+            customerDiaryModels=customerDiaryDao.getCustomerCurrentDiary(AppController.getInstance().getLoggedUser().getRole_id(),selected_status);
         }else {
-            customerDiaryModels=customerDiaryDao.getCustomerDiary(selected_status);
+            customerDiaryModels=customerDiaryDao.getCustomerDiary(selected_status,false);
         }
 
         setadaper();
@@ -99,9 +100,9 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     public void refreshview() {
 
         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
-            customerDiaryModels=customerDiaryDao.getCustomerDiary(AppController.getInstance().getLoggedUser().getId(),selected_status);
+            customerDiaryModels=customerDiaryDao.getCustomerDiary(AppController.getInstance().getLoggedUser().getRole_id(),selected_status);
         }else {
-            customerDiaryModels=customerDiaryDao.getCustomerDiary(selected_status);
+            customerDiaryModels=customerDiaryDao.getCustomerDiary(selected_status,true);
         }
 
         setadaper();
@@ -116,7 +117,12 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
 
     @Override
     public void onResume() {
-      refreshview();
+        if (isPendingList) {
+            refreshview();
+        } else {
+            currentRefreshview();
+
+        }
         super.onResume();
     }
 
@@ -159,13 +165,18 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, statusList);
             spinner.setAdapter(adapter);
-        spinner.setSelection( defualtSelection );
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            spinner.setSelection( defualtSelection );
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     selected_status =statusList.get(position);
-                    refreshview();
+                    if (isPendingList) {
+                        refreshview();
+                    } else {
+                        currentRefreshview();
+
+                    }
                 }
 
                 @Override
@@ -198,8 +209,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
             Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
             intent.putExtra("diaryId",customerDiaryModel.getDiaryId());
             startActivity(intent);
-
-        refreshview();
+            refreshview();
     }
 
     @Override
