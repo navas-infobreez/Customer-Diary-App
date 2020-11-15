@@ -69,7 +69,7 @@ public class JsonFormater {
         JSONObject jsonObject = new JSONObject();
         try {
             String s=customerDiaryModel.getStatus();
-            jsonObject.put("remoteId",customerDiaryModel.getDiaryId());
+            jsonObject.put("remoteId",customerDiaryModel.getDiaryId()>0?customerDiaryModel.getDiaryId():0);
             if (customerDiaryModel.getInvoice_no()!=null)
                  jsonObject.put("invoiceNo",customerDiaryModel.getInvoice_no());
             if (customerDiaryModel.getQuotationNo()!=null)
@@ -89,7 +89,11 @@ public class JsonFormater {
             jsonObject.put("customerId",customerDiaryModel.getCustomerId() );
             jsonObject.put("salesRepId", customerDiaryModel.getSalesmanId());
             jsonObject.put("totalAmount", customerDiaryModel.getTotalAmount());
-            jsonObject.put("CustomerDiaryLineDTOList", diaryLineJson( customerDiaryModel.getCustomerDiaryLineDTOList() ));
+            if (customerDiaryModel.getCustomerDiaryLineDTOList()!=null&&customerDiaryModel.getCustomerDiaryLineDTOList().size()>0){
+                jsonObject.put( "CustomerDiaryLineDTOList", diaryLineJson( customerDiaryModel.getCustomerDiaryLineDTOList() ) );
+            }else {
+                jsonObject.put( "CustomerDiaryLineDTOList",null );
+            }
             Log.d("customerDiaryJson", jsonObject.toString());
 
         } catch (JSONException e) {
@@ -130,7 +134,7 @@ public class JsonFormater {
             {
                 JSONObject studentJSON = new JSONObject();
                 studentJSON.put("id",c.getId());
-                studentJSON.put("remoteId",c.getHeaderId() );
+                studentJSON.put("remoteId",c.getHeaderId()>0?c.getHeaderId():0 );
                 studentJSON.put("productId", c.getProduct_id());
                 studentJSON.put("uomId","");
                 studentJSON.put("productCategoryId",c.getCategory());

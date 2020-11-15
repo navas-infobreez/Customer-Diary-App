@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.plannet.apps.diarybook.AppController;
+import com.plannet.apps.diarybook.Preference;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
@@ -30,6 +31,7 @@ import com.plannet.apps.diarybook.utils.CommonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,7 +188,7 @@ public class ReceptionForm extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitCustomer" );
+        AppController.getInstance().submitServerRequest( req, "sycDairy" );
     }
 
     private void syncCustomer(CustomerModel customerModel) {
@@ -223,12 +225,19 @@ public class ReceptionForm extends AppCompatActivity {
         customerDiaryModel.setCustomerPhone(phone.getText().toString());
         customerDiaryModels.add(customerDiaryModel);
         customerDiaryModel.setInvoiced(isInvoiced);
+        customerDiaryModel.setInvoice_no( "" );
         customerDiaryModel.setQuotation(isQuotation);
+        customerDiaryModel.setQuotationNo( "" );
+        customerDiaryModel.setDescripion( "" );
+        customerDiaryModel.setTotalAmount( BigDecimal.ZERO );
         customerDiaryModel.setVisit(isVisit);
         customerDiaryModel.setDate(CommonUtils.getCurrentDateAndTime());
         customerDiaryModel.setStatus(PENDING);
-//        syncDiary(customerDiaryModel);
-//        customerDiaryDao.insertCustomerDiary(customerDiaryModels);
+        customerDiaryModel.setCustomerId( customerId );
+        customerDiaryModel.setSalesmanId( Preference.getLoggedUserId() );
+        //customerDiaryModel.set
+        syncDiary(customerDiaryModel);
+        //customerDiaryDao.insertCustomerDiary(customerDiaryModels);
     }
 
     private void cearData() {

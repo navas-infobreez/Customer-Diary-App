@@ -1,6 +1,7 @@
 package com.plannet.apps.diarybook.activity;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,8 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,20 +23,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.plannet.apps.diarybook.AppController;
+import com.plannet.apps.diarybook.DatabaseHandler;
 import com.plannet.apps.diarybook.MainActivity;
+import com.plannet.apps.diarybook.Preference;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
+import com.plannet.apps.diarybook.forms.CreateProductsActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.utils.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.plannet.apps.diarybook.DatabaseHandler.PENDING;
+import static com.plannet.apps.diarybook.DatabaseHandler.getInstance;
 
 public class CustomerListFragment extends Fragment implements Callback {
     public static final String PENDING = "PN";
@@ -149,7 +160,48 @@ public class CustomerListFragment extends Fragment implements Callback {
         //bundle.putBoolean( "IsEdit",true );
         intent.putExtra("customerId",customerModel.getId());
         //intent.putExtras( bundle );
-        startActivity(intent);
+        CustomerDiaryModel customerDiaryModel=customerDiaryDao.getCustomerDiary( customerModel.getCustomerId() );
+
+        if (customerDiaryModel!=null){
+            activePopup(customerDiaryModel);
+        }
+        //getActivity().finish();
+        //startActivity(intent);
+    }
+
+
+    private void activePopup(final CustomerDiaryModel customerDiaryModel){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("");
+        builder.setMessage( "Pending Diary Fount.Do you want to Active or Create New" );
+        builder.setCancelable(false);
+        //LayoutInflater inflater = this.getLayoutInflater();
+        //View dialogView = inflater.inflate(R.layout.diary_active_activity, null);
+        //builder.setView(dialogView);
+
+        builder.setPositiveButton("Active", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                customerDiaryDao.updateDiaryStatus(customerDiaryModel.getDiaryId(), DatabaseHandler.PENDING  );
+                dialog.dismiss();
+
+            }
+        });
+        builder.setNegativeButton("Create New", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getActivity(), ReceptionForm.class );
+                Bundle bundle=new Bundle(  );
+                bundle.putBoolean( "IsEdit",true );
+                intent.putExtra("customerId",customerDiaryModel.getCustomerId());
+                intent.putExtras( bundle );
+                //getActivity().finish();
+                startActivity(intent);
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void createNewDiary() {

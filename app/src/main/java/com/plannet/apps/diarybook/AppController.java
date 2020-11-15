@@ -78,7 +78,7 @@ public class AppController extends MultiDexApplication {
 
     public void setLoggedUser(UserModel userModel) {
         this.loggerUser = userModel;
-        Preference.setLoggedUserId(userModel.getId());
+        Preference.setLoggedUserId(userModel.getRole_id());
     }
 
 
