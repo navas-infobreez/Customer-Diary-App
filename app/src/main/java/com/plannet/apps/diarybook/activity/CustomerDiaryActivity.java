@@ -456,7 +456,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 ProductPriceDto selectedPrice = productPriceList.get(position);
                 UomModel uomModel=uomDb.getUom(selectedPrice.getUomId());
-                uom.setText(uomModel.getName());
+                uom.setText("uom: "+uomModel.getName());
             }
 
             @Override
