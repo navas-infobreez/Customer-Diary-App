@@ -65,46 +65,51 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             sqliteDB.beginTransaction();
 
             for (CustomerDiaryModel tuple :customerDiaryModels ) {
-                if (tuple.getStatus()==null)
-                    tuple.setStatus(PENDING);
-                if (tuple.getStatus().equals("DRAFTED")) {
-                    tuple.setStatus(PENDING);
-                    tuple.setSalesmanId(0);
-                }
-                if (tuple.getPurpose()!=null&&tuple.getPurpose().equals("VISTED")){
-                    tuple.setVisit(true);
-                    tuple.setQuotation(false);
-                    tuple.setInvoiced(false);
-                }else if (tuple.getPurpose()!=null&&tuple.getPurpose().equals("QUOTATION")){
-                    tuple.setVisit(false);
-                    tuple.setQuotation(true);
-                    tuple.setInvoiced(false);
-                }else if (tuple.getPurpose()!=null&&tuple.getPurpose().equals("INVOICED")){
-                    tuple.setVisit(false);
-                    tuple.setQuotation(false);
-                    tuple.setInvoiced(true);
-                }
 
-                Object[] values_ar = {tuple.getDiaryId(),tuple.getCustomerName(),tuple.getCustomerAddress(),tuple.getCustomerPhone(),tuple.getCustomerId(), tuple.getDate(),
-                        tuple.getTime(),tuple.getSalesman_name(), tuple.getSalesmanId(),
-                        tuple.getInvoice_no(),tuple.getQuotationNo(),tuple.getDescripion(), tuple.getStatus(),tuple.isVisit()?1:0,tuple.isQuotation()?1:0,tuple.isInvoiced()?1:0,
-                        tuple.getTotalAmount()};
+                CustomerDiaryModel cDiary=getAll(tuple.getDiaryId());
 
-                String[] fields_ar = {diaryId,customerName,address,phone,customerId, date,time,salesman_name,salesmanId,invoice_no,quotation_no,descripion,
-                        status,isVisit,isQuotation,isInvoiced,totalAmount};
-                String values = "", fields = "";
-                for (int i = 0; i < values_ar.length; i++) {
-                    if (values_ar[i] != null) {
-                        values += CommonUtils.quoteIfString(values_ar[i]) + ",";
-                        fields += fields_ar[i] + ",";
+                if (cDiary==null) {
+                    if (tuple.getStatus() == null)
+                        tuple.setStatus(PENDING);
+                    if (tuple.getStatus().equals("DRAFTED")) {
+                        tuple.setStatus(PENDING);
+                        tuple.setSalesmanId(0);
                     }
-                }
-                if (!values.isEmpty()) {
-                    values = values.substring(0, values.length() - 1);
-                    fields = fields.substring(0, fields.length() - 1);
-                    String query = "INSERT INTO " + TABLE_NAME + "(" + fields + ") values(" + values + ");";
-                    Log.d("Customer Diary Insert", query);
-                    sqliteDB.execSQL(query);
+                    if (tuple.getPurpose() != null && tuple.getPurpose().equals("VISTED")) {
+                        tuple.setVisit(true);
+                        tuple.setQuotation(false);
+                        tuple.setInvoiced(false);
+                    } else if (tuple.getPurpose() != null && tuple.getPurpose().equals("QUOTATION")) {
+                        tuple.setVisit(false);
+                        tuple.setQuotation(true);
+                        tuple.setInvoiced(false);
+                    } else if (tuple.getPurpose() != null && tuple.getPurpose().equals("INVOICED")) {
+                        tuple.setVisit(false);
+                        tuple.setQuotation(false);
+                        tuple.setInvoiced(true);
+                    }
+
+                    Object[] values_ar = {tuple.getDiaryId(), tuple.getCustomerName(), tuple.getCustomerAddress(), tuple.getCustomerPhone(), tuple.getCustomerId(), tuple.getDate(),
+                            tuple.getTime(), tuple.getSalesman_name(), tuple.getSalesmanId(),
+                            tuple.getInvoice_no(), tuple.getQuotationNo(), tuple.getDescripion(), tuple.getStatus(), tuple.isVisit() ? 1 : 0, tuple.isQuotation() ? 1 : 0, tuple.isInvoiced() ? 1 : 0,
+                            tuple.getTotalAmount()};
+
+                    String[] fields_ar = {diaryId, customerName, address, phone, customerId, date, time, salesman_name, salesmanId, invoice_no, quotation_no, descripion,
+                            status, isVisit, isQuotation, isInvoiced, totalAmount};
+                    String values = "", fields = "";
+                    for (int i = 0; i < values_ar.length; i++) {
+                        if (values_ar[i] != null) {
+                            values += CommonUtils.quoteIfString(values_ar[i]) + ",";
+                            fields += fields_ar[i] + ",";
+                        }
+                    }
+                    if (!values.isEmpty()) {
+                        values = values.substring(0, values.length() - 1);
+                        fields = fields.substring(0, fields.length() - 1);
+                        String query = "INSERT INTO " + TABLE_NAME + "(" + fields + ") values(" + values + ");";
+                        Log.d("Customer Diary Insert", query);
+                        sqliteDB.execSQL(query);
+                    }
                 }
             }
             sqliteDB.setTransactionSuccessful();
@@ -125,10 +130,12 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
-    public List<CustomerDiaryModel> getCustomerDiary(String status) {
+    public List<CustomerDiaryModel> getCustomerDiary(String status,boolean isPending) {
         String query="select * from "+TABLE_NAME ;
         if (!status.equalsIgnoreCase( ALL )) {
             query=query+" where status = " + CommonUtils.quoteString( status );
+        }else if (isPending){
+            query=query+" where status = " + CommonUtils.quoteString( COMPLETED );
         }
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
@@ -156,6 +163,8 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
             query=query+" and status in (" + CommonUtils.quoteString( PENDING )+","+ CommonUtils.quoteString(APPROVERETURN)+")";
         }else if (!status.equalsIgnoreCase( ALL )) {
             query=query+" and status = " + CommonUtils.quoteString( status );
+        }else {
+            query=query+" and status in ('PENDING','REJECTED')";
         }
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
@@ -163,8 +172,8 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
-    public CustomerDiaryModel getAll(int id) {
-        String query="select * from "+TABLE_NAME+ " where diaryId = "+ id;
+    public CustomerDiaryModel getAll(int diaryId) {
+        String query="select * from "+TABLE_NAME+ " where diaryId = "+ diaryId;
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
 
         return list.size()>0?list.get(0):null;

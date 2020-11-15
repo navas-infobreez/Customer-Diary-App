@@ -31,7 +31,6 @@
                 android:id="@+id/customerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Customer name"
                 android:textColor="#000"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
@@ -39,7 +38,7 @@
                 android:id="@+id/customerAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="address"
+
                 android:textColor="#000"
                 android:textSize="15dp" />
             <LinearLayout
@@ -51,7 +50,6 @@
                 android:id="@+id/customerPhone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="8606522615"
                 android:layout_weight="1"
                 android:textColor="#000"
                 android:textSize="15dp" />
@@ -59,7 +57,6 @@
                     android:id="@+id/salesman"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Navas Karuvadan"
                     android:layout_weight="1"
                     android:textColor="#000"
                     android:textAlignment="textEnd"
