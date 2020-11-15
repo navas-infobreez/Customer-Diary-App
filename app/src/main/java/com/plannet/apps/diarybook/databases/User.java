@@ -40,7 +40,7 @@ public class User extends DatabaseHandlerController {
 
 
             for (UserModel tuple :userModels ) {
-                Object[] values_ar = {tuple.getName(),tuple.getRole_name(),tuple.getRole_id(),tuple.getUserName()
+                Object[] values_ar = {tuple.getName(),tuple.getRoles().get( 0 ).getRoleName(),tuple.getRole_id(),tuple.getUserName()
                 ,tuple.getPassword()};
 
                 String[] fields_ar = {name,role_name,role_id,userName,password};

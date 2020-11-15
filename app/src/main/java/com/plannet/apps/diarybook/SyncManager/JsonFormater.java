@@ -184,21 +184,12 @@ public class JsonFormater {
             jsonObject.put("userContact", null);
 
 
-            JSONArray payments = new JSONArray();
-            List<RoleModel> lines = new ArrayList<>();
-            RoleModel line = new RoleModel();
-            line.setRoleId( 1 );
-            line.setRoleName( userModel.getRole_name() );
-            line.setActive( true );
-            line.setDescription( userModel.getRole_name() );
-            line.setPriority( 1 );
-            lines.add( line );
 
-            if(lines != null ) {
+            if(userModel.getRoles() != null ) {
                 Gson gson = new Gson();
                 JSONArray json_lines = new JSONArray();
                 Type type = new TypeToken<List<UserModel>>() {}.getType();
-                json_lines = new JSONArray(gson.toJson(lines, type));
+                json_lines = new JSONArray(gson.toJson(userModel.getRoles(), type));
                 jsonObject.put("roles", json_lines);
             }
 //            Gson gson = new Gson();

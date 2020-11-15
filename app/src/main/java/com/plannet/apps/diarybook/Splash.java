@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.plannet.apps.diarybook.activity.LoginActivity;
 import com.plannet.apps.diarybook.databases.User;
+import com.plannet.apps.diarybook.models.RoleModel;
 import com.plannet.apps.diarybook.models.UserModel;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +40,25 @@ public class Splash extends AppCompatActivity {
             userModel.setUserName( "admin" );
             userModel.setRole_name( "Manager" );
             userModel.setPassword( "1234" );
+            List<RoleModel> lines = new ArrayList<>();
+            RoleModel line = new RoleModel();
+            line.setRoleId( 1 );
+            line.setRoleName( userModel.getRole_name() );
+            line.setActive( true );
+            line.setDescription( userModel.getRole_name() );
+            line.setPriority( 1 );
+            lines.add( line );
+
+            userModel.setRoles( lines );
+
+
+
+
             userModelList.add( userModel );
+
+
+
+            userModel.getRoles().get( 0 ).setRoleName( "Manager" );
             user.insertUser( userModelList );
             Preference.setnotFirstStart( getApplicationContext() );
         }
