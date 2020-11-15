@@ -110,6 +110,13 @@ public class UserCreationActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        roleModels=roleDb.getAllRoles();
+        setRolSpinner();
+        super.onResume();
+    }
+
     private void setRolSpinner() {
         List<String>roleName=new ArrayList<>();
         for (RoleModel temp:roleModels){
@@ -156,6 +163,7 @@ public class UserCreationActivity extends AppCompatActivity {
         userDb.insertUser(userModelList);
         syncUser(userModel);
         clear();
+        finish();
     }
 
     private void syncUser(UserModel userModel) {
@@ -250,7 +258,7 @@ public class UserCreationActivity extends AppCompatActivity {
     }
 
     private void addRollDialogue(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout. add_roll_activity, null);
         builder.setView(dialogView);

@@ -73,8 +73,7 @@ public class ProductCategory extends DatabaseHandlerController {
     }
 
     public void deleteAll() {
-        String query="delete from "+TABLE_NAME;
-        List<ProductCategoryModel> list = prepareProductCAtegoryModel(super.executeQuery(context,query));
+        super.delete(context,TABLE_NAME,"");
 
     }
 

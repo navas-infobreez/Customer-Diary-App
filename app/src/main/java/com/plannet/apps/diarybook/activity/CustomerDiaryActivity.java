@@ -117,7 +117,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedCategory = productCategoryModelList.get(0);
+                selectedCategory = productCategoryModelList.get(position);
             }
 
             @Override

@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                                  UserModel userModel=gson.fromJson(str,UserModel.class);
                                  userModelList.add(userModel);
                              }
+                             userDb.deleteAll();
                              userDb.insertUser(userModelList);
                              List<UserModel>test=userDb.getAllUser();
                              Log.d( "Response", test.toString());
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                                 ProductModel productModel=gson.fromJson(str,ProductModel.class);
                                 productModels.add(productModel);
                             }
+                            productsDb.deleteAll();
                             productsDb.insertProducts(productModels);
                             List<ProductModel>test=productsDb.selectAll();
                             Log.d( "Response", test.toString());
@@ -322,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
                                 CustomerModel customerModel=gson.fromJson(str,CustomerModel.class);
                                 customerModelList.add(customerModel);
                             }
+                             customerDb.deleteAll();
                             customerDb.insertCustomers(customerModelList);
                             List<CustomerModel>test=customerDb.getAll();
                             Log.d( "Response", test.toString());
@@ -359,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
                                 ProductCategoryModel productCategoryModel=gson.fromJson(str, ProductCategoryModel.class);
                                 productCategoryModels.add(productCategoryModel);
                             }
+                            productCategoryDb.deleteAll();
                             productCategoryDb.insertProductCategory(productCategoryModels);
                             List<ProductCategoryModel>test=productCategoryDb.getAll();
                             Log.d( "Response", test.toString());

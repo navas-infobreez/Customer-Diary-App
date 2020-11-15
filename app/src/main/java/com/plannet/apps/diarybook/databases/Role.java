@@ -68,6 +68,11 @@ public class Role extends DatabaseHandlerController {
 
     }
 
+    public void deleteAll() {
+        super.delete(context,TABLE_NAME,"");
+
+    }
+
     public List<RoleModel> getAllRoles() {
 
         String query = "select * from " + TABLE_NAME ;

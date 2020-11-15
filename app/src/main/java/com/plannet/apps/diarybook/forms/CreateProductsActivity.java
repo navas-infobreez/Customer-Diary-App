@@ -197,6 +197,10 @@ public class CreateProductsActivity extends AppCompatActivity {
                     productCategoryModel.setActive(isActive.isChecked());
                     productCategoryModel.setProductCategoryId(Preference.NextCategoryId(CreateProductsActivity.this));
                     productCategoryModel.setSearchKey(searchKey.getText().toString());
+                    Toast.makeText( getApplicationContext(), "Category "+categoryName.getText()+" Added Succes", Toast.LENGTH_SHORT).show();
+                    categoryName.getText().clear();
+                    description.getText().clear();
+                    searchKey.getText().clear();
                     sycCategory(productCategoryModel);
                 }
 
@@ -206,6 +210,8 @@ public class CreateProductsActivity extends AppCompatActivity {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                productCategoryModels=productCategoryDb.getAll();
+                setCategorySpinner();
                 dialog.dismiss();
 
             }
@@ -213,11 +219,19 @@ public class CreateProductsActivity extends AppCompatActivity {
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                productCategoryModels=productCategoryDb.getAll();
+                setCategorySpinner();
                 dialog.cancel();
             }
         });
 
         builder.show();
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
     }
 
     private void addNewUomDialogue(){
@@ -250,6 +264,10 @@ public class CreateProductsActivity extends AppCompatActivity {
                     uom.setActive(isActive.isChecked());
                     uom.setUomId(Preference.NextUomId(CreateProductsActivity.this));
                     uom.setSearchKey(searchKey.getText().toString());
+                    Toast.makeText( getApplicationContext(), "Uom "+categoryName.getText()+" Added Succes", Toast.LENGTH_SHORT).show();
+                    categoryName.getText().clear();
+                    description.getText().clear();
+                    searchKey.getText().clear();
                     sycUom(uom);
                 }
 
@@ -259,6 +277,8 @@ public class CreateProductsActivity extends AppCompatActivity {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                uomModelList=uomDb.getAll();
+                setUomSpinner();
                 dialog.dismiss();
 
             }
@@ -266,6 +286,8 @@ public class CreateProductsActivity extends AppCompatActivity {
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                uomModelList=uomDb.getAll();
+                setUomSpinner();
                 dialog.cancel();
             }
         });
@@ -352,6 +374,7 @@ public class CreateProductsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            getAllProductsCategory();
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
 

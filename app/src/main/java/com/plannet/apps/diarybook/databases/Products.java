@@ -85,6 +85,11 @@ public class  Products extends DatabaseHandlerController {
 
     }
 
+    public void deleteAll() {
+        super.delete(context,TABLE_NAME,"");
+
+    }
+
     public List<ProductModel> prepareProductModels(ArrayList<ArrayList<String>> data)
     {
         List<ProductModel> productModels = new ArrayList<>();
@@ -132,10 +137,5 @@ public class  Products extends DatabaseHandlerController {
         return productModels;
     }
 
-    public void deleteAll() {
-        String query="delete from "+TABLE_NAME;
-        List<ProductModel> list = prepareProductModels(super.executeQuery(context,query));
-
-    }
 }
 

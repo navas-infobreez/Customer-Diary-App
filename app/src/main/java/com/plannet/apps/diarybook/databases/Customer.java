@@ -92,6 +92,11 @@ public class Customer extends DatabaseHandlerController {
         }
     }
 
+    public void deleteAll() {
+        super.delete(context,TABLE_NAME,"");
+
+    }
+
     public List<CustomerModel> selectAllCustomer(String user_name) {
 
         String query = "select * from " + TABLE_NAME + " where  userName =" + CommonUtils.quoteString( user_name );
