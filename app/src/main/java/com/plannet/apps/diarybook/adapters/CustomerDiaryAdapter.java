@@ -92,14 +92,20 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
         } else {
             if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
                 holder.btnpick.setEnabled(true);
+                holder.statusView.setEnabled( true );
             }else {
                 holder.btnpick.setEnabled(false);
+                holder.statusView.setEnabled( false );
             }
 
             final CustomerDiaryModel eachItem = customerDiaryModels.get( position );
 
             if (!eachItem.getStatus().equals(PENDING)){
                 holder.btnpick.setBackgroundResource(R.drawable.picked_button);
+                holder.btnpick.setTextColor(Color.WHITE);
+                holder.btnpick.setText(eachItem.getStatus());
+            }else {
+                holder.btnpick.setBackgroundResource(R.drawable.approve_button);
                 holder.btnpick.setTextColor(Color.WHITE);
                 holder.btnpick.setText(eachItem.getStatus());
             }
@@ -109,6 +115,8 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
                 holder.statusView.setBackgroundResource(R.drawable.approved_status);
             }else  if (eachItem.getStatus().equals(APPROVERETURN)){
                 holder.statusView.setBackgroundResource(R.drawable.reject_status);
+            }else {
+                holder.statusView.setBackgroundResource(R.drawable.normal_status);
             }
 
             holder.textDate.setText( eachItem.getDate() );

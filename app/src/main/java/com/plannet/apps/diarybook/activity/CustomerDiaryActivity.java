@@ -249,8 +249,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         if (selectedCustomerDiary.getDescripion()!=null)
             details.setText(selectedCustomerDiary.getDescripion());
         customerName.setText(selectedCustomerDiary.getCustomerModel().getCustomerName());
-        customerPhone.setText("Phone : "+selectedCustomerDiary.getCustomerPhone());
-        customerAddress.setText("Place  : "+selectedCustomerDiary.getCustomerAddress());
+        customerPhone.setText("Phone : "+selectedCustomerDiary.getCustomerModel().getCustomerContact().getContactNo());
+        customerAddress.setText("Place  : "+selectedCustomerDiary.getCustomerModel().getCustomerContact().getCity());
         if (selectedCustomerDiary.getInvoice_no()!=null)
             invoiceNo.setText(selectedCustomerDiary.getInvoice_no());
         if (selectedCustomerDiary.getQuotationNo()!=null)

@@ -130,21 +130,25 @@ public class LoginActivity extends AppCompatActivity {
     private void login(UserModel userModel) {
 
         //progressDialog.dismiss();
-        if (userModel.getRole_name().equalsIgnoreCase( "Reception" )) {
-            Intent intent = new Intent( LoginActivity.this, CustomerSearchActivity.class );
-            intent.putExtra( "role_name", userModel.getRole_name() );
-            LoginActivity.this.startActivity( intent );
-        } else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" )||userModel.getRole_name().equalsIgnoreCase( "Accountant" )) {
-            Intent intent = new Intent( LoginActivity.this, MainActivity.class );
-            intent.putExtra( "role_name", userModel.getRole_name() );
-            LoginActivity.this.startActivity( intent );
-        } else if (userModel.getRole_name().equalsIgnoreCase( "Manager" )|| userModel.getRole_name().equalsIgnoreCase( "ADMIN" )) {
-            Intent intent = new Intent( LoginActivity.this, MainActivity.class );
-            intent.putExtra( "role_name", userModel.getRole_name() );
-            LoginActivity.this.startActivity( intent );
-        }
+        if (userModel!=null) {
+            if (userModel.getRole_name().equalsIgnoreCase( "Reception" )) {
+                Intent intent = new Intent( LoginActivity.this, CustomerSearchActivity.class );
+                intent.putExtra( "role_name", userModel.getRole_name() );
+                LoginActivity.this.startActivity( intent );
+            } else if (userModel.getRole_name().equalsIgnoreCase( "Sales Man" ) || userModel.getRole_name().equalsIgnoreCase( "Accountant" )) {
+                Intent intent = new Intent( LoginActivity.this, MainActivity.class );
+                intent.putExtra( "role_name", userModel.getRole_name() );
+                LoginActivity.this.startActivity( intent );
+            } else if (userModel.getRole_name().equalsIgnoreCase( "Manager" ) || userModel.getRole_name().equalsIgnoreCase( "ADMIN" )) {
+                Intent intent = new Intent( LoginActivity.this, MainActivity.class );
+                intent.putExtra( "role_name", userModel.getRole_name() );
+                LoginActivity.this.startActivity( intent );
+            }
 
-        AppController.getInstance().setLoggedUser( userModel );
+            AppController.getInstance().setLoggedUser( userModel );
+        }else {
+            Toast.makeText( getApplicationContext(), "User Not Exsists", Toast.LENGTH_SHORT ).show();
+        }
         progressBar.dismiss();
     }
 

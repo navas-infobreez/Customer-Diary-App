@@ -219,6 +219,12 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
+    public void deleteall() {
+        String query="delete from "+TABLE_NAME+ " where status not in('PICKED')";
+        List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));
+
+    }
+
     public void updateStatus(int i_d, String status, int salesmanID) {
 
         String query = "UPDATE " + TABLE_NAME + " set status =" + CommonUtils.quoteString( status ) +

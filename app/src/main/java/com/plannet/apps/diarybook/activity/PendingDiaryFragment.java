@@ -58,6 +58,13 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         activity = (MainActivity) getActivity();
         initui(view);
         initDb();
+        refresh();
+
+
+        return view;
+    }
+
+    public void refresh() {
         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )) {
             if (isPendingList) {
                 selected_status = COMPLETED;
@@ -76,8 +83,6 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
                 currentRefreshview();
             }
         }
-
-        return view;
     }
 
     private void currentRefreshview() {
@@ -91,7 +96,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         setadaper();
     }
 
-    private void refreshview() {
+    public void refreshview() {
 
         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Sales man" )){
             customerDiaryModels=customerDiaryDao.getCustomerDiary(AppController.getInstance().getLoggedUser().getId(),selected_status);
@@ -124,12 +129,12 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
         recyclerView.addItemDecoration(new ItemDecorator(getContext()));
 
 
-        BottomNavigationView bottom_navigation=(BottomNavigationView)view.findViewById( R.id.bottom_navigation );
-        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
-            bottom_navigation.setVisibility( View.VISIBLE );
-        }else {
-            bottom_navigation.setVisibility( View.GONE );
-        }
+//        BottomNavigationView bottom_navigation=(BottomNavigationView)view.findViewById( R.id.bottom_navigation );
+//        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
+//            bottom_navigation.setVisibility( View.VISIBLE );
+//        }else {
+//            bottom_navigation.setVisibility( View.GONE );
+//        }
 
         int defualtSelection=0;
 
@@ -188,7 +193,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     @Override
     public void onItemClick(Object object) {
         CustomerDiaryModel customerDiaryModel=(CustomerDiaryModel) object;
-        customerDiaryDao.updateStatus(customerDiaryModel.getDiaryId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getId());
+        customerDiaryDao.updateStatus(customerDiaryModel.getDiaryId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getRole_id());
 
             Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
             intent.putExtra("diaryId",customerDiaryModel.getDiaryId());

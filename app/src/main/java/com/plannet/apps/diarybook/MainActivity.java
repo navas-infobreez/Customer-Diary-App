@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         getallUom(onCompleteCallback);
         getAllDiary(onCompleteCallback);
 
+
     }
 
     @Override
@@ -187,6 +188,12 @@ public class MainActivity extends AppCompatActivity {
             getAllProductsCategory(null);
             getallUom(null);
             getAllDiary(null);
+            if (pendingDiaryFragment!=null) {
+                pendingDiaryFragment.refreshview();
+            }
+            if (currentDiaryFragment!=null) {
+                currentDiaryFragment.refreshview();
+            }
         }
         return super.onOptionsItemSelected( item );
     }
@@ -309,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
                                 CustomerDiaryModel cDiary=gson.fromJson(str,CustomerDiaryModel.class);
                                 customerDiaryModels.add(cDiary);
                             }
+                            customerDiaryDb.deleteall();
                             customerDiaryDb.insertCustomerDiary(customerDiaryModels);
                             List<CustomerDiaryModel>test=customerDiaryDb.getAll();
                             Preference.setDiaryDownloaded( true );
