@@ -423,6 +423,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     }
 
     private void detailsDialogue(final ProductModel productsModel){
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
