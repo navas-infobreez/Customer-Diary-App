@@ -46,6 +46,103 @@ public class Preference {
 
     }
 
+
+    public static void setProductDownloaded(boolean isProductDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isProductDownloaded", isProductDownloaded).commit();
+
+    }
+    public static boolean isProductDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isProductDownloaded",false);
+
+    }
+
+    public static void setCategoryDownloaded(boolean isCategoryDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isCategoryDownloaded", isCategoryDownloaded).commit();
+
+    }
+    public static boolean isCategoryDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isCategoryDownloaded",false);
+
+    }
+
+    public static void setUomDownloaded(boolean isUomDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isUomDownloaded", isUomDownloaded).commit();
+
+    }
+    public static boolean isUomDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isUomDownloaded",false);
+
+    }
+    public static void setDownloadCompleted(boolean isDownloadCompleted) {
+
+        getSharedAppPrefs().edit().putBoolean("isDownloadCompleted", isDownloadCompleted).commit();
+
+    }
+    public static boolean isDownloadCompleted() {
+
+        return getSharedAppPrefs().getBoolean("isDownloadCompleted",false);
+
+    }
+
+
+
+
+    public static boolean isUserDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isUserDownloaded",false);
+
+    }
+
+    public static void setUserDownloaded(boolean isUserDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isUserDownloaded", isUserDownloaded).commit();
+
+    }
+
+    public static void setRoleDownloaded(boolean isRoleDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isRoleDownloaded", isRoleDownloaded).commit();
+
+    }
+
+    public static boolean isRoleDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isRoleDownloaded",false);
+
+    }
+
+    public static void setCustomerDownloaded(boolean isCustomerDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isCustomerDownloaded", isCustomerDownloaded).commit();
+
+    }
+    public static boolean isCustomerDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isCustomerDownloaded",false);
+
+    }
+
+
+    public static boolean isDiaryDownloaded() {
+
+        return getSharedAppPrefs().getBoolean("isDiaryDownloaded",false);
+
+    }
+
+    public static void setDiaryDownloaded(boolean isDiaryDownloaded) {
+
+        getSharedAppPrefs().edit().putBoolean("isDiaryDownloaded", isDiaryDownloaded).commit();
+
+    }
+
+
+
     public static void setLoggedUserId( int userId) {
 
         getSharedAppPrefs().edit().putInt("userId", userId).apply();

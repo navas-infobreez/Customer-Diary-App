@@ -29,7 +29,7 @@
                 style="@style/modifiedEditText"
                 android:inputType="text"
                 android:textSize="20sp"
-                android:text="admin"
+                android:text="superuser"
                 android:maxLines="1"
                 android:hint="username"/>
         </com.google.android.material.textfield.TextInputLayout>

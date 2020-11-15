@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     Button submit;
     EditText user_name, pass_word;
     User user;
+    ProgressDialog progressBar;
 
 
 
@@ -69,7 +70,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //getAllUsers();
-
+                progressBar = new ProgressDialog(LoginActivity.this);
+                progressBar.setCancelable(true);//you can cancel it by pressing back button
+                progressBar.setMessage(" Auathenticating ...");
+                progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressBar.setProgress(0);//initially progress is 0
+                progressBar.setMax(100);//sets the maximum value 100
+                progressBar.show();//displays t
 
                 String username = user_name.getText().toString();
                 final UserModel userModel = user.selectUser( username );
@@ -131,12 +138,14 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent( LoginActivity.this, MainActivity.class );
             intent.putExtra( "role_name", userModel.getRole_name() );
             LoginActivity.this.startActivity( intent );
-        } else if (userModel.getRole_name().equalsIgnoreCase( "Manager" )) {
+        } else if (userModel.getRole_name().equalsIgnoreCase( "Manager" )|| userModel.getRole_name().equalsIgnoreCase( "ADMIN" )) {
             Intent intent = new Intent( LoginActivity.this, MainActivity.class );
             intent.putExtra( "role_name", userModel.getRole_name() );
             LoginActivity.this.startActivity( intent );
         }
+
         AppController.getInstance().setLoggedUser( userModel );
+        progressBar.dismiss();
     }
 
 

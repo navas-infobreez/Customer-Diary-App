@@ -1,12 +1,14 @@
 package com.plannet.apps.diarybook;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,15 +71,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main2);
+        setContentView( R.layout.activity_main2 );
         initDb();
-        myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        viewPager.setAdapter(myPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+        myPagerAdapter = new MyPagerAdapter( getSupportFragmentManager() );
+        viewPager = (ViewPager) findViewById( R.id.view_pager );
+        viewPager.setAdapter( myPagerAdapter );
+        tabLayout = (TabLayout) findViewById( R.id.tab_layout );
+        tabLayout.setupWithViewPager( viewPager );
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -90,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        } );
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById( R.id.bottom_navigation );
 //        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
 //            bottomNavigationView.getMenu().getItem(R.id.action_user  ).setEnabled( true );
 //            bottomNavigationView.getMenu().getItem(R.id.action_products  ).setEnabled( true );
@@ -102,27 +104,66 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener( new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_user:
-                        Intent intent = new Intent(MainActivity.this, UserCreationActivity.class );
-                        startActivity(intent);
+                        Intent intent = new Intent( MainActivity.this, UserCreationActivity.class );
+                        startActivity( intent );
                         break;
                     case R.id.action_products:
-                        Intent intent1 = new Intent(MainActivity.this, CreateProductsActivity.class );
-                        startActivity(intent1);
+                        Intent intent1 = new Intent( MainActivity.this, CreateProductsActivity.class );
+                        startActivity( intent1 );
                         break;
                     case R.id.action_customer:
-                        Intent intent2 = new Intent(MainActivity.this, ReceptionForm.class );
-                        startActivity(intent2);
+                        Intent intent2 = new Intent( MainActivity.this, ReceptionForm.class );
+                        startActivity( intent2 );
                         break;
                 }
                 return true;
             }
-        });
+        } );
+//        if (!Preference.isDownloadCompleted()) {
+//            final ProgressDialog progressBar = new ProgressDialog( this );
+//            progressBar.setCancelable( true );//you can cancel it by pressing back button
+//            progressBar.setMessage( " downloading data from server..." );
+//            progressBar.setProgressStyle( ProgressDialog.STYLE_SPINNER );
+//            progressBar.setProgress( 0 );//initially progress is 0
+//            progressBar.setMax( 100 );//sets the maximum value 100
+//            progressBar.show();//displays the progress bar
+//            doDownload( new OnCompleteCallback() {
+//
+//                @Override
+//                public void onError(Exception error) {
+//                    if (Preference.isProductDownloaded() && Preference.isCategoryDownloaded() && Preference.isCustomerDownloaded()
+//                            && Preference.isUomDownloaded() && Preference.isDiaryDownloaded() && Preference.isUserDownloaded()) {
+//                        progressBar.dismiss();
+//                        Preference.setDownloadCompleted( true );
+//                    }
+//                }
+//
+//                @Override
+//                public void onComplete() {
+//                    if (Preference.isProductDownloaded() && Preference.isCategoryDownloaded() && Preference.isCustomerDownloaded()
+//                            && Preference.isUomDownloaded() && Preference.isDiaryDownloaded() && Preference.isUserDownloaded()) {
+//                        progressBar.dismiss();
+//                        Preference.setDownloadCompleted( true );
+//                    }
+//                }
+//            } );
+//        }
+    }
+
+    private void doDownload(OnCompleteCallback onCompleteCallback) {
+
+        getAllUsers( onCompleteCallback );
+        getallCustomers(onCompleteCallback);
+        getAllProducts(onCompleteCallback);
+        getAllProductsCategory(onCompleteCallback);
+        getallUom(onCompleteCallback);
+        getAllDiary(onCompleteCallback);
+
     }
 
     @Override
@@ -140,12 +181,12 @@ public class MainActivity extends AppCompatActivity {
 
         int i = item.getItemId();
         if (i == R.id.sync) {
-            getAllUsers();
-            getallCustomers();
-            getAllProducts();
-            getAllProductsCategory();
-            getallUom();
-            getAllDiary();
+            getAllUsers(null);
+            getallCustomers(null);
+            getAllProducts(null);
+            getAllProductsCategory(null);
+            getallUom(null);
+            getAllDiary(null);
         }
         return super.onOptionsItemSelected( item );
     }
@@ -159,7 +200,8 @@ public class MainActivity extends AppCompatActivity {
         customerDiaryDb = new CustomerDiaryDao(this);
         uomDb=new Uom(this);
     }
-     public void getAllUsers() {
+     public void getAllUsers(final OnCompleteCallback onCompleteCallback) {
+         Preference.setUserDownloaded( false );
          final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
          JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
                  new Response.Listener<JSONObject>() {
@@ -178,8 +220,14 @@ public class MainActivity extends AppCompatActivity {
                              }
                              userDb.deleteAll();
                              userDb.insertUser(userModelList);
+                             //progressBar.setMax( userModelList.size() );
                              List<UserModel>test=userDb.getAllUser();
                              Log.d( "Response", test.toString());
+                             Preference.setUserDownloaded( true );
+                             if (onCompleteCallback!=null){
+                                 onCompleteCallback.onComplete();
+                             }
+
                          } catch (JSONException e) {
                              e.printStackTrace();
                          }
@@ -188,14 +236,18 @@ public class MainActivity extends AppCompatActivity {
              @Override
              public void onErrorResponse(VolleyError error) {
                  Log.d( "Response", error.toString() );
-
+                 Preference.setUserDownloaded( true );
+                 if (onCompleteCallback!=null){
+                     onCompleteCallback.onComplete();
+                 }
              }
          } );
 
          AppController.getInstance().submitServerRequest( req, "getUser" );
      }
 
-    public void getAllProducts() {
+    public void getAllProducts(final OnCompleteCallback onCompleteCallback) {
+        Preference.setProductDownloaded( false );
         final JsonFormater formatter = new JsonFormater();
         final String url = "https://planet-customerdiary.herokuapp.com/product/getallproduct";
         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
@@ -217,6 +269,10 @@ public class MainActivity extends AppCompatActivity {
                             productsDb.insertProducts(productModels);
                             List<ProductModel>test=productsDb.selectAll();
                             Log.d( "Response", test.toString());
+                            Preference.setProductDownloaded( true );
+                            if (onCompleteCallback!=null){
+                                onCompleteCallback.onComplete();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -225,14 +281,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d( "Response", error.toString() );
-
+                Preference.setProductDownloaded( true );
+                if (onCompleteCallback!=null){
+                    onCompleteCallback.onComplete();
+                }
             }
         } );
 
         AppController.getInstance().submitServerRequest( req, "getProduct" );
     }
 
-    private void getAllDiary() {
+    private void getAllDiary(final OnCompleteCallback onCompleteCallback) {
+        Preference.setDiaryDownloaded( false );
         final String url = "https://planet-customerdiary.herokuapp.com/customerdiary/getallcustomerdiary";
         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
                 new Response.Listener<JSONObject>() {
@@ -251,7 +311,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                             customerDiaryDb.insertCustomerDiary(customerDiaryModels);
                             List<CustomerDiaryModel>test=customerDiaryDb.getAll();
+                            Preference.setDiaryDownloaded( true );
                             Log.d( "Response", test.toString());
+                            if (onCompleteCallback!=null){
+                                onCompleteCallback.onComplete();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -260,7 +324,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d( "Response", error.toString() );
-
+                Preference.setDiaryDownloaded( true );
+                if (onCompleteCallback!=null){
+                    onCompleteCallback.onComplete();
+                }
             }
         } );
 
@@ -268,7 +335,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getallUom() {
+    public void getallUom(final OnCompleteCallback onCompleteCallback) {
+        Preference.setUomDownloaded( false );
         final JsonFormater formatter = new JsonFormater();
         final String url = " https://planet-customerdiary.herokuapp.com/uom/getalluom";
         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
@@ -289,7 +357,11 @@ public class MainActivity extends AppCompatActivity {
                             uomDb.deleteAll();
                             uomDb.insertUom(uomModels);
                             List<UomModel>test=uomDb.getAll();
+                            Preference.setUomDownloaded( true );
                             Log.d( "Response", test.toString());
+                            if (onCompleteCallback!=null){
+                                onCompleteCallback.onComplete();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -298,7 +370,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d( "Response", error.toString() );
-
+                Preference.setUomDownloaded( true );
+                if (onCompleteCallback!=null){
+                    onCompleteCallback.onComplete();
+                }
             }
         } );
 
@@ -306,7 +381,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getallCustomers() {
+    public void getallCustomers(final OnCompleteCallback onCompleteCallback) {
+        Preference.setCustomerDownloaded( false );
         final JsonFormater formatter = new JsonFormater();
         final String url = "https://planet-customerdiary.herokuapp.com/customer/getallcustomerdetails";
         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
@@ -328,6 +404,10 @@ public class MainActivity extends AppCompatActivity {
                             customerDb.insertCustomers(customerModelList);
                             List<CustomerModel>test=customerDb.getAll();
                             Log.d( "Response", test.toString());
+                            Preference.setCustomerDownloaded( true );
+                            if (onCompleteCallback!=null){
+                                onCompleteCallback.onComplete();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -336,7 +416,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d( "Response", error.toString() );
-
+                Preference.setCustomerDownloaded( true );
+                if (onCompleteCallback!=null){
+                    onCompleteCallback.onComplete();
+                }
             }
         } );
 
@@ -344,7 +427,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getAllProductsCategory() {
+    public void getAllProductsCategory(final OnCompleteCallback onCompleteCallback) {
+        Preference.setCategoryDownloaded( false );
         final JsonFormater formatter = new JsonFormater();
         final String url = "https://planet-customerdiary.herokuapp.com/product/getallproductcategory";
         JsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, null,
@@ -366,7 +450,10 @@ public class MainActivity extends AppCompatActivity {
                             productCategoryDb.insertProductCategory(productCategoryModels);
                             List<ProductCategoryModel>test=productCategoryDb.getAll();
                             Log.d( "Response", test.toString());
-
+                            Preference.setCategoryDownloaded( true );
+                            if (onCompleteCallback!=null){
+                                onCompleteCallback.onComplete();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -375,7 +462,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d( "Response", error.toString() );
-
+                Preference.setCategoryDownloaded( true );
+                if (onCompleteCallback!=null){
+                    onCompleteCallback.onComplete();
+                }
             }
         } );
 

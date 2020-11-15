@@ -37,8 +37,8 @@ public class Splash extends AppCompatActivity {
             List<UserModel> userModelList = new ArrayList<>();
             UserModel userModel = new UserModel();
             userModel.setName( "admin" );
-            userModel.setUserName( "admin" );
-            userModel.setRole_name( "Manager" );
+            userModel.setUserName( "superuser" );
+            userModel.setRole_name( "Admin" );
             userModel.setPassword( "1234" );
             List<RoleModel> lines = new ArrayList<>();
             RoleModel line = new RoleModel();
