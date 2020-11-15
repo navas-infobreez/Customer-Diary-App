@@ -159,6 +159,18 @@ public class UserCreationActivity extends AppCompatActivity {
         userContacts.setCountry( "India" );
         userModel.setUserContacts( userContacts );
 
+
+        List<RoleModel> lines = new ArrayList<>();
+        RoleModel line = new RoleModel();
+        line.setRoleId( selectedRolModel.getRoleId() );
+        line.setRoleName( selectedRolModel.getRoleName() );
+        line.setActive( true );
+        line.setDescription( "role" );
+        line.setPriority( 1 );
+        lines.add( line );
+        userModel.setRoles( lines );
+
+
         userModelList.add(userModel);
         userDb.insertUser(userModelList);
         syncUser(userModel);
