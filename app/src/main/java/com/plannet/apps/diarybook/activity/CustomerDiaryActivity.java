@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -161,6 +162,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     ProductModel productModel=new ProductModel();
                     String id=result.getContents();
                     productsDb.selectProductById(CommonUtils.toInt(id));
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     detailsDialogue(productModel);
 //                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
@@ -172,6 +174,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     ProductModel productModel=new ProductModel();
                     String id=result.getContents();
                     productsDb.selectProductById(CommonUtils.toInt(id));
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     detailsDialogue(productModel);
 //                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
                 }

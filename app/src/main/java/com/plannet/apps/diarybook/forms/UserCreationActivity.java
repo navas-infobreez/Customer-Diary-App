@@ -228,7 +228,7 @@ public class UserCreationActivity extends AppCompatActivity {
             }
         } );
 
-        AppController.getInstance().submitServerRequest( req, "submitRoll" );
+        AppController.getInstance().submitServerRequest( req, "getRoll" );
     }
 
     private void synRoll(RoleModel roleModel) {

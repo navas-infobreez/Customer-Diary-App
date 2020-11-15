@@ -188,7 +188,7 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     @Override
     public void onItemClick(Object object) {
         CustomerDiaryModel customerDiaryModel=(CustomerDiaryModel) object;
-        customerDiaryDao.updateStatus(customerDiaryModel.getId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getId());
+        customerDiaryDao.updateStatus(customerDiaryModel.getDiaryId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getId());
 
             Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
             intent.putExtra("diaryId",customerDiaryModel.getDiaryId());
