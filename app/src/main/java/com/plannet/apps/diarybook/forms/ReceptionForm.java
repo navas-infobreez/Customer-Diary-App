@@ -160,7 +160,9 @@ public class ReceptionForm extends AppCompatActivity {
             customerDb.insertCustomers( customerModelList );
             syncCustomer(customerModel);
         }
-         insertDiary();
+        if (isEdit)
+            insertDiary();
+
         cearData();
 
     }

@@ -70,9 +70,9 @@ public class JsonFormater {
         try {
             String s=customerDiaryModel.getStatus();
             jsonObject.put("remoteId",customerDiaryModel.getDiaryId()>0?customerDiaryModel.getDiaryId():0);
-            if (customerDiaryModel.getInvoice_no()!=null)
+            if (customerDiaryModel.getInvoice_no()!=null&&!customerDiaryModel.getInvoice_no().isEmpty()&&!customerDiaryModel.getInvoice_no().equals( " " ))
                  jsonObject.put("invoiceNo",customerDiaryModel.getInvoice_no());
-            if (customerDiaryModel.getQuotationNo()!=null)
+            if (customerDiaryModel.getQuotationNo()!=null&&!customerDiaryModel.getQuotationNo().isEmpty()&&!customerDiaryModel.getQuotationNo().equals( "" ))
                 jsonObject.put("quotationNo",customerDiaryModel.getQuotationNo() );
             jsonObject.put("searchKey", "");
             jsonObject.put("status",s);
@@ -85,7 +85,7 @@ public class JsonFormater {
             }else {
                 jsonObject.put("purpose","INVOICE");
             }
-            jsonObject.put("shiptoCustomerAddress", customerDiaryModel.getCustomerAddress());
+            jsonObject.put("shiptoCustomerAddress", true);
             jsonObject.put("customerId",customerDiaryModel.getCustomerId() );
             jsonObject.put("salesRepId", customerDiaryModel.getSalesmanId());
             jsonObject.put("totalAmount", customerDiaryModel.getTotalAmount());
@@ -114,7 +114,7 @@ public class JsonFormater {
             jsonObject.put("lastName", "kk");
             jsonObject.put("searchKey","key" );
             jsonObject.put("gstNo", customerModel.getGst_no());
-            jsonObject.put("CustomerContact", customerContactJson( customerModel.getCustomerContact() ));
+            jsonObject.put("customerContact", customerContactJson( customerModel.getCustomerContact() ));
             Log.d("customerJson", jsonObject.toString());
 
         } catch (JSONException e) {
@@ -250,7 +250,7 @@ public class JsonFormater {
             jsonObject.put("description",productModel.getDescription() );
             jsonObject.put("searchKey", productModel.getProduct_name());
             jsonObject.put("active", true);
-            jsonObject.put("productCategoryId", 1);
+            jsonObject.put("productCategoryId", productModel.getProductCategoryId());
             jsonObject.put("productPriceDTOList", productPriceJson(productModel.getProductPriceDTOList()));
 
 

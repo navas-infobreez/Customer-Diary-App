@@ -22,7 +22,7 @@ public class CustomerModel {
     int locationId;
 
     String region;
-    @SerializedName("11111111")
+    @SerializedName("gstNo")
     @Expose
     String gst_no;
 
@@ -34,7 +34,8 @@ public class CustomerModel {
     public void setRegion(String region) {
         this.region = region;
     }
-
+    @SerializedName("customerContact")
+    @Expose
     CustomerContact customerContact;
 
     public CustomerContact getCustomerContact() {

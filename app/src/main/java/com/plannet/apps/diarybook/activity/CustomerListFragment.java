@@ -173,21 +173,21 @@ public class CustomerListFragment extends Fragment implements Callback {
     private void activePopup(final CustomerDiaryModel customerDiaryModel){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("");
-        builder.setMessage( "Pending Diary Fount.Do you want to Active or Create New" );
+        builder.setMessage( "Do you want to  Create New Diary" );
         builder.setCancelable(false);
         //LayoutInflater inflater = this.getLayoutInflater();
         //View dialogView = inflater.inflate(R.layout.diary_active_activity, null);
         //builder.setView(dialogView);
 
-        builder.setPositiveButton("Active", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                customerDiaryDao.updateDiaryStatus(customerDiaryModel.getDiaryId(), DatabaseHandler.PENDING  );
+//                customerDiaryDao.updateDiaryStatus(customerDiaryModel.getDiaryId(), DatabaseHandler.PENDING  );
                 dialog.dismiss();
 
             }
         });
-        builder.setNegativeButton("Create New", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Create Diary", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getActivity(), ReceptionForm.class );
