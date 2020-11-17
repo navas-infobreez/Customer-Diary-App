@@ -24,6 +24,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.Preference;
@@ -62,6 +63,7 @@ public class CreateProductsActivity extends AppCompatActivity {
     Uom uomDb;
     List<ProductCategoryModel>productCategoryModels=new ArrayList<>();
     List<UomModel>uomModelList=new ArrayList<>();
+    SweetAlertDialog sweetAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class CreateProductsActivity extends AppCompatActivity {
         productPriceDb = new ProductPrice(this);
     }
     private void setCategorySpinner() {
+        productCategoryModels=productCategoryDb.getAll();
         List<String>category=new ArrayList<>();
         for (ProductCategoryModel temp:productCategoryModels){
             category.add(temp.getCategoryName()!=null?temp.getCategoryName():"");
@@ -108,7 +111,7 @@ public class CreateProductsActivity extends AppCompatActivity {
         submit = (Button) findViewById( R.id.add_button );
         addCategory=(Button)findViewById(R.id.add_category);
         addUom=(Button)findViewById(R.id.add_uom);
-        productCategoryModels=productCategoryDb.getAll();
+
         uomModelList=uomDb.getAll();
         setCategorySpinner();
         setUomSpinner();
@@ -317,6 +320,7 @@ public class CreateProductsActivity extends AppCompatActivity {
                             productCategoryDb.deleteAll();
                             productCategoryDb.insertProductCategory(productCategoryModels);
                             List<ProductCategoryModel>test=productCategoryDb.getAll();
+                            setCategorySpinner();
                             Log.d( "Response", test.toString());
 
                         } catch (JSONException e) {
@@ -432,7 +436,12 @@ public class CreateProductsActivity extends AppCompatActivity {
     }
 
     private void saveData() {
-        List<ProductModel> productModels = new ArrayList<>();
+
+        sweetAlertDialog=new SweetAlertDialog( CreateProductsActivity.this,SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog .setTitleText("Please wait");
+        sweetAlertDialog.setContentText( "creating product" );
+        sweetAlertDialog .show();
+
         List<ProductPriceDto> productPriceDtoList = new ArrayList<>();
         ProductModel productModel = new ProductModel();
 
@@ -453,13 +462,8 @@ public class CreateProductsActivity extends AppCompatActivity {
         productModel.setProduct_category( selectedCategory.getCategoryName());
         productModel.setProductCategoryId(selectedCategory.getProductCategoryId());
         productModel.setProductPriceDTOList(productPriceDtoList);
-        productModels.add( productModel );
 
-        products.insertProducts( productModels );
-
-        Toast.makeText( this, "Product "+product_name.getText()+" Added Succes", Toast.LENGTH_SHORT).show();
         sycProducts( productModel );
-        clear();
     }
 
     private void clear() {
@@ -483,7 +487,19 @@ public class CreateProductsActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
-
+                            List<ProductModel> productModels = new ArrayList<>();
+                            Gson gson = new Gson();
+                            JSONObject js =response.getJSONObject("result");
+                            String value=js.toString();
+                            ProductModel productModel1=gson.fromJson(value,ProductModel.class);
+                            productModels.add( productModel1 );
+                            products.insertProducts( productModels );
+                            sweetAlertDialog.dismiss();
+                            new SweetAlertDialog(CreateProductsActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Success")
+                                    .setContentText("product added successfully!")
+                                    .show();
+                            clear();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -491,8 +507,12 @@ public class CreateProductsActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                sweetAlertDialog.dismiss();
                 Log.d( "error Response", error.toString() );
+                new SweetAlertDialog(CreateProductsActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Error..")
+                        .setContentText("product creation failed")
+                        .show();
             }
         } );
 

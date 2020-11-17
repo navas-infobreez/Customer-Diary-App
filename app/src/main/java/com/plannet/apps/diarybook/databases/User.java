@@ -75,6 +75,11 @@ public class User extends DatabaseHandlerController {
 
     }
 
+    public void deleteUser(int userId) {
+        super.delete(context,TABLE_NAME," role_id="+userId);
+
+    }
+
     public List<UserModel> prepareUserModels(ArrayList<ArrayList<String>> data) {
         List<UserModel> roleModels = new ArrayList<>();
         for (ArrayList<String> tuple : data) {

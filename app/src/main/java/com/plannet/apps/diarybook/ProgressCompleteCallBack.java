@@ -5,5 +5,6 @@ import java.io.Serializable;
 public interface ProgressCompleteCallBack extends Serializable
 {
     void onComplete();
+    void onComplete(Object object);
 }
 

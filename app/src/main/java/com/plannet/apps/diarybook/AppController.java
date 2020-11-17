@@ -134,12 +134,16 @@ public class AppController extends MultiDexApplication {
                 }
 
                 @Override
+                public void onComplete(Object object) {
+                }
+
+                @Override
                 public void onError(Exception error) {
                     AppController.getInstance().setAuthToken(null);
                     req.deliverError((VolleyError) error);
                     Log.d(tag,"Login failed. " + (error != null ? error.getMessage() : "Unknown error"));
                 }
-            });
+            },null,null);
         } else {
             if(serial) {
                 getSerialRequestQueue().add(req);

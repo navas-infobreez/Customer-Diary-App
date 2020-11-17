@@ -27,13 +27,13 @@ import java.util.List;
 
 public class JsonFormater {
 
-    public JSONObject toJson() {
+    public JSONObject toJson(String user,String pass) {
         JSONObject jsonObject = new JSONObject();
         try {
 
 
-            jsonObject.put("username", "superuser");
-            jsonObject.put("password", "superuser");
+            jsonObject.put("username", user);
+            jsonObject.put("password", pass);
             Log.d("loginJson", jsonObject.toString());
 
         } catch (JSONException e) {
@@ -184,7 +184,7 @@ public class JsonFormater {
             jsonObject.put("firstName", userModel.getName());
             jsonObject.put("lastName", "h");
             jsonObject.put("userName", userModel.getUserName());
-
+            jsonObject.put("password", userModel.getPassword());
             jsonObject.put("userContact", null);
 
 

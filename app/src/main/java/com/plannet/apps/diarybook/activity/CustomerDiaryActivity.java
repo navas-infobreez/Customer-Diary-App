@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,6 +55,7 @@ import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
+import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.ProductPriceDto;
@@ -93,6 +96,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     boolean isEdit,isManager;
     User userDb;
     BigDecimal grant_Total;
+    ProductPriceDto selectedPrice=new ProductPriceDto();
     UserModel userModel=new UserModel();
     private IntentIntegrator qrScan;
     ProductCategory productCategoryDb;
@@ -162,9 +166,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     //setting values to textviews
                     ProductModel productModel=new ProductModel();
                     String id=result.getContents();
-                    productsDb.selectProductById(CommonUtils.toInt(id));
+                    productModel=productsDb.selectProductById(CommonUtils.toInt(id));
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    detailsDialogue(productModel);
+                    if (productModel!=null)
+                        detailsDialogue(productModel);
 //                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -174,9 +179,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     //to a toast
                     ProductModel productModel=new ProductModel();
                     String id=result.getContents();
-                    productsDb.selectProductById(CommonUtils.toInt(id));
+                    productModel=productsDb.selectProductById(CommonUtils.toInt(id));
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    detailsDialogue(productModel);
+                    if (productModel!=null)
+                        detailsDialogue(productModel);
 //                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
                 }
             }
@@ -394,14 +400,14 @@ public class CustomerDiaryActivity extends AppCompatActivity {
 
 
     private void dialogue(){
-        List<ProductModel>productModels=productsDb.selectAllByCategory(selectedCategory.getProductCategoryId());
+        final List<ProductModel>productModels=productsDb.selectAllByCategory(selectedCategory.getProductCategoryId());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Product");
         builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout. product_detais_list, null);
         builder.setView(dialogView);
-
+        EditText search=(EditText) dialogView.findViewById(R.id.search);
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.productList);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -433,6 +439,55 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                List<ProductModel> filteredList;
+                if (productModels == null || productModels.isEmpty()) {
+                    return;
+                }
+
+                if (s.toString() == null || s.toString().isEmpty()) {
+                    filteredList = productModels;
+                } else {
+                    List<ProductModel> temp = new ArrayList<>();
+                    for (ProductModel productModel : productModels) {
+                        if (productModel.getProduct_name() != null && productModel.getProduct_name().toLowerCase().contains( s.toString().toLowerCase() ) ||
+                                productModel.getSearchKey() != null && productModel.getSearchKey().toLowerCase().contains( s.toString().toLowerCase() )) {
+                            temp.add( productModel );
+                        }
+                    }
+                    filteredList = temp;
+                }
+
+
+                ProductListAdapter productListAdapter = new ProductListAdapter(filteredList, new OnCompleteCallBack() {
+                    @Override
+                    public void onCompleteCallBack(Object data) {
+                        ProductModel productModel=new ProductModel();
+                        if (data instanceof ProductModel)
+                            productModel= (ProductModel) data;
+                        detailsDialogue(productModel);
+                    }
+                });
+                recyclerView.setAdapter(productListAdapter);
+                productListAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+
 
         builder.show();
     }
@@ -470,7 +525,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         price_spinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                ProductPriceDto selectedPrice = productPriceList.get(position);
+                selectedPrice = productPriceList.get(position);
                 UomModel uomModel=uomDb.getUom(selectedPrice.getUomId());
                 uom.setText("uom: "+uomModel.getName());
             }
@@ -484,7 +539,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         save.setVisibility(View.GONE);
 
         name.setText(productsModel.getProduct_name());
-        amount.setText("Price : "+String.valueOf(productsModel.getSale_price()));
+//        amount.setText("Price : "+String.valueOf(selectedPrice.getSalesPrice()));
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -506,7 +561,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     customerDiaryLineModel.setProduct_id(productsModel.getProduct_id());
                     customerDiaryLineModel.setHeaderId(diaryId);
                     customerDiaryLineModel.setCategory(productsModel.getProduct_category());
-                    customerDiaryLineModel.setPrice(productsModel.getSale_price().multiply(CommonUtils.toBigDecimal(qty)));
+                    customerDiaryLineModel.setPrice(selectedPrice.getSalesPrice().multiply(CommonUtils.toBigDecimal(qty)));
                     saveLine(customerDiaryLineModel);
                     sqrft.getText().clear();
                     details.getText().clear();

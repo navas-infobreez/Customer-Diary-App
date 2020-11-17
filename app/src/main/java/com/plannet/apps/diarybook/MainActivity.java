@@ -182,18 +182,84 @@ public class MainActivity extends AppCompatActivity {
 
         int i = item.getItemId();
         if (i == R.id.sync) {
-            getAllUsers(null);
-            getallCustomers(null);
-            getAllProducts(null);
-            getAllProductsCategory(null);
-            getallUom(null);
-            getAllDiary(null);
-            if (pendingDiaryFragment!=null) {
-                pendingDiaryFragment.refreshview();
-            }
-            if (currentDiaryFragment!=null) {
-                currentDiaryFragment.refreshview();
-            }
+            getAllUsers( new OnCompleteCallback() {
+                @Override
+                public void onError(Exception error) {
+                }
+                @Override
+                public void onComplete() {
+                    getallCustomers( new OnCompleteCallback() {
+                        @Override
+                        public void onError(Exception error) {
+                        }
+                        @Override
+                        public void onComplete() {
+                            getAllProducts( new OnCompleteCallback() {
+                                @Override
+                                public void onError(Exception error) {
+                                }
+                                @Override
+                                public void onComplete() {
+                                    getAllProductsCategory( new OnCompleteCallback() {
+                                        @Override
+                                        public void onError(Exception error) {
+                                        }
+                                        @Override
+                                        public void onComplete() {
+                                            getallUom( new OnCompleteCallback() {
+                                                @Override
+                                                public void onError(Exception error) {
+                                                }
+                                                @Override
+                                                public void onComplete() {
+                                                    getAllDiary( new OnCompleteCallback() {
+                                                        @Override
+                                                        public void onError(Exception error) {
+                                                        }
+                                                        @Override
+                                                        public void onComplete() {
+                                                            if (pendingDiaryFragment!=null) {
+                                                                pendingDiaryFragment.refreshview();
+                                                            }
+                                                            if (currentDiaryFragment!=null) {
+                                                                currentDiaryFragment.refreshview();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onComplete(Object object) {
+                                                        }
+                                                    } );
+                                                }
+
+                                                @Override
+                                                public void onComplete(Object object) {
+                                                }
+                                            } );
+                                        }
+
+                                        @Override
+                                        public void onComplete(Object object) {
+                                        }
+                                    } );
+                                }
+                                @Override
+                                public void onComplete(Object object) {
+                                }
+                            } );
+                        }
+                        @Override
+                        public void onComplete(Object object) {
+                        }
+                    } );
+                }
+
+                @Override
+                public void onComplete(Object object) {
+
+                }
+            } );
+
         }
         return super.onOptionsItemSelected( item );
     }

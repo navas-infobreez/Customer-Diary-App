@@ -1,5 +1,6 @@
 package com.plannet.apps.diarybook;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,15 +11,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.plannet.apps.diarybook.SyncManager.DefaultErrorListener;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
+import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.models.Authentication;
+import com.plannet.apps.diarybook.models.UserModel;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginManager {
@@ -35,26 +42,28 @@ public class LoginManager {
 
 
 
-        public void login(final OnCompleteCallback onCompleteCallback){
+        public void login(final OnCompleteCallback onCompleteCallback,String user,String pass){
 
             final String url = "https://planet-customerdiary.herokuapp.com/login/generate-token";
             //final String url = "https://planet-customerdiary.herokuapp.com/user/getalluserdetails";
 
             final JsonFormater formatter = new JsonFormater();
-            JsonObjectRequest jsonObjReq = new JsonObjectRequest( url, formatter.toJson(), new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest( url, formatter.toJson(user,pass), new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d( "Result", response.toString() );
                     try {
                         Gson gson = new Gson();
-
+                        JSONObject js =response.getJSONObject("result");
+                        String value=js.getString( "user" );
                         Type type = new TypeToken<Authentication>() {
                         }.getType();
                         authentication = gson.fromJson( response.toString(), type );
                         AppController.getInstance().setAuthToken(authentication);
                         if (onCompleteCallback != null) {
-                            onCompleteCallback.onComplete();
+                            UserModel userModel=gson.fromJson(value,UserModel.class);
+                            onCompleteCallback.onComplete(userModel);
                         }
                     } catch (Exception e) {
                         if (onCompleteCallback != null)

@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
@@ -33,6 +34,7 @@ import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.activity.CustomerDiaryActivity;
 import com.plannet.apps.diarybook.activity.ItemDecorator;
+import com.plannet.apps.diarybook.activity.LoginActivity;
 import com.plannet.apps.diarybook.adapters.ProductListAdapter;
 import com.plannet.apps.diarybook.databases.Role;
 import com.plannet.apps.diarybook.databases.User;
@@ -58,6 +60,7 @@ public class UserCreationActivity extends AppCompatActivity {
     User userDb;
     Role roleDb;
     List<RoleModel>roleModels=new ArrayList<>();
+    SweetAlertDialog sweetAlertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +146,10 @@ public class UserCreationActivity extends AppCompatActivity {
     }
 
     private void saveData() {
-        List<UserModel>userModelList=new ArrayList<>();
+        sweetAlertDialog=new SweetAlertDialog( UserCreationActivity.this,SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog .setTitleText("Please wait");
+        sweetAlertDialog.setContentText( "creating user" );
+        sweetAlertDialog .show();
         UserModel userModel=new UserModel();
         userModel.setName(name.getText().toString());
         userModel.setRole_name(selectedRolModel.getRoleName());
@@ -170,15 +176,13 @@ public class UserCreationActivity extends AppCompatActivity {
         lines.add( line );
         userModel.setRoles( lines );
 
-
-        userModelList.add(userModel);
-        userDb.insertUser(userModelList);
         syncUser(userModel);
-        clear();
-        finish();
+
+
     }
 
-    private void syncUser(UserModel userModel) {
+    private void syncUser(final UserModel userModel) {
+
         final String url ="https://planet-customerdiary.herokuapp.com/user/createorupdateuser";
         final JsonFormater formatter = new JsonFormater();
         DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest( this, url, formatter.toUserJson(userModel),
@@ -188,6 +192,21 @@ public class UserCreationActivity extends AppCompatActivity {
                         try {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
+                            List<UserModel>userModelList=new ArrayList<>();
+                            Gson gson = new Gson();
+                            JSONObject js =response.getJSONObject("result");
+                            String value=js.toString();
+                            UserModel userModel=gson.fromJson(value,UserModel.class);
+                            userModel.setRole_name( userModel.getRoles().get( 0 ).getRoleName());
+                            userModelList.add( userModel );
+                            userDb.insertUser(userModelList);
+                            sweetAlertDialog .dismiss();
+                            new SweetAlertDialog(UserCreationActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Success")
+                                    .setContentText("user added successfully!")
+                                    .show();
+                            clear();
+                            finish();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -197,6 +216,11 @@ public class UserCreationActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d( "error", error.toString() );
+                sweetAlertDialog .dismiss();
+                new SweetAlertDialog(UserCreationActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Error..")
+                        .setContentText("user creation failed")
+                        .show();
 
             }
         } );
@@ -207,6 +231,7 @@ public class UserCreationActivity extends AppCompatActivity {
     private void getRoll() {
         final String url = " https://planet-customerdiary.herokuapp.com/userrole/getalluserrole";
         DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest(this,  url, null,
+
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
