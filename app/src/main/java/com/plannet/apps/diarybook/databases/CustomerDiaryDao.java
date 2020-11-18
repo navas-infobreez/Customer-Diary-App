@@ -172,6 +172,7 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
 
     }
 
+
     public CustomerDiaryModel getAll(int diaryId) {
         String query="select * from "+TABLE_NAME+ " where diaryId = "+ diaryId;
         List<CustomerDiaryModel> list = prepareCustomerDiaryModel(super.executeQuery(context,query));

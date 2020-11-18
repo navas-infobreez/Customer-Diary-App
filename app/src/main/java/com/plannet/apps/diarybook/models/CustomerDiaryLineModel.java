@@ -8,9 +8,13 @@ import java.math.BigDecimal;
 
 public class CustomerDiaryLineModel {
 
+
+    int id ;
     @SerializedName("remoteId")
     @Expose
-    int id ;
+    int diaryLineId ;
+    @SerializedName("remoteId")
+    @Expose
     int headerId;
     String product_name ;
     int product_id ;

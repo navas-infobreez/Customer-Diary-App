@@ -90,7 +90,7 @@ public class JsonFormater {
             jsonObject.put("salesRepId", customerDiaryModel.getSalesmanId());
             jsonObject.put("totalAmount", customerDiaryModel.getTotalAmount());
             if (customerDiaryModel.getCustomerDiaryLineDTOList()!=null&&customerDiaryModel.getCustomerDiaryLineDTOList().size()>0){
-                jsonObject.put( "CustomerDiaryLineDTOList", diaryLineJson( customerDiaryModel.getCustomerDiaryLineDTOList() ) );
+                jsonObject.put( "customerDiaryLineDTOList", diaryLineJson( customerDiaryModel.getCustomerDiaryLineDTOList() ) );
             }else {
                 jsonObject.put( "CustomerDiaryLineDTOList",null );
             }
@@ -133,14 +133,13 @@ public class JsonFormater {
             for (CustomerDiaryLineModel c : customerDiaryLineModel)
             {
                 JSONObject studentJSON = new JSONObject();
-                studentJSON.put("id",c.getId());
                 studentJSON.put("remoteId",c.getHeaderId()>0?c.getHeaderId():0 );
                 studentJSON.put("productId", c.getProduct_id());
                 studentJSON.put("uomId",c.getUomId());
                 studentJSON.put("productCategoryId",c.getCategoryId());
                 studentJSON.put("salesPrice",c.getPrice());
-                studentJSON.put("Qty", c.getQty());
-                studentJSON.put("Description",c.getDetails() );
+                studentJSON.put("qty", c.getQty());
+                studentJSON.put("description",c.getDetails() );
                 jArray.put(studentJSON);
             }
             Log.d("diaryLineJson", jArray.toString());

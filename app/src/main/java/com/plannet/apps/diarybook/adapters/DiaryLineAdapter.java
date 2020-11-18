@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
+import com.plannet.apps.diarybook.utils.Callback;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
 import java.util.List;
@@ -16,9 +17,9 @@ import java.util.List;
 public class DiaryLineAdapter extends RecyclerView.Adapter<DiaryLineAdapter.MyViewHolder> {
 
     private List<CustomerDiaryLineModel> customerDiaryLineModels;
-    OnCompleteCallBack callBack;
+    Callback callBack;
 
-    public DiaryLineAdapter(List<CustomerDiaryLineModel> customerDiaryLineModels, OnCompleteCallBack completeCallBack) {
+    public DiaryLineAdapter(List<CustomerDiaryLineModel> customerDiaryLineModels, Callback completeCallBack) {
 
         this.customerDiaryLineModels = customerDiaryLineModels;
         this.callBack = completeCallBack;
@@ -73,7 +74,15 @@ public class DiaryLineAdapter extends RecyclerView.Adapter<DiaryLineAdapter.MyVi
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callBack.onCompleteCallBack(eachItem);
+                    callBack.onItemClick(eachItem);
+                }
+            });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    callBack.onItemLongClick(eachItem);
+                    return false;
                 }
             });
         }

@@ -36,6 +36,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
@@ -60,6 +61,7 @@ import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.ProductPriceDto;
 import com.plannet.apps.diarybook.models.UserModel;
+import com.plannet.apps.diarybook.utils.Callback;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 
@@ -171,7 +173,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     productModel=productsDb.selectProductById(CommonUtils.toInt(id));
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     if (productModel!=null)
-                        detailsDialogue(productModel);
+                        detailsDialogue(productModel,false,0);
 //                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -184,7 +186,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     productModel=productsDb.selectProductById(CommonUtils.toInt(id));
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     if (productModel!=null)
-                        detailsDialogue(productModel);
+                        detailsDialogue(productModel,false,0);
 //                    Toast.makeText(this, ""+productModel, Toast.LENGTH_LONG).show();
                 }
             }
@@ -425,7 +427,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                 ProductModel productModel=new ProductModel();
                 if (data instanceof ProductModel)
                     productModel= (ProductModel) data;
-                detailsDialogue(productModel);
+                detailsDialogue(productModel,false,0);
             }
         });
         recyclerView.setAdapter(productListAdapter);
@@ -477,7 +479,7 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                         ProductModel productModel=new ProductModel();
                         if (data instanceof ProductModel)
                             productModel= (ProductModel) data;
-                        detailsDialogue(productModel);
+                        detailsDialogue(productModel,false,0);
                     }
                 });
                 recyclerView.setAdapter(productListAdapter);
@@ -497,21 +499,21 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void detailsDialogue(final ProductModel productsModel){
+    private void detailsDialogue(final ProductModel productsModel, final boolean isEditOption, final int lineId){
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout. product_detais_data, null);
         builder.setView(dialogView);
 
-
+        CustomerDiaryLineModel lineModel=customerDiaryLinesDao.getLine(lineId);
         final List<ProductPriceDto>productPriceList=productPriceDb.getAllById(productsModel.getProduct_id());
 
-        final EditText sqrft,details;
+        final EditText qty,details;
         final TextView name,amount,uom;
         Spinner price_spinner;
         Button save;
-        sqrft=(EditText)dialogView.findViewById(R.id.sqrft);
+        qty=(EditText)dialogView.findViewById(R.id.sqrft);
         details=(EditText)dialogView.findViewById(R.id.details);
         uom=(TextView) dialogView.findViewById(R.id.uom);
         name=(TextView) dialogView.findViewById(R.id.name);
@@ -526,6 +528,9 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         ArrayAdapter aa = new ArrayAdapter( CustomerDiaryActivity.this, android.R.layout.simple_spinner_item, priceList );
         aa.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
         price_spinner.setAdapter( aa );
+
+        if (isEditOption)
+            qty.setText(String.valueOf(lineModel.getQty()));
 
         price_spinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
             @Override
@@ -555,22 +560,25 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (sqrft.getText().toString().isEmpty()||sqrft.getText().toString().equals("")){
-                    sqrft.setError("Enter a Quantity");
+                if (qty.getText().toString().isEmpty()||qty.getText().toString().equals("")){
+                    qty.setError("Enter a Quantity");
                 }else {
                     CustomerDiaryLineModel customerDiaryLineModel = new CustomerDiaryLineModel();
                     customerDiaryLineModel.setProduct_name(productsModel.getProduct_name());
-                    String qty = sqrft.getText().toString();
-                    customerDiaryLineModel.setQty(CommonUtils.toInt(qty));
+                    String qtyValue = qty.getText().toString();
+                    if (isEditOption){
+                        customerDiaryLineModel.setId(lineId);
+                    }
+                    customerDiaryLineModel.setQty(CommonUtils.toInt(qtyValue));
                     customerDiaryLineModel.setDetails(details.getText().toString());
                     customerDiaryLineModel.setProduct_id(productsModel.getProduct_id());
                     customerDiaryLineModel.setHeaderId(diaryId);
                     customerDiaryLineModel.setCategory(productsModel.getProduct_category());
                     customerDiaryLineModel.setUomId(selectedUomModel.getUomId());
                     customerDiaryLineModel.setCategoryId(selectedCategory.getProductCategoryId());
-                    customerDiaryLineModel.setPrice(selectedPrice.getSalesPrice().multiply(CommonUtils.toBigDecimal(qty)));
-                    saveLine(customerDiaryLineModel);
-                    sqrft.getText().clear();
+                    customerDiaryLineModel.setPrice(selectedPrice.getSalesPrice().multiply(CommonUtils.toBigDecimal(qtyValue)));
+                    saveLine(customerDiaryLineModel,isEditOption);
+                    qty.getText().clear();
                     details.getText().clear();
                     lineRefresh();
                     initView();
@@ -615,15 +623,49 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     }
 
     private void lineRefresh() {
-        List<CustomerDiaryLineModel>customerDiaryLineModelList=customerDiaryLinesDao.getAll(diaryId);
+        final List<CustomerDiaryLineModel>customerDiaryLineModelList=customerDiaryLinesDao.getAll(diaryId);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         productDetails.setLayoutManager(mLayoutManager);
         productDetails.setItemAnimator(new DefaultItemAnimator());
         productDetails.addItemDecoration(new ItemDecorator(getApplicationContext()));
-        DiaryLineAdapter diaryLineAdapter = new DiaryLineAdapter(customerDiaryLineModelList, new OnCompleteCallBack() {
+        DiaryLineAdapter diaryLineAdapter = new DiaryLineAdapter(customerDiaryLineModelList, new Callback() {
             @Override
-            public void onCompleteCallBack(Object data) {
-                ProductModel productModel=new ProductModel();
+            public void onItemClick(Object object) {
+                if (object instanceof CustomerDiaryLineModel){
+                    CustomerDiaryLineModel cDiary= (CustomerDiaryLineModel) object;
+                    ProductModel productModel=productsDb.selectProductById(cDiary.getProduct_id());
+                    detailsDialogue(productModel,true,cDiary.getId());
+                }
+            }
+
+            @Override
+            public void onItemLongClick(Object object) {
+                if (object instanceof CustomerDiaryLineModel) {
+                    final CustomerDiaryLineModel cDiary = (CustomerDiaryLineModel) object;
+
+                new SweetAlertDialog(CustomerDiaryActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("You want to delete this line!")
+                        .setConfirmText("Yes,delete it!")
+                        .setCancelText("No")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                               customerDiaryLinesDao.deleteLine(cDiary.getId());
+                                sDialog.dismissWithAnimation();
+                                lineRefresh();
+                                grant_Total=customerDiaryLinesDao.getSumOfLineTotal(diaryId);
+                                grandTotal.setText(grant_Total!=null?grant_Total.toPlainString():"0.00"  );
+                            }
+                        })
+                        .show();
+                }
 
             }
         });
@@ -631,10 +673,14 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         diaryLineAdapter.notifyDataSetChanged();
     }
 
-    private void saveLine(CustomerDiaryLineModel customerDiaryLineModel) {
+    private void saveLine(CustomerDiaryLineModel customerDiaryLineModel,boolean isEditDiary) {
         List<CustomerDiaryLineModel>customerDiaryLineModelList=new ArrayList<>();
         customerDiaryLineModelList.add(customerDiaryLineModel);
-        customerDiaryLinesDao.insertCustomerDiaryLines(customerDiaryLineModelList);
+        if (isEditDiary){
+            customerDiaryLinesDao.updateDiary(customerDiaryLineModel);
+        }else {
+            customerDiaryLinesDao.insertCustomerDiaryLines(customerDiaryLineModelList);
+        }
         lineRefresh();
         grant_Total=customerDiaryLinesDao.getSumOfLineTotal(diaryId);
         grandTotal.setText(grant_Total!=null?grant_Total.toPlainString():"0.00"  );

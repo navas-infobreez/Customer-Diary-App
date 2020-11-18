@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.databases.ProductCategory;
+import com.plannet.apps.diarybook.databases.ProductPrice;
 import com.plannet.apps.diarybook.databases.Products;
 import com.plannet.apps.diarybook.databases.Role;
 import com.plannet.apps.diarybook.databases.Uom;
@@ -43,6 +45,7 @@ import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
 import com.plannet.apps.diarybook.models.ProductCategoryModel;
 import com.plannet.apps.diarybook.models.ProductModel;
+import com.plannet.apps.diarybook.models.ProductPriceDto;
 import com.plannet.apps.diarybook.models.RoleModel;
 import com.plannet.apps.diarybook.models.UserModel;
 
@@ -97,27 +100,28 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById( R.id.bottom_navigation );
-//        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )){
-//            bottomNavigationView.getMenu().getItem(R.id.action_user  ).setEnabled( true );
-//            bottomNavigationView.getMenu().getItem(R.id.action_products  ).setEnabled( true );
-//        }else {
-//            bottomNavigationView.setVisibility( View.GONE );
-//            bottomNavigationView.getMenu().getItem(R.id.action_user  ).setEnabled( false );
-//            bottomNavigationView.getMenu().getItem(R.id.action_products  ).setEnabled( false );
-//        }
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener( new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_user:
-                        Intent intent = new Intent( MainActivity.this, UserCreationActivity.class );
-                        startActivity( intent );
+                        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )||
+                                AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Admin" )) {
+                            Intent intent = new Intent(MainActivity.this, UserCreationActivity.class);
+                            startActivity(intent);
+                        }else {
+                            Toast.makeText(MainActivity.this,"You have no permission for this action",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case R.id.action_products:
-                        Intent intent1 = new Intent( MainActivity.this, CreateProductsActivity.class );
-                        startActivity( intent1 );
+                        if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )||
+                                AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Admin" )) {
+                            Intent intent1 = new Intent(MainActivity.this, CreateProductsActivity.class);
+                            startActivity(intent1);
+                        }else {
+                            Toast.makeText(MainActivity.this,"You have no permission for this action",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case R.id.action_customer:
                         Intent intent2 = new Intent( MainActivity.this, ReceptionForm.class );
@@ -348,6 +352,8 @@ public class MainActivity extends AppCompatActivity {
                                 ProductModel productModel=gson.fromJson(str,ProductModel.class);
                                 productModels.add(productModel);
                             }
+                            ProductPrice productPriceDb=new ProductPrice(MainActivity.this);
+                            productPriceDb.deleteAll();
                             productsDb.deleteAll();
                             productsDb.insertProducts(productModels);
                             List<ProductModel>test=productsDb.selectAll();

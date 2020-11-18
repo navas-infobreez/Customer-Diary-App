@@ -81,6 +81,11 @@ public class ProductPrice extends DatabaseHandlerController {
 
     }
 
+    public void deleteAll() {
+        super.delete(context,TABLE_NAME,"");
+
+    }
+
     public List<ProductPriceDto> getAllById(int productId) {
         String query="select * from "+TABLE_NAME + " where productId ="+productId;
         List<ProductPriceDto> list = prepareUomModels(super.executeQuery(context,query));

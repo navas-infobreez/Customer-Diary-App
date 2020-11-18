@@ -30,10 +30,7 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
-        <activity android:name=".forms.CreateProductsActivity"
-            android:stateNotNeeded="false"
-            android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden">
+        <activity android:name=".forms.CreateProductsActivity">
         </activity>
         <activity android:name=".forms.CustomerSearchActivity" />
         <activity android:name=".activity.DiaryListActivity" />

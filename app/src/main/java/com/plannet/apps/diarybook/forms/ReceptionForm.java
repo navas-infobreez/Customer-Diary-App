@@ -15,7 +15,10 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.google.gson.Gson;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.plannet.apps.diarybook.AppController;
+import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.Preference;
 import com.plannet.apps.diarybook.R;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
@@ -25,6 +28,7 @@ import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.models.CustomerContact;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.models.CustomerModel;
+import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.RoleModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
@@ -49,6 +53,7 @@ public class ReceptionForm extends AppCompatActivity {
     boolean isEdit;
     int customerId=0;
     TextView header;
+    private SweetAlertDialog sweetAlertDialog;
 
 
     @Override
@@ -145,10 +150,13 @@ public class ReceptionForm extends AppCompatActivity {
     }
 
     private void getData() {
+        sweetAlertDialog=new SweetAlertDialog(ReceptionForm.this,SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog .setTitleText("Please wait");
+        sweetAlertDialog.setContentText( "Creating customer.." );
+        sweetAlertDialog .show();
         if (customerId==0) {//for check is not edit
             List<CustomerModel> customerModelList = new ArrayList<>();
             CustomerContact customerContact=new CustomerContact();
-
             CustomerModel customerModel = new CustomerModel();
             customerModel.setCustomerName( name.getText().toString() );
             customerContact.setAddress1( address.getText().toString() );
@@ -157,13 +165,11 @@ public class ReceptionForm extends AppCompatActivity {
             customerContact.setCity( place.getText().toString() );
             customerModel.setCustomerContact( customerContact );
             customerModelList.add( customerModel );
-            customerDb.insertCustomers( customerModelList );
             syncCustomer(customerModel);
         }
         if (isEdit)
             insertDiary();
 
-        cearData();
 
     }
 
@@ -204,6 +210,21 @@ public class ReceptionForm extends AppCompatActivity {
                             VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
                             Log.d( "Response", response.toString() );
 
+                            List<CustomerModel> customerModelList = new ArrayList<>();
+                            Gson gson = new Gson();
+                            JSONObject js =response.getJSONObject("result");
+                            String value=js.toString();
+                            CustomerModel customerModel1=gson.fromJson(value,CustomerModel.class);
+                            customerModelList.add( customerModel1 );
+                            customerDb.insertCustomers( customerModelList );
+                            sweetAlertDialog.dismiss();
+                            new SweetAlertDialog(ReceptionForm.this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Success")
+                                    .setContentText("customer added successfully!")
+                                    .show();
+                            cearData();
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -211,7 +232,10 @@ public class ReceptionForm extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                new SweetAlertDialog(ReceptionForm.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Error..")
+                        .setContentText("customer creation failed")
+                        .show();
                 Log.d( "error Response", error.toString() );
             }
         } );

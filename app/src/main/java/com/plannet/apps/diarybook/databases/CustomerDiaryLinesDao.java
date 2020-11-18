@@ -77,6 +77,31 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
     }
 
+    public void deleteLine(int id) {
+        super.delete(context,TABLE_NAME," id = "+id);
+
+    }
+
+    public CustomerDiaryLineModel getLine(int id) {
+        String query="select * from "+TABLE_NAME+ " where id = "+ id;
+        List<CustomerDiaryLineModel> list = prepareCustomerDiaryLinesModel(super.executeQuery(context,query));
+
+        return list.size()>0?list.get(0):null;
+
+    }
+
+    public void updateDiary(CustomerDiaryLineModel customerDiaryLineModel) {
+
+        String query = "UPDATE " + TABLE_NAME +
+                " set qty =" + customerDiaryLineModel.getQty()+
+                ", price ="+CommonUtils.quoteString( String.valueOf(customerDiaryLineModel.getPrice()) )+
+                ", details ="+CommonUtils.quoteString( customerDiaryLineModel.getDetails() ) +
+                ", uomId ="+customerDiaryLineModel.getUomId()+
+                " where id =" + customerDiaryLineModel.getId();
+        super.execute( context, query );
+
+    }
+
     public List<CustomerDiaryLineModel> getAll(int id) {
         String query="select * from "+TABLE_NAME+ " where headerId = "+ id+" and qty >0 "+" order by category";
         List<CustomerDiaryLineModel> list = prepareCustomerDiaryLinesModel(super.executeQuery(context,query));
