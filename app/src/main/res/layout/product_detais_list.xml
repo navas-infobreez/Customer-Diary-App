@@ -3,24 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
+    android:background="@color/whiteCardColor"
     android:layout_height="match_parent">
 
-   <com.google.android.material.textfield.TextInputLayout
-       android:id="@+id/iextinput"
-       android:layout_above="@+id/customerList_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content">
+
       <EditText
           android:id="@+id/search"
-          android:hint="  Customer Search"
+          android:hint="Search product"
           android:textColor="@color/black"
+          android:textAlignment="textStart"
+          android:padding="10dp"
+          android:layout_marginEnd="15sp"
+          android:layout_marginStart="15sp"
+          android:layout_marginTop="15sp"
           android:layout_width="match_parent"
           android:background="@drawable/rounded_edit_text"
-          android:layout_height="50dp"/>
-   </com.google.android.material.textfield.TextInputLayout>
+          android:layout_height="40dp"/>
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/productList"
+       android:layout_marginTop="10dp"
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
 
