@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -194,9 +195,13 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     public void onCompleteCallBack(Object data) {
         if (data instanceof CustomerDiaryModel) {
             CustomerDiaryModel customerDiaryModel = (CustomerDiaryModel) data;
-            Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
-            intent.putExtra("diaryId",customerDiaryModel.getDiaryId());
-            startActivity(intent);
+            if (!customerDiaryModel.getStatus().equals(PENDING)) {
+                Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class);
+                intent.putExtra("diaryId", customerDiaryModel.getDiaryId());
+                startActivity(intent);
+            }else {
+                Toast.makeText(getActivity(),"Please pick customer first..!!",Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
