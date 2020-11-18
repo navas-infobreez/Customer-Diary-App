@@ -136,11 +136,11 @@ public class JsonFormater {
                 studentJSON.put("id",c.getId());
                 studentJSON.put("remoteId",c.getHeaderId()>0?c.getHeaderId():0 );
                 studentJSON.put("productId", c.getProduct_id());
-                studentJSON.put("uomId","");
-                studentJSON.put("productCategoryId",c.getCategory());
+                studentJSON.put("uomId",c.getUomId());
+                studentJSON.put("productCategoryId",c.getCategoryId());
                 studentJSON.put("salesPrice",c.getPrice());
                 studentJSON.put("Qty", c.getQty());
-                studentJSON.put("Description","" );
+                studentJSON.put("Description",c.getDetails() );
                 jArray.put(studentJSON);
             }
             Log.d("diaryLineJson", jArray.toString());

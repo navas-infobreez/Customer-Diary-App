@@ -18,7 +18,24 @@ public class CustomerDiaryLineModel {
     String details;
     BigDecimal price;
     String category;
+    int uomId;
+    int categoryId;
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getUomId() {
+        return uomId;
+    }
+
+    public void setUomId(int uomId) {
+        this.uomId = uomId;
+    }
 
     public String getCategory() {
         return category;

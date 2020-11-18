@@ -100,6 +100,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     UserModel userModel=new UserModel();
     private IntentIntegrator qrScan;
     ProductCategory productCategoryDb;
+    UomModel selectedUomModel=new UomModel();
+
     List<ProductCategoryModel>productCategoryModelList=new ArrayList<>();
 
     @Override
@@ -205,6 +207,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
 
         int i = item.getItemId();
         if (i == R.id.qrcCde) {
+            qrScan = new IntentIntegrator(this);
+            qrScan.setCaptureActivity(OriantationActivity.class);
+            qrScan.setPrompt("Scan QR Code");
+            qrScan.setOrientationLocked(false);
             qrScan.initiateScan();
 
         }
@@ -267,7 +273,6 @@ public class CustomerDiaryActivity extends AppCompatActivity {
         if (userModel!=null)
             salesMan.setText(userModel.getName());
 
-        qrScan = new IntentIntegrator(this);
 
 
     }
@@ -495,10 +500,10 @@ public class CustomerDiaryActivity extends AppCompatActivity {
     private void detailsDialogue(final ProductModel productsModel){
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout. product_detais_data, null);
         builder.setView(dialogView);
+
 
         final List<ProductPriceDto>productPriceList=productPriceDb.getAllById(productsModel.getProduct_id());
 
@@ -526,8 +531,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedPrice = productPriceList.get(position);
-                UomModel uomModel=uomDb.getUom(selectedPrice.getUomId());
-                uom.setText("uom: "+uomModel.getName());
+                selectedUomModel=uomDb.getUom(selectedPrice.getUomId());
+                uom.setText("uom: "+selectedUomModel.getName());
             }
 
             @Override
@@ -561,6 +566,8 @@ public class CustomerDiaryActivity extends AppCompatActivity {
                     customerDiaryLineModel.setProduct_id(productsModel.getProduct_id());
                     customerDiaryLineModel.setHeaderId(diaryId);
                     customerDiaryLineModel.setCategory(productsModel.getProduct_category());
+                    customerDiaryLineModel.setUomId(selectedUomModel.getUomId());
+                    customerDiaryLineModel.setCategoryId(selectedCategory.getProductCategoryId());
                     customerDiaryLineModel.setPrice(selectedPrice.getSalesPrice().multiply(CommonUtils.toBigDecimal(qty)));
                     saveLine(customerDiaryLineModel);
                     sqrft.getText().clear();

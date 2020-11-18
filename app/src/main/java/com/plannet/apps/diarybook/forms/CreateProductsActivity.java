@@ -53,7 +53,7 @@ import java.util.List;
 
 public class CreateProductsActivity extends AppCompatActivity {
     Button submit,addCategory,addUom;
-    EditText product_name, code, amount, details;
+    EditText product_name, code, purchase_amount, details,sales_amount,discount_amount;
     Spinner category_spinner,uom_spinner;
     Products products;
     ProductPrice productPriceDb;
@@ -104,7 +104,9 @@ public class CreateProductsActivity extends AppCompatActivity {
     private void initUi() {
         product_name = (EditText) findViewById( R.id.name );
         code = (EditText) findViewById( R.id.product_code );
-        amount = (EditText) findViewById( R.id.rate );
+        purchase_amount = (EditText) findViewById( R.id.purchase_rate );
+        sales_amount = (EditText) findViewById( R.id.sales_rate );
+        discount_amount = (EditText) findViewById( R.id.discount_rate );
         details = (EditText) findViewById( R.id.details );
         category_spinner = (Spinner) findViewById( R.id.category_spinner );
         uom_spinner = (Spinner) findViewById( R.id.uom_spinner );
@@ -430,7 +432,9 @@ public class CreateProductsActivity extends AppCompatActivity {
     private void getData() {
         if (product_name.getText().toString().isEmpty() || product_name.getText().toString().equals( "" )) {
             product_name.setError( "enter product Name" );
-        }else {
+        }else if (sales_amount.getText().toString().isEmpty() || sales_amount.getText().toString().equals( "" )) {
+            sales_amount.setError( "enter sales rate" );
+        } else {
             saveData();
         }
     }
@@ -449,13 +453,16 @@ public class CreateProductsActivity extends AppCompatActivity {
         ProductPriceDto productPriceDto = new ProductPriceDto();
         productPriceDto.setProductPriceId(Preference.NextProductPriceId(this));
         productPriceDto.setProductId(producId);
-        productPriceDto.setSalesPrice(CommonUtils.toBigDecimal( amount.getText().toString() ));
+        productPriceDto.setPurchasePrice(CommonUtils.toBigDecimal( purchase_amount.getText().toString() ));
+        productPriceDto.setSalesPrice(CommonUtils.toBigDecimal( sales_amount.getText().toString() ));
+        productPriceDto.setDiscntSalesPrice(CommonUtils.toBigDecimal( discount_amount.getText().toString() ));
         productPriceDto.setUomId(selectedUom.getUomId());
         productPriceDtoList.add(productPriceDto);
 
         productModel.setProduct_id(producId);
         productModel.setProduct_name( product_name.getText().toString() );
-        productModel.setSale_price( CommonUtils.toBigDecimal( amount.getText().toString() ) );
+        productModel.setCost_price( CommonUtils.toBigDecimal( purchase_amount.getText().toString() ) );
+        productModel.setSale_price( CommonUtils.toBigDecimal( sales_amount.getText().toString() ) );
         productModel.setDescription( details.getText().toString() );
         productModel.setUomId(selectedUom.getUomId());
         productModel.setUom(selectedUom.getName());
@@ -468,7 +475,9 @@ public class CreateProductsActivity extends AppCompatActivity {
 
     private void clear() {
         product_name.getText().clear();
-        amount.getText().clear();
+        purchase_amount.getText().clear();
+        sales_amount.getText().clear();
+        discount_amount.getText().clear();
         details.getText().clear();
         code.getText().clear();
         category_spinner.setSelection( 0 );

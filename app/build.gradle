@@ -42,7 +42,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
+    implementation "com.journeyapps:zxing-android-embedded:3.6.0"
+    implementation "com.google.zxing:core:3.3.3"
 
     implementation 'com.github.thomper:sweet-alert-dialog:1.4.0'
 }

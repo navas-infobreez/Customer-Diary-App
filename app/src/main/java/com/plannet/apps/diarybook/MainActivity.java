@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -26,6 +26,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
+import com.plannet.apps.diarybook.activity.LoginActivity;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     Customer customerDb;
     Uom uomDb;
     ProductCategory productCategoryDb;
+    SweetAlertDialog sweetAlertDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -182,6 +185,12 @@ public class MainActivity extends AppCompatActivity {
 
         int i = item.getItemId();
         if (i == R.id.sync) {
+            sweetAlertDialog=new SweetAlertDialog(MainActivity.this,SweetAlertDialog.PROGRESS_TYPE);
+            sweetAlertDialog .setTitleText("Downloading Datas..");
+            sweetAlertDialog.setContentText( "Please wait" );
+            sweetAlertDialog .show();
+
+
             getAllUsers( new OnCompleteCallback() {
                 @Override
                 public void onError(Exception error) {
@@ -224,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
                                                             if (currentDiaryFragment!=null) {
                                                                 currentDiaryFragment.refreshview();
                                                             }
+                                                            sweetAlertDialog.dismiss();
                                                         }
 
                                                         @Override

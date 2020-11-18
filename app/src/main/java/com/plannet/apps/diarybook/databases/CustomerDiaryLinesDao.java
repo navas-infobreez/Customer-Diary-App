@@ -26,6 +26,8 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
     public static final String price = "price";
     public static final String details = "details";
     public static final String category = "category";
+    public static final String uomId = "uomId";
+    public static final String categoryId = "categoryId";
 
 
     private DatabaseHandler dbhelper;
@@ -45,9 +47,10 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
 
             for (CustomerDiaryLineModel tuple :customerDiaryLineModels ) {
-                Object[] values_ar = {tuple.getHeaderId(),tuple.getProduct_name(), tuple.getProduct_id(), tuple.getQty(),tuple.getPrice(),tuple.getDetails(),tuple.getCategory()};
+                Object[] values_ar = {tuple.getHeaderId(),tuple.getProduct_name(), tuple.getProduct_id(), tuple.getQty(),tuple.getPrice(),tuple.getDetails(),tuple.getCategory(),
+                tuple.getUomId(),tuple.getCategoryId()};
 
-                String[] fields_ar = {headerId,product_name, product_id,qty,price,details,category};
+                String[] fields_ar = {headerId,product_name, product_id,qty,price,details,category,uomId,categoryId};
                 String values = "", fields = "";
                 for (int i = 0; i < values_ar.length; i++) {
                     if (values_ar[i] != null) {
@@ -95,6 +98,8 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
             temp.setPrice(CommonUtils.toBigDecimal(tuple.get(5)));
             temp.setDetails(tuple.get(6));
             temp.setCategory(tuple.get(7));
+            temp.setUomId(CommonUtils.toInt(tuple.get(8)));
+            temp.setCategoryId(CommonUtils.toInt(tuple.get(9)));
             customerDiaryLineModels.add(temp);
         }
         return customerDiaryLineModels;
