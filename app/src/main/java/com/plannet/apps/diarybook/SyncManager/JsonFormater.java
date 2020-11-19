@@ -133,7 +133,8 @@ public class JsonFormater {
             for (CustomerDiaryLineModel c : customerDiaryLineModel)
             {
                 JSONObject studentJSON = new JSONObject();
-                studentJSON.put("remoteId",c.getHeaderId()>0?c.getHeaderId():0 );
+                studentJSON.put("remoteId",c.getDiaryLineId()>0?c.getDiaryLineId():0 );
+                studentJSON.put("customerDiaryId", c.getHeaderId());
                 studentJSON.put("productId", c.getProduct_id());
                 studentJSON.put("uomId",c.getUomId());
                 studentJSON.put("productCategoryId",c.getCategoryId());

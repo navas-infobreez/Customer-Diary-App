@@ -8,22 +8,43 @@ import java.math.BigDecimal;
 
 public class CustomerDiaryLineModel {
 
-
     int id ;
     @SerializedName("remoteId")
     @Expose
     int diaryLineId ;
-    @SerializedName("remoteId")
+    @SerializedName("customerDiaryId")
     @Expose
     int headerId;
     String product_name ;
+    @SerializedName("productId")
+    @Expose
     int product_id ;
+    @SerializedName("qty")
+    @Expose
     int qty ;
+    @SerializedName("description")
+    @Expose
     String details;
+    @SerializedName("salesPrice")
+    @Expose
     BigDecimal price;
+
     String category;
+    @SerializedName("uomId")
+    @Expose
     int uomId;
+    @SerializedName("productCategoryId")
+    @Expose
     int categoryId;
+
+
+    public int getDiaryLineId() {
+        return diaryLineId;
+    }
+
+    public void setDiaryLineId(int diaryLineId) {
+        this.diaryLineId = diaryLineId;
+    }
 
     public int getCategoryId() {
         return categoryId;

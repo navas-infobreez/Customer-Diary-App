@@ -31,6 +31,7 @@ import com.plannet.apps.diarybook.activity.LoginActivity;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
+import com.plannet.apps.diarybook.databases.CustomerDiaryLinesDao;
 import com.plannet.apps.diarybook.databases.ProductCategory;
 import com.plannet.apps.diarybook.databases.ProductPrice;
 import com.plannet.apps.diarybook.databases.Products;
@@ -398,6 +399,8 @@ public class MainActivity extends AppCompatActivity {
                                 CustomerDiaryModel cDiary=gson.fromJson(str,CustomerDiaryModel.class);
                                 customerDiaryModels.add(cDiary);
                             }
+                            CustomerDiaryLinesDao customerDiaryLinesDao=new CustomerDiaryLinesDao(MainActivity.this);
+                            customerDiaryLinesDao.deleteAll();
                             customerDiaryDb.deleteall();
                             customerDiaryDb.insertCustomerDiary(customerDiaryModels);
                             List<CustomerDiaryModel>test=customerDiaryDb.getAll();

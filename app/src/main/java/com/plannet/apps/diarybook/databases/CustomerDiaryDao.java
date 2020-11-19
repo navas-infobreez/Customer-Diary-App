@@ -111,8 +111,11 @@ public class CustomerDiaryDao extends DatabaseHandlerController {
                         sqliteDB.execSQL(query);
                     }
                 }
+                if (tuple.getCustomerDiaryLineDTOList()!=null&&tuple.getCustomerDiaryLineDTOList().size()>0)
+                    customerDiaryLinesDao.insertCustomerDiaryLines(tuple.getCustomerDiaryLineDTOList());
             }
             sqliteDB.setTransactionSuccessful();
+
         } catch (Exception e) {
             ErrorMsg.showError(context, "Error while running DB query", e,"");
         } finally {

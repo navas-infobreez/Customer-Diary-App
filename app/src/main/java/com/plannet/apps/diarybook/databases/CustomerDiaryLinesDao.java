@@ -9,6 +9,7 @@ import com.plannet.apps.diarybook.DatabaseHandlerController;
 import com.plannet.apps.diarybook.ErrorMsg;
 import com.plannet.apps.diarybook.models.CustomerDiaryLineModel;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
+import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.utils.CommonUtils;
 
 import java.math.BigDecimal;
@@ -28,13 +29,16 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
     public static final String category = "category";
     public static final String uomId = "uomId";
     public static final String categoryId = "categoryId";
+    public static final String diaryLineId = "diaryLineId";
 
 
     private DatabaseHandler dbhelper;
     private SQLiteDatabase sqliteDB;
     private Context context;
+    Products productsDb;
     public CustomerDiaryLinesDao(Context context) {
         this.context = context;
+        productsDb=new Products(context);
     }
 
     public void insertCustomerDiaryLines( List<CustomerDiaryLineModel> customerDiaryLineModels) {
@@ -48,9 +52,9 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
             for (CustomerDiaryLineModel tuple :customerDiaryLineModels ) {
                 Object[] values_ar = {tuple.getHeaderId(),tuple.getProduct_name(), tuple.getProduct_id(), tuple.getQty(),tuple.getPrice(),tuple.getDetails(),tuple.getCategory(),
-                tuple.getUomId(),tuple.getCategoryId()};
+                tuple.getUomId(),tuple.getCategoryId(),tuple.getDiaryLineId()};
 
-                String[] fields_ar = {headerId,product_name, product_id,qty,price,details,category,uomId,categoryId};
+                String[] fields_ar = {headerId,product_name, product_id,qty,price,details,category,uomId,categoryId,diaryLineId};
                 String values = "", fields = "";
                 for (int i = 0; i < values_ar.length; i++) {
                     if (values_ar[i] != null) {
@@ -75,6 +79,12 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
 
         }
 
+    }
+
+
+    public void deleteAll() {
+        String query="delete from "+TABLE_NAME;
+        List<CustomerDiaryLineModel> list = prepareCustomerDiaryLinesModel(super.executeQuery(context,query));
     }
 
     public void deleteLine(int id) {
@@ -117,7 +127,7 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
             CustomerDiaryLineModel temp = new CustomerDiaryLineModel();
             temp.setId(CommonUtils.toInt(tuple.get(0)));
             temp.setHeaderId(CommonUtils.toInt(tuple.get(1)));
-            temp.setProduct_name((tuple.get(2)));
+
             temp.setProduct_id(CommonUtils.toInt(tuple.get(3)));
             temp.setQty(CommonUtils.toInt(tuple.get(4)));
             temp.setPrice(CommonUtils.toBigDecimal(tuple.get(5)));
@@ -125,6 +135,9 @@ public class CustomerDiaryLinesDao extends DatabaseHandlerController {
             temp.setCategory(tuple.get(7));
             temp.setUomId(CommonUtils.toInt(tuple.get(8)));
             temp.setCategoryId(CommonUtils.toInt(tuple.get(9)));
+            temp.setDiaryLineId(CommonUtils.toInt(tuple.get(10)));
+            ProductModel productModel=productsDb.selectProductById(CommonUtils.toInt(tuple.get(3)));
+            temp.setProduct_name(productModel.getProduct_name());
             customerDiaryLineModels.add(temp);
         }
         return customerDiaryLineModels;
