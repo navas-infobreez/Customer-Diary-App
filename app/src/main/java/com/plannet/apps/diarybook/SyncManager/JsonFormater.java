@@ -111,7 +111,7 @@ public class JsonFormater {
 
             jsonObject.put("id",customerModel.getId());
             jsonObject.put("firstName",customerModel.getCustomerName() );
-            jsonObject.put("lastName", "kk");
+            jsonObject.put("lastName", "");
             jsonObject.put("searchKey","key" );
             jsonObject.put("gstNo", customerModel.getGst_no());
             jsonObject.put("customerContact", customerContactJson( customerModel.getCustomerContact() ));

@@ -69,7 +69,8 @@ public class  Products extends DatabaseHandlerController {
                         Log.d( "Insert Products", query );
                         sqliteDB.execSQL( query );
                     }
-                productPriceDb.insertProductPrice(tuple.getProductPriceDTOList());
+
+                productPriceDb.insertProductPrice(tuple.getProductPriceDTOList(),tuple.getProduct_id());
             }
 
             sqliteDB.setTransactionSuccessful();

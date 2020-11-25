@@ -33,7 +33,7 @@ public class ProductPrice extends DatabaseHandlerController {
         this.context = context;
     }
 
-    public void insertProductPrice(List<ProductPriceDto> productPriceDtoList) {
+    public void insertProductPrice(List<ProductPriceDto> productPriceDtoList,int productId) {
 
         try {
             dbhelper = DatabaseHandler.getInstance(context);
@@ -41,7 +41,7 @@ public class ProductPrice extends DatabaseHandlerController {
             sqliteDB.beginTransaction();
 
             for (ProductPriceDto tuple : productPriceDtoList) {
-                Object[] values_ar = {tuple.getProductId(), tuple.getUomId(), tuple.getSalesPrice(),
+                Object[] values_ar = {productId, tuple.getUomId(), tuple.getSalesPrice(),
                         tuple.getSalesPrice(), tuple.getDiscntSalesPrice(),tuple.getProductPriceId()};
                 String[] fields_ar = { ProductPrice.productId,ProductPrice.uomId, ProductPrice.purchasePrice,
                         ProductPrice.salesPrice, ProductPrice.discntSalesPrice,ProductPrice.productPriceId};

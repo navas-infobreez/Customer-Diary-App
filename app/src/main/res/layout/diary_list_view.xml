@@ -50,7 +50,7 @@
                 android:padding="5dp"
                 android:layout_weight="1"
                 android:textColor="#000"
-                android:text="8606522615"/>
+                android:text=""/>
             <TextView
                 android:id="@+id/address"
                 android:layout_width="0dp"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="textEnd"
-                android:text="mavayil house"/>
+                android:text=""/>
         </LinearLayout>
             <Button
                 android:id="@+id/add_button"

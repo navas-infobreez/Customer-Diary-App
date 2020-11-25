@@ -81,7 +81,7 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             final CustomerModel eachItem = customerModels.get( position );
             holder.phoneNo.setText( eachItem.getCustomerContact().getContactNo() );
             holder.customerName.setText( eachItem.getCustomerName() );
-            //holder.btnpick.setText( eachItem.getAddress1() );
+            holder.address.setText( eachItem.getCustomerContact().getAddress1() );
             holder.btnpick.setVisibility( View.GONE );
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,11 +118,13 @@ public class CustomerDiaryAdapter extends RecyclerView.Adapter<CustomerDiaryAdap
             }else {
                 holder.statusView.setBackgroundResource(R.drawable.normal_status);
             }
-
+            holder.address.setText( eachItem.getCustomerModel().getCustomerContact().getAddress1() );
             holder.textDate.setText( eachItem.getDate() );
             holder.customerName.setText( eachItem.getCustomerModel().getCustomerName() );
+            holder.phoneNo.setText( eachItem.getCustomerModel().getCustomerContact().getContactNo() );
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onCompleteCallBack.onCompleteCallBack(eachItem);

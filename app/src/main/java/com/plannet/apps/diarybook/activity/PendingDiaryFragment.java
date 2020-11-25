@@ -3,6 +3,7 @@ package com.plannet.apps.diarybook.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +17,24 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.plannet.apps.diarybook.AppController;
 import com.plannet.apps.diarybook.MainActivity;
 import com.plannet.apps.diarybook.R;
+import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
+import com.plannet.apps.diarybook.SyncManager.JsonFormater;
 import com.plannet.apps.diarybook.adapters.CustomerDiaryAdapter;
 import com.plannet.apps.diarybook.databases.Customer;
 import com.plannet.apps.diarybook.databases.CustomerDiaryDao;
 import com.plannet.apps.diarybook.models.CustomerDiaryModel;
 import com.plannet.apps.diarybook.utils.OnCompleteCallBack;
 import com.plannet.apps.diarybook.utils.Callback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,6 +218,8 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     @Override
     public void onItemClick(Object object) {
         CustomerDiaryModel customerDiaryModel=(CustomerDiaryModel) object;
+        sycDairy( customerDiaryModel );
+
         customerDiaryDao.updateStatus(customerDiaryModel.getDiaryId(),customerDiaryModel.getStatus(),AppController.getInstance().getLoggedUser().getRole_id());
 
             Intent intent = new Intent(getActivity(), CustomerDiaryActivity.class );
@@ -221,4 +232,32 @@ public class PendingDiaryFragment extends Fragment implements Callback,OnComplet
     public void onItemLongClick(Object object) {
 
     }
+
+    private void sycDairy(CustomerDiaryModel customerDiaryModel) {
+        customerDiaryModel.setSalesmanId( AppController.getInstance().getLoggedUser().getRole_id());
+        final String url = " https://planet-customerdiary.herokuapp.com/customerdiary/createorupdatecustomerdiary";
+        final JsonFormater formatter = new JsonFormater();
+        DiaryBookJsonObjectRequest req = new DiaryBookJsonObjectRequest(getActivity(),  url, formatter.customerDiaryJson(customerDiaryModel),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v( "Response:%n %s", response.toString( 4 ) );
+                            Log.d( "Response", response.toString() );
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.d( "error Response", error.toString() );
+            }
+        } );
+
+        AppController.getInstance().submitServerRequest( req, "sycDairy" );
+    }
+
 }
