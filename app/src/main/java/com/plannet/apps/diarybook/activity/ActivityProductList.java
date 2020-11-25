@@ -23,6 +23,7 @@ import com.plannet.apps.diarybook.adapters.UserListAdapter;
 import com.plannet.apps.diarybook.databases.Products;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
+import com.plannet.apps.diarybook.forms.UserCreationActivity;
 import com.plannet.apps.diarybook.models.ProductModel;
 import com.plannet.apps.diarybook.models.UserModel;
 import com.plannet.apps.diarybook.utils.Callback;
@@ -150,7 +151,13 @@ public class ActivityProductList extends AppCompatActivity implements Callback {
 
     @Override
     public void onItemClick(Object object) {
-
+        ProductModel productModel=new ProductModel();
+        if (object instanceof ProductModel)
+            productModel = (ProductModel) object;
+        Intent intent = new Intent(ActivityProductList.this, CreateProductsActivity.class);
+        intent.putExtra("productId",productModel.getProduct_id());
+        intent.putExtra("isEdit",true);
+        startActivity(intent);
     }
 
     @Override

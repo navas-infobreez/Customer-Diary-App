@@ -61,14 +61,19 @@ public class UserCreationActivity extends AppCompatActivity {
     Role roleDb;
     List<RoleModel>roleModels=new ArrayList<>();
     SweetAlertDialog sweetAlertDialog;
+    UserModel editUserModel=new UserModel();
+    private int userId;
+    private boolean isEdit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ucer_crestion);
+        userId= getIntent().getExtras().getInt("userId");
+        isEdit= getIntent().getExtras().getBoolean("isEdit",false);
         initUi();
         initDb();
         getRoll();
-//        roleModels=roleDb.getAllRoles();
     }
 
     private void initDb() {

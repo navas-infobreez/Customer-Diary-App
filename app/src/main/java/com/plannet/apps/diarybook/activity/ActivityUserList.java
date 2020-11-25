@@ -124,6 +124,14 @@ public class ActivityUserList extends AppCompatActivity implements Callback {
 
     @Override
     public void onItemClick(Object object) {
+        UserModel userModel=new UserModel();
+        if (object instanceof UserModel)
+            userModel = (UserModel) object;
+        Intent intent = new Intent(ActivityUserList.this, UserCreationActivity.class);
+        intent.putExtra("userId",userModel.getRole_id());
+        intent.putExtra("isEdit",true);
+        startActivity(intent);
+
 
     }
 

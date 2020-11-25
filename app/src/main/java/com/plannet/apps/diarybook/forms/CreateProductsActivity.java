@@ -64,15 +64,30 @@ public class CreateProductsActivity extends AppCompatActivity {
     List<ProductCategoryModel>productCategoryModels=new ArrayList<>();
     List<UomModel>uomModelList=new ArrayList<>();
     SweetAlertDialog sweetAlertDialog;
+    private int productId;
+    private boolean isEdit;
+    ProductModel editProduct=new ProductModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_create_products );
-
+        productId= getIntent().getExtras().getInt("productId");
+        isEdit= getIntent().getExtras().getBoolean("isEdit",false);
         initDb();
         initUi();
+        if (isEdit)
+            setView();
 
+    }
+
+    private void setView() {
+        product_name.setText(editProduct.getProduct_name());
+        code.setText(editProduct.getSearchKey());
+        purchase_amount.setText(String.valueOf(editProduct.getProductPriceDTOList().get(0).getPurchasePrice()));
+        sales_amount.setText(String.valueOf(editProduct.getProductPriceDTOList().get(0).getSalesPrice()));
+        discount_amount.setText(String.valueOf(editProduct.getProductPriceDTOList().get(0).getDiscntSalesPrice()));
+        details.setText(editProduct.getDescription());
     }
 
     private void initDb() {
@@ -113,7 +128,7 @@ public class CreateProductsActivity extends AppCompatActivity {
         submit = (Button) findViewById( R.id.add_button );
         addCategory=(Button)findViewById(R.id.add_category);
         addUom=(Button)findViewById(R.id.add_uom);
-
+        editProduct=products.selectProductById(productId);
         uomModelList=uomDb.getAll();
         setCategorySpinner();
         setUomSpinner();
