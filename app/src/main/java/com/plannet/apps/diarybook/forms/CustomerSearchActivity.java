@@ -1,6 +1,7 @@
 package com.plannet.apps.diarybook.forms;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -23,6 +25,8 @@ public class CustomerSearchActivity extends AppCompatActivity {
     Button submit;
     CustomerListFragment customerListFragment;
     EditText search;
+    CardView cardView;
+    private boolean isSearchVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class CustomerSearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.add_new_customer, menu);
+        inflater.inflate(R.menu.search_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -58,28 +62,29 @@ public class CustomerSearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int i = item.getItemId();
-        if (i == R.id.add_customer) {
+        if (i == R.id.search) {
+            if (isSearchVisible) {
+                cardView.setVisibility(View.GONE);
+                isSearchVisible=false;
+            }else{
+                cardView.setVisibility(View.VISIBLE);
+                isSearchVisible=true;
+            }
+
+        }else if (i == R.id.add) {
             Intent intent = new Intent( CustomerSearchActivity.this, ReceptionForm.class );
             intent.putExtra( "isEdit",false );
             intent.putExtra( "customerId",false );
             CustomerSearchActivity.this.startActivity( intent );
-
         }
+
         return super.onOptionsItemSelected( item );
     }
-            private void initUi() {
-
+    private void initUi() {
+        cardView=(CardView)findViewById(R.id.cardview);
         search=(EditText) findViewById(R.id.search);
-        //submit=(Button)findViewById(R.id.search_button);
-
-//        submit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent=new Intent(getApplicationContext(), ReceptionForm.class);
-//                startActivity(intent);
-//            }
-//        });
-
+        isSearchVisible=false;
+        cardView.setVisibility(View.GONE);
 
         search.addTextChangedListener(new TextWatcher() {
             @Override

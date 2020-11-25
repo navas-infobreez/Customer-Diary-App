@@ -13,19 +13,16 @@
         app:cardElevation="5dp"
         android:layout_marginStart="7dp"
         android:layout_height="wrap_content">
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/iextinput"
-            android:layout_above="@+id/customerList_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/search"
                 android:hint="  Customer Search"
                 android:textColor="@color/black"
                 android:layout_width="match_parent"
+                android:textAlignment="textStart"
+                android:paddingStart="7dp"
+                android:drawableEnd="@drawable/search"
                 android:background="@drawable/rounded_edit_text"
                 android:layout_height="50dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
     </androidx.cardview.widget.CardView>
         <LinearLayout
             android:id="@+id/customerList_layout"

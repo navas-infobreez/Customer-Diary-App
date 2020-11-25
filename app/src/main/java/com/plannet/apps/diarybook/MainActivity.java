@@ -27,6 +27,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.plannet.apps.diarybook.SyncManager.DiaryBookJsonObjectRequest;
 import com.plannet.apps.diarybook.SyncManager.JsonFormater;
+import com.plannet.apps.diarybook.activity.ActivityProductList;
+import com.plannet.apps.diarybook.activity.ActivityUserList;
 import com.plannet.apps.diarybook.activity.LoginActivity;
 import com.plannet.apps.diarybook.activity.PendingDiaryFragment;
 import com.plannet.apps.diarybook.databases.Customer;
@@ -39,6 +41,7 @@ import com.plannet.apps.diarybook.databases.Role;
 import com.plannet.apps.diarybook.databases.Uom;
 import com.plannet.apps.diarybook.databases.User;
 import com.plannet.apps.diarybook.forms.CreateProductsActivity;
+import com.plannet.apps.diarybook.forms.CustomerSearchActivity;
 import com.plannet.apps.diarybook.forms.ReceptionForm;
 import com.plannet.apps.diarybook.forms.UomModel;
 import com.plannet.apps.diarybook.forms.UserCreationActivity;
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_user:
                         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )||
                                 AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Admin" )) {
-                            Intent intent = new Intent(MainActivity.this, UserCreationActivity.class);
+                            Intent intent = new Intent(MainActivity.this, ActivityUserList.class);
                             startActivity(intent);
                         }else {
                             Toast.makeText(MainActivity.this,"You have no permission for this action",Toast.LENGTH_SHORT).show();
@@ -118,14 +121,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_products:
                         if (AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Manager" )||
                                 AppController.getInstance().getLoggedUser().getRole_name().equalsIgnoreCase( "Admin" )) {
-                            Intent intent1 = new Intent(MainActivity.this, CreateProductsActivity.class);
+                            Intent intent1 = new Intent(MainActivity.this, ActivityProductList.class);
                             startActivity(intent1);
                         }else {
                             Toast.makeText(MainActivity.this,"You have no permission for this action",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case R.id.action_customer:
-                        Intent intent2 = new Intent( MainActivity.this, ReceptionForm.class );
+                        Intent intent2 = new Intent( MainActivity.this, CustomerSearchActivity.class );
                         startActivity( intent2 );
                         break;
                 }
